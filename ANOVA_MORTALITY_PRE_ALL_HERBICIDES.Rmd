@@ -1,6 +1,6 @@
 ---
 title: "ANOVA PALMER MORTALITY PRE - ALL HERBICIDES"
-author: "Felipe A. Faleco"
+author: "Felipe A. Faleco e Maxwel"
 date: "3/23/2020"
 output: pdf_document
 ---
