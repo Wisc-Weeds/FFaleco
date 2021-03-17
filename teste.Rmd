@@ -1,6 +1,6 @@
 ---
 title: "teste"
-author: "Maxwel Coura Oliveira"
+author: "Maxwel Coura Oliveira & Felipe Faleco"
 date: "3/17/2021"
 output: html_document
 ---
