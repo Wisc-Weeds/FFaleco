@@ -1,0 +1,169 @@
+---
+title: "MAPS WATERHEMP POST"
+author: "Felipe A. Faleco"
+date: "11/7/2020"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+
+knitr::opts_chunk$set(echo = TRUE)
+
+
+library(tidyverse)
+library(ggplot2)
+library(knitr)
+library(kableExtra)
+library(scales)
+library(ggthemes)
+library(usmap)
+library(ggsn)
+library(ggmap)
+library(ggrepel)
+library(maps)
+library(grid)
+library(mapdata)
+library(maptools)
+library(stringr)
+library(dplyr)
+library(choroplethr)
+
+states <- map_data("state")
+df <- subset(states, region =="wisconsin")
+
+counties <- map_data("county")
+county <- subset(counties, region =="wisconsin")
+county 
+
+base <- ggplot(data = df, mapping = aes(x = long, y = lat, group = group)) + 
+  coord_fixed(1.3) + 
+  geom_polygon(color = "black", fill = "white")
+base + theme_nothing()
+
+
+```
+
+
+
+# DATA
+
+```{r}
+
+waterhemp <- read.csv("MAPS.csv")
+
+```
+
+
+
+# POPULATIONS MAIN POOL_1X MAP
+
+
+## FILTERING
+
+```{r}
+
+pop_main_pool <- waterhemp %>% filter(tested_ima_gly_atraz == "x")
+
+```
+
+
+
+## NAMES MAP
+
+```{r}
+
+base + 
+  geom_point(data = pop_main_pool, 
+             mapping = aes(x = long, y = lat, group = pop, label = pop, color = resistance_1x), 
+             size = 2) +
+  geom_polygon(data = county, 
+               fill = "NA", 
+               color = "gray") +
+  geom_label_repel(data = pop_main_pool, 
+                   aes(label = pop, group = 1, , color = resistance_1x),
+                   max.overlaps = 100,
+                   box.padding   = 0.5, 
+                   point.padding = 0.2,
+                   segment.color = 'grey50', 
+                   size = 3,
+                   seed = TRUE,
+                   show.legend = FALSE) +  
+  north(df, location = 'topright', symbol = 1, anchor = c(x = -92.5, y = 47)) +
+  scale_color_manual(name = "Putative-Resistance", values = c("black", "blue", "cyan4", "orange2","red", "darkorchid3")) +
+  theme_map() +
+  labs(fill="", y = "Latitude", x = "Longitude", title = "Waterhemp Putative-Resistance in WI - 1x POST") +
+  theme(axis.text=element_blank(), 
+        axis.title=element_blank(), 
+        panel.background = element_rect(fill="white", color = "black"), 
+        panel.grid.major = element_line(color = "white"), 
+        panel.grid.minor = element_blank(),
+        panel.border = element_rect(fill = NA,color = "white", size = 0.5, linetype = "solid"),
+        legend.title = element_text(size = 16, colour = "black", face = "bold", hjust = 1),
+        legend.text = element_text(size = 16, colour = "black"), 
+        legend.key = element_rect(fill = NA),
+        legend.key.width = unit(2.2, "line"),
+        legend.position = c(- 0.03, 0), 
+        legend.background = element_rect(fill =NA), 
+        plot.title = element_text(color = "darkgreen", face = "bold", size = 22, hjust = 0.5)) +
+  ggsave("MAP_POPMAINPOOL_1X.jpeg", units = "in", width = 8, height = 8, dpi = 600)
+
+
+```
+
+
+
+# POPULATIONS TESTED WITH ALL HERBS 1X MAP
+
+
+## FILTERING
+
+```{r}
+
+pop_all_herbs <- waterhemp %>% filter(tested_all_herbs == "x")
+
+```
+
+
+
+## NAMES MAP
+
+```{r}
+
+base + 
+  geom_point(data = pop_all_herbs, 
+             mapping = aes(x = long, y = lat, group = pop, label = pop, color = resistance_1x), 
+             size = 2) +
+  geom_polygon(data = county, 
+               fill = "NA", 
+               color = "gray") +
+  geom_label_repel(data = pop_all_herbs, 
+                   aes(label = pop, group = 1, , color = resistance_1x),
+                   max.overlaps = 100,
+                   box.padding   = 0.5, 
+                   point.padding = 0.2,
+                   segment.color = 'grey50', 
+                   size = 3,
+                   seed = TRUE,
+                   show.legend = FALSE) +  
+  north(df, location = 'topright', symbol = 1, anchor = c(x = -92.5, y = 47)) +
+  scale_color_manual(name = "Putative-Resistance", values = c("black", "blue", "cyan4", "orange2","red", "darkorchid3")) +
+  theme_map() +
+  labs(fill="", y = "Latitude", x = "Longitude", title = "Waterhemp Putative-Resistance in WI - 1x POST") +
+  theme(axis.text=element_blank(), 
+        axis.title=element_blank(), 
+        panel.background = element_rect(fill="white", color = "black"), 
+        panel.grid.major = element_line(color = "white"), 
+        panel.grid.minor = element_blank(),
+        panel.border = element_rect(fill = NA,color = "white", size = 0.5, linetype = "solid"),
+        legend.title = element_text(size = 16, colour = "black", face = "bold", hjust = 1),
+        legend.text = element_text(size = 16, colour = "black"), 
+        legend.key = element_rect(fill = NA),
+        legend.key.width = unit(2.2, "line"),
+        legend.position = c(- 0.03, 0), 
+        legend.background = element_rect(fill =NA), 
+        plot.title = element_text(color = "darkgreen", face = "bold", size = 22, hjust = 0.5)) +
+  ggsave("MAP_POPALLHERBS_1X.jpeg", units = "in", width = 8, height = 8, dpi = 600)
+
+
+
+```

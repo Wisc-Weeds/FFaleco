@@ -1,0 +1,75 @@
+---
+title: "RAW BIORED - WATERHEMP HERB x RATE"
+author: "Felipe A. Faleco"
+date: "01/26/2021"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+
+knitr::opts_chunk$set(echo = TRUE)
+library(dplyr)
+library(ggplot2)
+
+```
+
+
+# DATA
+
+```{r}
+
+waterhemp <- read.csv("All POST_Reduction.csv")
+
+str(waterhemp)
+
+waterhemp$run <- as.factor(waterhemp$run)
+
+waterhemp$pop <- as.factor(waterhemp$pop)
+
+waterhemp$herb <- as.factor(waterhemp$herb)
+
+waterhemp$rate <- as.factor(waterhemp$rate)
+
+waterhemp$rep <- as.factor(waterhemp$rep)
+
+str(waterhemp)
+
+```
+
+
+# DATA SUMMARY
+
+```{r}
+
+summary <- waterhemp %>% 
+  group_by(herb,rate) %>% 
+  summarise(n = sum(!is.na(bio_red)), 
+            mean = mean(bio_red, na.rm = TRUE), 
+            sd = sd(bio_red, na.rm = TRUE),
+            se = sd / sqrt(n),
+            CI = qnorm(1- 0.05/2) * se)
+
+summary
+            
+```
+
+
+# PLOT
+
+```{r}
+
+ggplot(summary, aes(x = mean*100, y = reorder(herb, mean))) + 
+  geom_point(size = 2) + 
+  geom_vline(xintercept = 90, size = 1, colour = "red") +
+  geom_errorbar(aes(xmin = (mean*100) - (se*100), xmax = (mean*100) + (se*100), width = 0.2)) + 
+  facet_grid(rate ~ ., labeller = label_both) +
+  labs(title = "Waterhemp Biomass Reduction - POST", x = "Biomass Reduction (%)", y = "Herbicide") + 
+  theme_classic() + 
+  theme (plot.title = element_text(face = "bold", hjust = 0.5, size = 20, colour = "darkgreen"), 
+         axis.title = element_text(face = "bold", size = 18, colour = "darkgreen"), 
+         axis.text = element_text(face = "bold", size = 12, colour = "black"),
+         strip.text = element_text(face = "bold", size = 12, colour = "black")) +
+  ggsave("RAW BIORED_HERBxRATE.jpeg", units="in", width=8, height=5, dpi=600)
+
+```
+

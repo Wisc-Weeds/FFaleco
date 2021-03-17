@@ -1,0 +1,250 @@
+---
+title: "BETA BIORED - WATERHEMP"
+author: "Felipe A. Faleco"
+date: "01/26/2021"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(ggplot2)
+library(car)
+library(emmeans)
+library(multcompView)
+library(glmmTMB)
+library(ggpubr)
+library(DHARMa)
+
+```
+
+
+# DATA
+
+```{r}
+
+waterhemp <- read.csv("All POST_Reduction_2.csv")
+
+str(waterhemp)
+
+waterhemp$run <- as.factor(waterhemp$run)
+
+waterhemp$pop <- as.factor(waterhemp$pop)
+
+waterhemp$herb <- as.factor(waterhemp$herb)
+
+waterhemp$rate <- as.factor(waterhemp$rate)
+
+waterhemp$rep <- as.factor(waterhemp$rep)
+
+str(waterhemp)
+
+```
+
+
+# IMA_GLY
+
+```{r}
+
+ima_gly <- waterhemp %>% filter(herb %in% c("imazethapyr", "glyphosate"), rate == "1x", selected == "x")
+
+```
+
+
+## MODEL
+
+```{r}
+
+model_ima_gly <- glmmTMB(bio_red ~ herb + (1|run) + (1|pop), data = ima_gly, beta_family(link = "logit"))
+
+resid <- simulateResiduals(model_ima_gly)
+
+plot(resid)
+
+```
+
+
+## SUMMARY
+
+```{r, echo=TRUE}
+
+summary(model_ima_gly)
+
+```
+
+
+## ANOVA
+
+```{r, echo=TRUE}
+
+glmmTMB:::Anova.glmmTMB(model_ima_gly)
+
+```
+
+
+## EMM & CLD
+
+```{r, echo=TRUE}
+
+emm_herb_ima_gly <- emmeans(model_ima_gly, ~ herb, adjust = "tukey", type = "response", contr = "pairwise")
+
+emm_herb_ima_gly
+
+CLD_emm_herb_ima_gly <- if(requireNamespace("multcomp")) {
+    multcomp::cld(emm_herb_ima_gly$emmeans, alpha = 0.05, Letters=letters, adjust="tukey", reversed = TRUE)}
+
+CLD_emm_herb_ima_gly
+
+```
+
+
+
+# ATRAZ_DICA_TWOFOUR
+
+```{r}
+
+atra_dica_twofour <- waterhemp %>% filter(herb %in% c("atrazine", "dicamba", "2,4-D"), rate == "1x", selected == "x")
+
+```
+
+
+## MODEL
+
+```{r}
+
+model_atra_dica_twofour <- glmmTMB(bio_red ~ herb + (1|run) + (1|pop), data = atra_dica_twofour, beta_family(link = "logit"))
+
+resid <- simulateResiduals(model_atra_dica_twofour)
+
+plot(resid)
+
+```
+
+
+## SUMMARY
+
+```{r, echo=TRUE}
+
+summary(model_atra_dica_twofour)
+
+```
+
+
+## ANOVA
+
+```{r, echo=TRUE}
+
+glmmTMB:::Anova.glmmTMB(model_atra_dica_twofour)
+
+```
+
+
+## EMM & CLD
+
+```{r, echo=TRUE}
+
+emm_herb_atra_dica_twofour <- emmeans(model_atra_dica_twofour, ~ herb, adjust = "tukey", type = "response", contr = "pairwise")
+
+emm_herb_atra_dica_twofour
+
+CLD_emm_herb_atra_dica_twofour <- if(requireNamespace("multcomp")) {
+    multcomp::cld(emm_herb_atra_dica_twofour$emmeans, alpha = 0.05, Letters=letters, adjust="tukey", reversed = TRUE)}
+
+CLD_emm_herb_atra_dica_twofour
+
+```
+
+
+
+# FOME_MESO_GLUFO
+
+```{r}
+
+fome_meso_glufo <- waterhemp %>% filter(herb %in% c("fomesafen", "mesotrione", "glufosinate"), rate == "1x", selected == "x")
+
+```
+
+
+## MODEL
+
+```{r}
+
+model_fome_meso_glufo <- glmmTMB(bio_red ~ herb + (1|run) + (1|pop), data = fome_meso_glufo, beta_family(link = "logit"))
+
+resid <- simulateResiduals(model_fome_meso_glufo)
+
+plot(resid)
+
+```
+
+
+## SUMMARY
+
+```{r, echo=TRUE}
+
+summary(model_fome_meso_glufo)
+
+```
+
+
+## ANOVA
+
+```{r, echo=TRUE}
+
+glmmTMB:::Anova.glmmTMB(model_fome_meso_glufo)
+
+```
+
+
+## EMM & CLD
+
+```{r, echo=TRUE}
+
+emm_herb_fome_meso_glufo <- emmeans(model_fome_meso_glufo, ~ herb, adjust = "tukey", type = "response", contr = "pairwise")
+
+emm_herb_fome_meso_glufo
+
+CLD_emm_herb_fome_meso_glufo <- if(requireNamespace("multcomp")) {
+    multcomp::cld(emm_herb_fome_meso_glufo$emmeans, alpha = 0.05, Letters=letters, adjust="tukey", reversed = TRUE)}
+
+CLD_emm_herb_fome_meso_glufo
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# PLOT
+
+```{r, echo=TRUE}
+
+plot(emm_herb_rate, adjust = "tukey", comparisons = T, alpha = 0.05) + 
+  geom_point(size = 1) +
+  geom_text(aes(label = c("cd", "bc", "d", "ab", "a", "e", "f", "ab",
+                          "a", "a", "a", "a", "a", "b", "c", "a")),
+            vjust = -1, size = 3.5) +
+  labs(title = "Waterhemp Biomass Reduction - POST", 
+       x = "Biomass Reduction (%)", 
+       y = "Herbicide") +
+  facet_grid(rate ~ .) +
+  theme_bw() + 
+  theme (plot.title = element_text(face = "bold", hjust = 0.5, size = 22, colour = "darkgreen"), 
+         axis.title = element_text(face = "bold", size = 18, colour = "darkgreen"), 
+         axis.text = element_text(face = "bold", size = 13, colour = "black"),
+         strip.text = element_text(face = "bold", size = 18, colour = "black")) +
+  ggsave("BETA Tukey HSD_HERBxRATE.jpeg", units="in", width = 10, height = 7, dpi = 600)
+
+
+```
+
