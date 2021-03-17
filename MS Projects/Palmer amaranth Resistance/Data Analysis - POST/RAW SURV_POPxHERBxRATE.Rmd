@@ -1,0 +1,88 @@
+---
+title: "RAW SURVIVORSHIP - PALMER POP x HERB x RATE"
+author: "Felipe A. Faleco"
+date: "01/26/2021"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+
+knitr::opts_chunk$set(echo = TRUE)
+library(dplyr)
+library(ggplot2)
+library(ggpubr)
+
+```
+
+
+# WHOLE DATA
+
+```{r}
+
+palmer <- read.csv("All POST_Reduction.csv")
+
+str(palmer)
+
+palmer$run <- as.factor(palmer$run)
+
+palmer$pop <- as.factor(palmer$pop)
+
+palmer$herb <- as.factor(palmer$herb)
+
+palmer$rate <- as.factor(palmer$rate)
+
+palmer$rep <- as.factor(palmer$rep)
+
+str(palmer)
+
+```
+
+
+## DATA SUMMARY
+
+```{r}
+
+summary <- palmer %>% 
+  group_by(pop, herb, rate) %>% 
+  summarise(n = sum(!is.na(surv)), 
+            mean = mean(surv, na.rm = TRUE), 
+            sd = sd(surv, na.rm = TRUE),
+            se = sd / sqrt(n),
+            CI = qnorm(1- 0.05/2) * se)
+
+summary$herb <- factor(summary$herb,
+                       levels = c("2,4-D", "atrazine", "dicamba", "glufosinate", "glyphosate", "imazethapyr", "lactofen", "mesotrione"))
+
+summary
+            
+```
+
+
+
+## PLOT
+
+```{r}
+
+ggplot(summary, aes(x = mean*100, y = pop)) + 
+  geom_point(size = 4) + 
+  geom_vline(xintercept = 50, size = 1, colour = "red") +
+  geom_errorbar(aes(xmin = (mean*100) - (se*100), xmax = (mean*100) + (se*100), width = 0.2)) + 
+  facet_grid(rate ~ herb, labeller = label_value) +
+  labs(title = "Palmer Survivorship - POST", x = "% Survivorship", y = "Population") + 
+  theme_bw() + 
+  theme (plot.title = element_text(face = "bold", hjust = 0.5, size = 38, colour = "darkgreen"), 
+         axis.title = element_text(face = "bold", size = 32, colour = "darkgreen"), 
+         axis.text = element_text(face = "bold", size = 22, colour = "black"),
+         strip.text = element_text(face = "bold", size = 25, colour = "black")) +
+  ggsave("RAW SURV_POPxHERBxRATE.jpeg", units="in", width=30, height=7, dpi=600)
+
+
+```
+
+
+
+
+
+
+
+

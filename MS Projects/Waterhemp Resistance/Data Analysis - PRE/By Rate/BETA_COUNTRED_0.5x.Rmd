@@ -1,0 +1,104 @@
+---
+title: "BETA COUNT REDUCTION - WATERHEMP ALL PRE 0.5X"
+author: "Felipe A. Faleco"
+date: "01/26/2021"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(ggplot2)
+library(car)
+library(emmeans)
+library(multcompView)
+library(glmmTMB)
+library(ggpubr)
+
+```
+
+
+# DATA
+
+```{r}
+
+waterhemp <- read.csv("All PRE_Reduction_0.5x.csv")
+
+str(waterhemp)
+
+waterhemp$run <- as.factor(waterhemp$run)
+
+waterhemp$pop <- as.factor(waterhemp$pop)
+
+waterhemp$herb <- as.factor(waterhemp$herb)
+
+waterhemp$rate <- as.factor(waterhemp$rate)
+
+waterhemp$rep <- as.factor(waterhemp$rep)
+
+str(waterhemp)
+
+```
+
+
+# MODEL
+
+```{r}
+
+model <- glmmTMB(count_red ~ herb + (1|run) + (1|pop), data = waterhemp, beta_family(link = "logit"))
+
+```
+
+
+# SUMMARY
+
+```{r, echo=TRUE}
+
+summary(model)
+
+```
+
+
+# ANOVA
+
+```{r, echo=TRUE}
+
+glmmTMB:::Anova.glmmTMB(model)
+
+```
+
+
+# EMM & CLD
+
+```{r, echo=TRUE}
+
+emm_herb <- emmeans(model, ~ herb, adjust = "tukey", type = "response", contr = "pairwise")
+
+emm_herb
+
+CLD_emm_herb <- if(requireNamespace("multcomp")) {
+    multcomp::cld(emm_herb$emmeans, alpha = 0.05, Letters=letters, adjust="tukey",type = "response", contr = "pairwise", reversed = TRUE)}
+
+CLD_emm_herb
+
+```
+
+
+# PLOT
+
+```{r, echo=TRUE}
+
+plot(emm_herb, adjust = "tukey", comparisons = TRUE) + xlim(0.6, 1) + 
+  geom_point(size = 1) +
+  geom_vline(xintercept = 0.9, size = 1, colour = "red") +
+  geom_text(aes(label = c("c", "b", "a", "ab", "a")), vjust = -1) +
+  labs(title = "Waterhemp Count Reduction 0.5x - PRE", x = "Count Reduction (%)", y = "Herbicide") + 
+  theme_classic() + 
+  theme (plot.title = element_text(face = "bold", hjust = 0.5, size = 20, colour = "darkgreen"), 
+         axis.title = element_text(face = "bold", size = 18, colour = "darkgreen"), 
+         axis.text = element_text(face = "bold", size = 12, colour = "black")) +
+  ggsave("All PRE 0.5x_BETA Tukey HSD.jpeg", units="in", width=8, height=5, dpi=600)
+
+```
+

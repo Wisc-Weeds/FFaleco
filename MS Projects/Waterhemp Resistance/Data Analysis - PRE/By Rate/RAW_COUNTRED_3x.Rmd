@@ -1,0 +1,116 @@
+---
+title: "RAW COUNT REDUCTION - WATERHEMP ALL PRE 3X"
+author: "Felipe A. Faleco"
+date: "01/26/2021"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+
+knitr::opts_chunk$set(echo = TRUE)
+library(ggplot2)
+
+```
+
+
+# DATA
+
+```{r}
+
+waterhemp <- read.csv("All PRE_Reduction_3x.csv")
+
+str(waterhemp)
+
+waterhemp$run <- as.factor(waterhemp$run)
+
+waterhemp$pop <- as.factor(waterhemp$pop)
+
+waterhemp$herb <- as.factor(waterhemp$herb)
+
+waterhemp$rate <- as.factor(waterhemp$rate)
+
+waterhemp$rep <- as.factor(waterhemp$rep)
+
+str(waterhemp)
+
+```
+
+
+# FUNCTION MEAN & SE
+
+```{r}
+
+## Summarizes data.
+## Gives count, mean, standard deviation, standard error of the mean, and confidence interval (default 95%).
+##   data: a data frame.
+##   measurevar: the name of a column that contains the variable to be summarized
+##   groupvars: a vector containing names of columns that contain grouping variables
+##   na.rm: a boolean that indicates whether to ignore NA's
+##   conf.interval: the percent range of the confidence interval (default is 95%)
+summarySE <- function(data=NULL, measurevar, groupvars=NULL, na.rm=TRUE,
+                      conf.interval=.95, .drop=TRUE) {
+    library(plyr)
+
+    # New version of length which can handle NA's: if na.rm==T, don't count them
+    length2 <- function (x, na.rm=TRUE) {
+        if (na.rm) sum(!is.na(x))
+        else       length(x)
+    }
+
+    # This does the summary. For each group's data frame, return a vector with
+    # N, mean, and sd
+    datac <- ddply(data, groupvars, .drop=.drop,
+      .fun = function(xx, col) {
+        c(N    = length2(xx[[col]], na.rm=na.rm),
+          mean = mean   (xx[[col]], na.rm=na.rm),
+          sd   = sd     (xx[[col]], na.rm=na.rm)
+        )
+      },
+      measurevar
+    )
+
+    # Rename the "mean" column    
+    datac <- rename(datac, c("mean" = measurevar))
+
+    datac$se <- datac$sd / sqrt(datac$N)  # Calculate standard error of the mean
+
+    # Confidence interval multiplier for standard error
+    # Calculate t-statistic for confidence interval: 
+    # e.g., if conf.interval is .95, use .975 (above/below), and use df=N-1
+    ciMult <- qt(conf.interval/2 + .5, datac$N-1)
+    datac$ci <- datac$se * ciMult
+
+    return(datac)
+}
+
+```
+
+
+# DATA SUMMARY
+
+```{r}
+
+summary <- summarySE(waterhemp, measurevar = "count_red", groupvars = "herb")
+
+summary
+
+```
+
+
+# PLOT
+
+```{r}
+
+ggplot(summary, aes(x = count_red*100, y = reorder(herb, count_red))) + xlim(60, 100) +
+  geom_point(size = 2) + 
+  geom_vline(xintercept = 90, size = 1, colour = "red") +
+  geom_errorbar(aes(xmin = (count_red*100) - (ci*100), xmax = (count_red*100) + (ci*100), width = 0.2)) + 
+  labs(title = "Waterhemp Count Reduction 3x - PRE", x = "Count Reduction (%)", y = "Herbicide") + 
+  theme_classic() + 
+  theme (plot.title = element_text(face = "bold", hjust = 0.5, size = 20, colour = "darkgreen"), 
+         axis.title = element_text(face = "bold", size = 18, colour = "darkgreen"), 
+         axis.text = element_text(face = "bold", size = 12, colour = "black")) +
+  ggsave("All PRE 3x_RAW COUNTRED.jpeg", units="in", width=8, height=5, dpi=600)
+
+```
+

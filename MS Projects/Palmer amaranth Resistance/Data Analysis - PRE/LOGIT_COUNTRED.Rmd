@@ -1,0 +1,141 @@
+---
+title: "LOGIT COUNTRED - PALMER"
+author: "Felipe A. Faleco"
+date: "01/26/2021"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(ggplot2)
+library(car)
+library(emmeans)
+library(glmmTMB)
+
+```
+
+
+# DATA
+
+```{r}
+
+palmer <- read.csv("All PRE_Reduction.csv")
+
+str(palmer)
+
+palmer$run <- as.factor(palmer$run)
+
+palmer$pop <- as.factor(palmer$pop)
+
+palmer$herb <- as.factor(palmer$herb)
+
+palmer$rate <- as.factor(palmer$rate)
+
+palmer$rep <- as.factor(palmer$rep)
+
+str(palmer)
+
+```
+
+
+# MODEL
+
+```{r}
+
+model <- glmmTMB(logit(count_red) ~ pop * herb * rate + (1|run), data = palmer, family = "gaussian")
+
+```
+
+
+# SUMMARY
+
+```{r, echo=TRUE}
+
+summary(model)
+
+```
+
+
+# ANOVA
+
+```{r, echo=TRUE}
+
+glmmTMB:::Anova.glmmTMB(model)
+
+```
+
+
+# EMM & CLD
+
+```{r, echo=TRUE}
+
+emm_pop_herb <- emmeans(model, ~ pop|herb, adjust = "tukey", type = "response", contr = "pairwise")
+
+emm_pop_herb
+
+CLD_emm_pop_herb <- if(requireNamespace("multcomp")) {
+    multcomp::cld(emm_pop_herb$emmeans, alpha = 0.05, Letters=letters, adjust="tukey", reversed = T)}
+
+CLD_emm_pop_herb
+
+
+
+emm_herb_rate <- emmeans(model, ~ herb|rate, adjust = "tukey", type = "response", contr = "pairwise")
+
+emm_herb_rate
+
+CLD_emm_herb_rate <- if(requireNamespace("multcomp")) {
+    multcomp::cld(emm_herb_rate$emmeans, alpha = 0.05, Letters=letters, adjust="tukey", reversed = T)}
+
+CLD_emm_herb_rate
+
+```
+
+
+# PLOT
+
+```{r, echo=TRUE}
+
+plot(emm_pop_herb, adjust = "tukey", comparisons = T, alpha = 0.05) + 
+  geom_point(size = 2.5) +
+  facet_grid( ~ herb, labeller = label_value) +
+  geom_text(aes(label = c("c", "b", "a", 
+                          "a", "a", "a", 
+                          "a", "a", "a", 
+                          "a", "a", "a", 
+                          "a", "a", "a")),
+            vjust = -1, size = 5) +
+  labs(title = "Palmer Count Reduction - PRE", 
+       x = "Count Reduction (%)", 
+       y = "Population") + 
+  theme_bw() + 
+  theme (plot.title = element_text(face = "bold", hjust = 0.5, size = 28, colour = "darkgreen"), 
+         axis.title = element_text(face = "bold", size = 22, colour = "darkgreen"), 
+         axis.text = element_text(face = "bold", size = 15, colour = "black"),
+         strip.text = element_text(face = "bold", size = 18, colour = "black")) +
+  ggsave("LOGIT Tukey HSD_POPxHERB.jpeg", units="in", width = 15, height = 3, dpi = 600)
+
+
+
+
+plot(emm_herb_rate, adjust = "tukey", comparisons = T, alpha = 0.05) + 
+  geom_point(size = 2.5) +
+  facet_grid( ~ rate, labeller = label_value) +
+  geom_text(aes(label = c("c", "b", "ab", "ab", "a", 
+                          "b", "a", "a", "a", "a", 
+                          "b", "a", "a", "a", "a")),
+            vjust = -1, size = 5) +
+  labs(title = "Palmer Count Reduction - PRE", 
+       x = "Count Reduction (%)", 
+       y = "Population") + 
+  theme_bw() + 
+  theme (plot.title = element_text(face = "bold", hjust = 0.5, size = 28, colour = "darkgreen"), 
+         axis.title = element_text(face = "bold", size = 22, colour = "darkgreen"), 
+         axis.text = element_text(face = "bold", size = 15, colour = "black"),
+         strip.text = element_text(face = "bold", size = 18, colour = "black")) +
+  ggsave("LOGIT Tukey HSD_HERBxRATE.jpeg", units="in", width = 15, height = 4, dpi = 600)
+
+```
+

@@ -1,0 +1,42 @@
+---
+title: "Exploratory"
+author: "Felipe A. Faleco"
+date: "02/06/2021"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+
+knitr::opts_chunk$set(echo = TRUE)
+
+library(tidyverse)
+library(glmmTMB)
+library(tidytext)
+library(emmeans)
+
+```
+
+
+```{r read-data}
+
+waterhemp <- read_csv("All PRE.csv")
+
+```
+
+
+```{r}
+
+ggplot(waterhemp, aes(x = count, y = reorder(herb, order), color = biomass)) + 
+  geom_jitter(aes(color = biomass), alpha = 0.8, width = 0.3) +
+  facet_grid(run ~ rate, labeller = label_both) + 
+  scale_color_gradient(low = "yellow", high = "red") +
+  theme_dark() +
+  scale_x_continuous(limits = c(0, 85)) + 
+  labs(title = "Exploratory Analysis - Waterhemp PRE", x = "Count", y = "Herbicide", color = "Biomass (g)") + 
+  theme (plot.title = element_text(face = "bold", hjust = 0.5, size = 18, colour = "darkgreen"), 
+         axis.title = element_text(face = "bold", size = 16, colour = "darkgreen"), 
+         axis.text = element_text(face = "bold", size = 10, colour = "black"),
+         strip.text = element_text(face = "bold", size = 10, colour = "white")) +
+  ggsave("EXPLORATORY.jpeg", units="in", width=8, height=5, dpi=600)
+
+```

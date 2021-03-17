@@ -1,0 +1,296 @@
+---
+title: "WATERHEMP MAPS"
+author: "Felipe A. Faleco"
+date: "11/10/2019"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+
+library(tidyverse)
+library(ggplot2)
+library(knitr)
+library(kableExtra)
+library(scales)
+library(ggthemes)
+library(usmap)
+library(ggsn)
+library(ggmap)
+library(ggrepel)
+library(maps)
+library(grid)
+library(mapdata)
+library(maptools)
+library(stringr)
+library(dplyr)
+library(choroplethr)
+
+states <- map_data("state")
+df <- subset(states, region =="wisconsin")
+
+counties <- map_data("county")
+county <- subset(counties, region =="wisconsin")
+county 
+
+base <- ggplot(data = df, mapping = aes(x = long, y = lat, group = group)) + 
+  coord_fixed(1.3) + 
+  geom_polygon(color = "black", fill = "white")
+base + theme_nothing()
+
+```
+
+
+
+# ALL POPULATIONS
+
+```{r}
+
+all_pop <- read.csv("ALL_POP.csv")
+
+base + 
+  geom_point(data = all_pop, mapping = aes(x = long, y = lat, group = pop), size=2, colour = "orange2") +
+  geom_polygon(data = county, fill = "NA", color = "gray") +
+  geom_polygon(color = "black", fill = NA)  + xlim(-93, -86.8) +
+  labs(title = "WiscWeeds Waterhemp Survey - Fall 2018") +
+  north(df, location = 'topright', symbol = 1, anchor = c(x = -92.5, y = 47)) +
+  theme_map() +
+  theme(axis.text=element_blank(), 
+        axis.title=element_blank(), 
+        panel.background = element_rect(fill="white", color = "black"), 
+        panel.grid.major = element_line(color = "white"), 
+        panel.grid.minor = element_blank(),
+        panel.border = element_rect(fill = NA, color = "black", size = 0.5, linetype = "solid"), 
+        plot.title = element_text(color = "darkgreen", face = "bold", size = 25, hjust = 0.5)) +
+        ggsave("ALL_POP.jpeg", units="in", width=8, height=8, dpi=600)
+
+```
+
+
+
+
+# GLYPHOSATE
+
+```{r}
+
+Glyphosate <- read.csv("Glyphosate.csv")
+
+base + 
+  geom_point(data = Glyphosate, mapping=aes(x = Longitude, y = Latitude, group = Population, color = Resistance), size=2) +
+  geom_polygon(data = county, fill = "NA", color = "gray") +
+  geom_polygon(color = "black", fill = NA)  + xlim(-93, -86.8) +
+  labs(fill="", y = "Latitude", x = "Longitude", title = "glyphosate", caption="Source: University of Wisconsin - Madison", tag = "A") +
+  north(df, location = 'topright', symbol = 1, anchor = c(x = -92.5, y = 47)) +
+  scale_color_manual(values = c("orange", "red", "darkgreen")) +
+  theme_map() +
+  theme(axis.text=element_blank(), 
+        axis.title=element_blank(), 
+        panel.background = element_rect(fill="white", color = "black"), 
+        panel.grid.major = element_line(color = "white"), 
+        panel.grid.minor = element_blank(),
+        legend.position=c(0,0.01), legend.text = element_text(size = 15, colour = "black"), legend.key = element_rect(fill=NA), 
+        panel.border = element_rect(fill=NA,color="black", size=0.5, linetype="solid"), plot.title = element_text(color="black", face="bold", size=40, hjust = 0.5), plot.caption = element_text(color="black", face="bold", size=14), plot.tag.position = c(0.9,0.85), 
+        plot.tag = element_text(color="black", face="bold", size=40), legend.background = element_rect(fill =NA), legend.key.width = unit(2.2, "line"), legend.title=element_blank()) +
+  ggsave("Glyphosate.jpeg", units="in", width=8, height=8, dpi=600)
+
+```
+
+
+
+# IMAZETHAPYR
+
+```{r}
+
+Imazethapyr <- read.csv("Imazethapyr.csv")
+
+base + 
+  geom_point(data = Imazethapyr, mapping=aes(x = Longitude, y = Latitude, group = Population, color = Resistance), size=2) +
+  geom_polygon(data = county, fill = "NA", color = "gray") +
+  geom_polygon(color = "black", fill = NA)  + xlim(-93, -86.8) +
+  labs(fill="", y = "Latitude", x = "Longitude", title = "imazethapyr", caption="Source: University of Wisconsin - Madison", tag = "B") +
+  north(df, location = 'topright', symbol = 1, anchor = c(x = -92.5, y = 47)) +
+  scale_color_manual(values = c("orange", "red", "darkgreen")) +
+  theme_map() +
+  theme(axis.text=element_blank(), 
+        axis.title=element_blank(), 
+        panel.background = element_rect(fill="white", color = "black"), 
+        panel.grid.major = element_line(color = "white"), 
+        panel.grid.minor = element_blank(),
+        legend.position=c(0,0.01), legend.text = element_text(size = 15, colour = "black"), legend.key = element_rect(fill=NA), 
+        panel.border = element_rect(fill=NA,color="black", size=0.5, linetype="solid"), plot.title = element_text(color="black", face="bold", size=40, hjust = 0.5), plot.caption = element_text(color="black", face="bold", size=14), plot.tag.position = c(0.9,0.85), 
+        plot.tag = element_text(color="black", face="bold", size=40), legend.background = element_rect(fill =NA), legend.key.width = unit(2.2, "line"), legend.title=element_blank()) +
+  ggsave("Imazethapyr.jpeg", units="in", width=8, height=8, dpi=600)
+
+```
+
+
+
+# ATRAZINE
+
+```{r}
+
+Atrazine <- read.csv("Atrazine.csv")
+
+base + 
+  geom_point(data = Atrazine, mapping=aes(x = Longitude, y = Latitude, group = Population, color = Resistance), size=2) +
+  geom_polygon(data = county, fill = "NA", color = "gray") +
+  geom_polygon(color = "black", fill = NA)  + xlim(-93, -86.8) +
+  labs(fill="", y = "Latitude", x = "Longitude", title = "atrazine", caption="Source: University of Wisconsin - Madison", tag = "C") +
+  north(df, location = 'topright', symbol = 1, anchor = c(x = -92.5, y = 47)) +
+  scale_color_manual(values = c("orange", "red", "darkgreen")) +
+  theme_map() +
+  theme(axis.text=element_blank(), 
+        axis.title=element_blank(), 
+        panel.background = element_rect(fill="white", color = "black"), 
+        panel.grid.major = element_line(color = "white"), 
+        panel.grid.minor = element_blank(),
+        legend.position=c(0,0.01), legend.text = element_text(size = 15, colour = "black"), legend.key = element_rect(fill=NA), 
+        panel.border = element_rect(fill=NA,color="black", size=0.5, linetype="solid"), plot.title = element_text(color="black", face="bold", size=40, hjust = 0.5), plot.caption = element_text(color="black", face="bold", size=14), plot.tag.position = c(0.9,0.85), 
+        plot.tag = element_text(color="black", face="bold", size=40), legend.background = element_rect(fill =NA), legend.key.width = unit(2.2, "line"), legend.title=element_blank()) +
+  ggsave("Atrazine.jpeg", units="in", width=8, height=8, dpi=600)
+
+```
+
+
+
+# GLYPHOSATE_IMAZETHAPYR
+
+```{r}
+
+Glyphosate_Imazethapyr <- read.csv("Glyphosate_Imazethapyr.csv")
+
+base + 
+  geom_point(data = Glyphosate_Imazethapyr, mapping=aes(x = Longitude, y = Latitude, group = Population, color = Resistance), size=2) +
+  geom_polygon(data = county, fill = "NA", color = "gray") +
+  geom_polygon(color = "black", fill = NA)  + xlim(-93, -86.8) +
+  labs(fill="", y = "Latitude", x = "Longitude", title = "glyphosate and imazethapyr", caption="Source: University of Wisconsin - Madison") +
+  north(df, location = 'topright', symbol = 1, anchor = c(x = -92.5, y = 47)) +
+  scale_color_manual(values = c("orange", "red")) +
+  theme_map() +
+  theme(axis.text=element_blank(), 
+        axis.title=element_blank(), 
+        panel.background = element_rect(fill="white", color = "black"), 
+        panel.grid.major = element_line(color = "white"), 
+        panel.grid.minor = element_blank(),
+        legend.position=c(0,0.01), legend.text = element_text(size = 15, colour = "black"), legend.key = element_rect(fill=NA), 
+        panel.border = element_rect(fill=NA,color="black", size=0.5, linetype="solid"), plot.title = element_text(color="black", face="bold", size=38, hjust = 0.5), plot.caption = element_text(color="black", face="bold", size=14), plot.tag.position = c(0.9,0.85), 
+        plot.tag = element_text(color="black", face="bold", size=40), legend.background = element_rect(fill =NA), legend.key.width = unit(2.2, "line"), legend.title=element_blank()) +
+  ggsave("Glyphosate_Imazethapyr.jpeg", units="in", width=8, height=8, dpi=600)
+
+
+```
+
+
+
+# GLYPHOSATE_IMAZETHAPYR_ATRAZINE
+
+```{r}
+
+Gly_Ima_Atraz <- read.csv("Gly_Ima_Atraz.csv")
+
+base + 
+  geom_point(data = Gly_Ima_Atraz, mapping=aes(x = Longitude, y = Latitude, group = Population, color = Resistance), size=2) +
+  geom_polygon(data = county, fill = "NA", color = "gray") +
+  geom_polygon(color = "black", fill = NA)  + xlim(-93, -86.8) +
+  labs(fill="", y = "Latitude", x = "Longitude", title = "glyphosate, imazethapyr and atrazine", caption="Source: University of Wisconsin - Madison", tag = "D") +
+  north(df, location = 'topright', symbol = 1, anchor = c(x = -92.5, y = 47)) +
+  scale_color_manual(values = c("orange", "red")) +
+  theme_map() +
+  theme(axis.text=element_blank(), 
+        axis.title=element_blank(), 
+        panel.background = element_rect(fill="white", color = "black"), 
+        panel.grid.major = element_line(color = "white"), 
+        panel.grid.minor = element_blank(),
+        legend.position=c(0,0.01), legend.text = element_text(size = 15, colour = "black"), legend.key = element_rect(fill=NA), 
+        panel.border = element_rect(fill=NA,color="black", size=0.5, linetype="solid"), plot.title = element_text(color="black", face="bold", size=28, hjust = 0.5), plot.caption = element_text(color="black", face="bold", size=14), plot.tag.position = c(0.9,0.85), 
+        plot.tag = element_text(color="black", face="bold", size=40), legend.background = element_rect(fill =NA), legend.key.width = unit(2.2, "line"), legend.title=element_blank()) +
+  ggsave("Gly_Ima_Atraz.jpeg", units="in", width=8, height=8, dpi=600)
+
+
+```
+
+
+
+# GLYPHOSATE_IMAZETHAPYR_NAMES
+
+```{r}
+
+base + 
+  geom_text(data = Glyphosate_Imazethapyr, mapping=aes(x = Longitude, y = Latitude, group = Population, label = Population, color = Resistance), size = 2) +
+  geom_polygon(data = county, fill = "NA", color = "gray") +
+  geom_polygon(color = "black", fill = NA)  + xlim(-93, -86.8) +
+  labs(fill="", y = "Latitude", x = "Longitude", title = "glyphosate and imazethapyr", caption="Source: University of Wisconsin - Madison") +
+  north(df, location = 'topright', symbol = 1, anchor = c(x = -92.5, y = 47)) +
+  scale_color_manual(values = c("orange", "red")) +
+  theme_map() +
+  theme(axis.text=element_blank(), 
+        axis.title=element_blank(), 
+        panel.background = element_rect(fill="white", color = "black"), 
+        panel.grid.major = element_line(color = "white"), 
+        panel.grid.minor = element_blank(),
+        legend.position=c(0,0.01), legend.text = element_text(size = 15, colour = "black"), legend.key = element_rect(fill=NA), 
+        panel.border = element_rect(fill=NA,color="black", size=0.5, linetype="solid"), plot.title = element_text(color="black", face="bold", size=38, hjust = 0.5), plot.caption = element_text(color="black", face="bold", size=14), plot.tag.position = c(0.9,0.85), 
+        plot.tag = element_text(color="black", face="bold", size=40), legend.background = element_rect(fill =NA), legend.key.width = unit(2.2, "line"), legend.title=element_blank()) +
+  ggsave("Glyphosate_Imazethapyr_NAMES.jpeg", units="in", width=8, height=8, dpi=600)
+
+
+```
+
+
+
+# GLYPHOSATE_IMAZETHAPYR_ATRAZINE_NAMES
+
+```{r}
+
+base +
+  geom_text(data = Gly_Ima_Atraz, mapping=aes(x = Longitude, y = Latitude, group = Population, label = Population, color = Resistance), size = 2) +
+  geom_polygon(data = county, fill = "NA", color = "gray") +
+  geom_polygon(color = "black", fill = NA)  + xlim(-93, -86.8) +
+  labs(fill="", y = "Latitude", x = "Longitude", title = "glyphosate, imazethapyr and atrazine", caption="Source: University of Wisconsin - Madison") +
+  north(df, location = 'topright', symbol = 1, anchor = c(x = -92.5, y = 47)) +
+  scale_color_manual(values = c("orange", "red")) +
+  theme_map() +
+  theme(axis.text=element_blank(), 
+        axis.title=element_blank(), 
+        panel.background = element_rect(fill="white", color = "black"), 
+        panel.grid.major = element_line(color = "white"), 
+        panel.grid.minor = element_blank(),
+        legend.position=c(0,0.01), legend.text = element_text(size = 15, colour = "black"), legend.key = element_rect(fill=NA), 
+        panel.border = element_rect(fill=NA,color="black", size=0.5, linetype="solid"), plot.title = element_text(color="black", face="bold", size=28, hjust = 0.5), plot.caption = element_text(color="black", face="bold", size=14), plot.tag.position = c(0.9,0.85), 
+        plot.tag = element_text(color="black", face="bold", size=40), legend.background = element_rect(fill =NA), legend.key.width = unit(2.2, "line"), legend.title=element_blank()) + 
+  ggsave("Gly_Ima_Atraz_NAMES.jpeg", units="in", width=8, height=8, dpi=600)
+
+
+```
+
+
+
+# 30_POP_SELECTION_NAMES
+
+```{r}
+
+Pop_Selection <- read.csv("30_Pop_Selection.csv")
+
+base +
+  geom_text(data = Pop_Selection, mapping=aes(x = Longitude, y = Latitude, group = Population, label = Population, color = Resistance), size = 2) +
+  geom_polygon(data = county, fill = "NA", color = "gray") +
+  geom_polygon(color = "black", fill = NA)  + xlim(-93, -86.8) +
+  labs(fill="", y = "Latitude", x = "Longitude", title = "30 Populations Selection", caption="Source: University of Wisconsin - Madison") +
+  north(df, location = 'topright', symbol = 1, anchor = c(x = -92.5, y = 47)) +
+  scale_color_manual(values = c("darkgreen", "orange", "red", "blue", "purple")) +
+  theme_map() +
+  theme(axis.text=element_blank(), 
+        axis.title=element_blank(), 
+        panel.background = element_rect(fill="white", color = "black"), 
+        panel.grid.major = element_line(color = "white"), 
+        panel.grid.minor = element_blank(),
+        legend.position=c(0,0.01), legend.text = element_text(size = 15, colour = "black"), legend.key = element_rect(fill=NA), 
+        panel.border = element_rect(fill=NA,color="black", size=0.5, linetype="solid"), plot.title = element_text(color="black", face="bold", size=28, hjust = 0.5), plot.caption = element_text(color="black", face="bold", size=14), plot.tag.position = c(0.9,0.85), 
+        plot.tag = element_text(color="black", face="bold", size=40), legend.background = element_rect(fill =NA), legend.key.width = unit(2.2, "line"), legend.title=element_blank()) + 
+  ggsave("30_Pop_Selection.jpeg", units="in", width=8, height=8, dpi=600)
+
+
+```
+
+
+
+

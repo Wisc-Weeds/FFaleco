@@ -1,0 +1,73 @@
+---
+title: "Maps_Waterhemp_POST"
+author: "Felipe A. Faleco"
+date: "11/7/2020"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+
+knitr::opts_chunk$set(echo = TRUE)
+
+
+library(tidyverse)
+library(ggplot2)
+library(knitr)
+library(kableExtra)
+library(scales)
+library(ggthemes)
+library(usmap)
+library(ggsn)
+library(ggmap)
+library(ggrepel)
+library(maps)
+library(grid)
+library(mapdata)
+library(maptools)
+library(stringr)
+library(dplyr)
+library(choroplethr)
+
+states <- map_data("state")
+df <- subset(states, region =="wisconsin")
+
+counties <- map_data("county")
+county <- subset(counties, region =="wisconsin")
+county 
+
+base <- ggplot(data = df, mapping = aes(x = long, y = lat, group = group)) + 
+  coord_fixed(1.3) + 
+  geom_polygon(color = "black", fill = "white")
+base + theme_nothing()
+
+
+```
+
+
+# maps_waterhemp_POST_classification to 1x
+
+```{r}
+
+maps_waterhemp_post <- read.csv("maps_waterhemp_POST_classification to 1x.csv")
+
+base + 
+  geom_point(data = maps_waterhemp_post, mapping=aes(x = longitude, y = latitude, group = population, color = classification), size=2.5) +
+  geom_polygon(data = county, fill = "NA", color = "gray") +
+  labs(fill="", y = "Latitude", x = "Longitude", title = "Waterhemp Putative-Resistant Populations in WI - 1x POST", caption="Source: University of Wisconsin - Madison") +
+  north(df, location = 'topright', symbol = 1, anchor = c(x = -92.5, y = 47)) +
+  scale_color_manual(values = c("black", "orange1", "red", "darkorchid3", "blue", "cyan4")) +
+  theme_map() +
+  theme(axis.text=element_blank(), 
+        axis.title=element_blank(), 
+        panel.background = element_rect(fill="white", color = "black"), 
+        panel.grid.major = element_line(color = "white"), 
+        panel.grid.minor = element_blank(),
+        legend.position=c(-0.05,0), legend.text = element_text(size = 18, colour = "black", face = "bold"), legend.key = element_rect(fill=NA), 
+        panel.border = element_rect(fill=NA,color="white", size=0.5, linetype="solid"), plot.title = element_text(color="black", face="bold", size=20, hjust = 0.5), plot.caption = element_text(color="black", face="bold", size=12), plot.tag.position = c(0.9,0.85), 
+        plot.tag = element_text(color="black", face="bold", size=40), legend.background = element_rect(fill =NA), legend.key.width = unit(2.2, "line"), legend.title=element_blank()) +
+  ggsave("Waterhemp Putative-Resistant Populations in WI - 1x POST.jpeg", units="in", width=8, height=8, dpi=600)
+
+
+```
+
+

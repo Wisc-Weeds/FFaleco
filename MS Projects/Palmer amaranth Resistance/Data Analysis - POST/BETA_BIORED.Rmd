@@ -1,0 +1,110 @@
+---
+title: "BETA BIORED - PALMER"
+author: "Felipe A. Faleco"
+date: "01/26/2021"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(ggplot2)
+library(car)
+library(emmeans)
+library(multcompView)
+library(glmmTMB)
+library(ggpubr)
+
+```
+
+
+# DATA
+
+```{r}
+
+palmer <- read.csv("All POST_Reduction.csv")
+
+str(palmer)
+
+palmer$run <- as.factor(palmer$run)
+
+palmer$pop <- as.factor(palmer$pop)
+
+palmer$herb <- as.factor(palmer$herb)
+
+palmer$rate <- as.factor(palmer$rate)
+
+palmer$rep <- as.factor(palmer$rep)
+
+str(palmer)
+
+```
+
+
+# MODEL
+
+```{r}
+
+model <- glmmTMB(bio_red ~ pop * herb * rate + (1|run), data = palmer, beta_family(link = "logit"))
+
+```
+
+
+# SUMMARY
+
+```{r, echo=TRUE}
+
+summary(model)
+
+```
+
+
+# ANOVA
+
+```{r, echo=TRUE}
+
+glmmTMB:::Anova.glmmTMB(model)
+
+```
+
+
+# EMM & CLD
+
+```{r, echo=TRUE}
+
+emm_pop_herb_rate <- emmeans(model, ~ pop|herb|rate, adjust = "tukey", type = "response", contr = "pairwise")
+
+emm_pop_herb_rate
+
+CLD_emm_pop_herb_rate <- if(requireNamespace("multcomp")) {
+    multcomp::cld(emm_pop_herb_rate$emmeans, alpha = 0.05, Letters=letters, adjust="tukey", reversed = TRUE)}
+
+CLD_emm_pop_herb_rate
+
+
+```
+
+
+# PLOT
+
+```{r, echo=TRUE}
+
+plot(emm_pop_herb_rate, adjust = "tukey", comparisons = T, alpha = 0.05) + 
+  geom_point(size = 4) +
+  facet_grid(rate ~ herb, labeller = label_value) +
+  geom_text(aes(label = c("a", "a", "a", "ab", "b", "a", "a", "a", "a", "a", "a", "a", "b", "c", "a", "b", "ab", "a", "a", "a", "a", "a", "a", "a",
+                          "a", "a", "a", "a", "a", "a", "a", "a", "a", "a", "a", "a", "a", "a", "a", "a", "a", "a", "a", "a", "a", "a", "a", "a")),
+            vjust = -1, size = 7) +
+  labs(title = "Palmer Biomass Reduction - POST", 
+       x = "Biomass Reduction (%)", 
+       y = "Population") + 
+  theme_bw() + 
+  theme (plot.title = element_text(face = "bold", hjust = 0.5, size = 38, colour = "darkgreen"), 
+         axis.title = element_text(face = "bold", size = 32, colour = "darkgreen"), 
+         axis.text = element_text(face = "bold", size = 18, colour = "black"),
+         strip.text = element_text(face = "bold", size = 25, colour = "black")) +
+  ggsave("BETA Tukey HSD_POPxHERBxRATE.jpeg", units="in", width=30, height=7, dpi=600)
+
+```
+
