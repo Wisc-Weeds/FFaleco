@@ -120,11 +120,11 @@ ima_tune_grid <- tune_grid(ima_workflow, resamples = ima_vfold_cv, grid = 20)
 
 ```{r}
 
-ima_tune_grid %>% select_best("accuracy")
+ima_tune_grid %>% select_best("roc_auc")
 
 ima_tune_grid %>%
   collect_metrics() %>% 
-  filter(.metric =="accuracy") %>% 
+  filter(.metric =="roc_auc") %>% 
   pivot_longer(min_n:mtry, values_to="value", names_to="parameter") %>% 
   ggplot(aes(value, mean, color=parameter)) +
   geom_point(show.legend=FALSE) +
@@ -137,7 +137,7 @@ ima_tune_grid %>%
 
 ```{r}
 
-ima_grid_reg <- grid_regular(mtry(range = c(0,5)), min_n(range = c(5,40)), levels = 5) 
+ima_grid_reg <- grid_regular(mtry(range = c(0,5)), min_n(range = c(25,35)), levels = 5) 
 
 
 set.seed(456)
@@ -150,12 +150,12 @@ ima_tune_grid_ref <- tune_grid(ima_workflow, resamples = ima_vfold_cv, grid = im
 
 ```{r}
 
-ima_tune_grid_ref %>% select_best("accuracy")
+ima_tune_grid_ref %>% select_best("roc_auc")
 
 
 ima_tune_grid_ref %>%
   collect_metrics() %>%
-  filter(.metric =="accuracy") %>% 
+  filter(.metric =="roc_auc") %>% 
   mutate(min_n = factor(min_n)) %>% 
   ggplot(aes(mtry, mean, color = min_n)) +
   geom_line(alpha = 0.5, size = 1.5) +
@@ -169,7 +169,7 @@ ima_tune_grid_ref %>%
 
 ```{r}
 
-ima_best_accuracy <- select_best(ima_tune_grid_ref, "accuracy")
+ima_best_accuracy <- select_best(ima_tune_grid_ref, "roc_auc")
 
 ima_best_accuracy
 
@@ -303,11 +303,11 @@ gly_tune_grid <- tune_grid(gly_workflow, resamples = gly_vfold_cv, grid = 20)
 
 ```{r}
 
-gly_tune_grid %>% select_best("accuracy")
+gly_tune_grid %>% select_best("roc_auc")
 
 gly_tune_grid %>%
   collect_metrics() %>% 
-  filter(.metric =="accuracy") %>% 
+  filter(.metric =="roc_auc") %>% 
   pivot_longer(min_n:mtry, values_to="value", names_to="parameter") %>% 
   ggplot(aes(value, mean, color=parameter)) +
   geom_point(show.legend=FALSE) +
@@ -320,7 +320,7 @@ gly_tune_grid %>%
 
 ```{r}
 
-gly_grid_reg <- grid_regular(mtry(range = c(0,5)), min_n(range = c(5,40)), levels = 5) 
+gly_grid_reg <- grid_regular(mtry(range = c(0,5)), min_n(range = c(5,10)), levels = 5) 
 
 
 set.seed(456)
@@ -333,12 +333,12 @@ gly_tune_grid_ref <- tune_grid(gly_workflow, resamples = gly_vfold_cv, grid = gl
 
 ```{r}
 
-gly_tune_grid_ref %>% select_best("accuracy")
+gly_tune_grid_ref %>% select_best("roc_auc")
 
 
 gly_tune_grid_ref %>%
   collect_metrics() %>%
-  filter(.metric =="accuracy") %>% 
+  filter(.metric =="roc_auc") %>% 
   mutate(min_n = factor(min_n)) %>% 
   ggplot(aes(mtry, mean, color = min_n)) +
   geom_line(alpha = 0.5, size = 1.5) +
@@ -352,7 +352,7 @@ gly_tune_grid_ref %>%
 
 ```{r}
 
-gly_best_accuracy <- select_best(gly_tune_grid_ref, "accuracy")
+gly_best_accuracy <- select_best(gly_tune_grid_ref, "roc_auc")
 
 gly_best_accuracy
 
@@ -486,11 +486,11 @@ atra_tune_grid <- tune_grid(atra_workflow, resamples = atra_vfold_cv, grid = 20)
 
 ```{r}
 
-atra_tune_grid %>% select_best("accuracy")
+atra_tune_grid %>% select_best("roc_auc")
 
 atra_tune_grid %>%
   collect_metrics() %>% 
-  filter(.metric =="accuracy") %>% 
+  filter(.metric =="roc_auc") %>% 
   pivot_longer(min_n:mtry, values_to="value", names_to="parameter") %>% 
   ggplot(aes(value, mean, color=parameter)) +
   geom_point(show.legend=FALSE) +
@@ -503,7 +503,7 @@ atra_tune_grid %>%
 
 ```{r}
 
-atra_grid_reg <- grid_regular(mtry(range = c(0,5)), min_n(range = c(25,40)), levels = 5) 
+atra_grid_reg <- grid_regular(mtry(range = c(0,5)), min_n(range = c(5,35)), levels = 5) 
 
 
 set.seed(456)
@@ -516,12 +516,12 @@ atra_tune_grid_ref <- tune_grid(atra_workflow, resamples = atra_vfold_cv, grid =
 
 ```{r}
 
-atra_tune_grid_ref %>% select_best("accuracy")
+atra_tune_grid_ref %>% select_best("roc_auc")
 
 
 atra_tune_grid_ref %>%
   collect_metrics() %>%
-  filter(.metric =="accuracy") %>% 
+  filter(.metric =="roc_auc") %>% 
   mutate(min_n = factor(min_n)) %>% 
   ggplot(aes(mtry, mean, color = min_n)) +
   geom_line(alpha = 0.5, size = 1.5) +
@@ -535,7 +535,7 @@ atra_tune_grid_ref %>%
 
 ```{r}
 
-atra_best_accuracy <- select_best(atra_tune_grid_ref, "accuracy")
+atra_best_accuracy <- select_best(atra_tune_grid_ref, "roc_auc")
 
 atra_best_accuracy
 
