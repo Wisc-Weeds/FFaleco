@@ -30,7 +30,7 @@ library(mlr)
 
 ```{r}
 
-data <- read.csv("RANDOM FOREST.csv")
+data <- read.csv("RANDOM FOREST_FINAL.csv")
 
 ```
 
@@ -43,7 +43,7 @@ data <- read.csv("RANDOM FOREST.csv")
 
 ima_data <- data %>% 
   filter(herb == "imazethapyr") %>% 
-  select(ima_R, SOA_2, SOA_5, SOA_9) %>% 
+  select(ima_R, SOA_1, SOA_2, SOA_4, SOA_5, SOA_6, SOA_9, SOA_10, SOA_14, SOA_15, SOA_19, SOA_27) %>% 
   mutate_if(is.character, as.factor)
   
 str(ima_data)
@@ -127,8 +127,8 @@ ima_tuneRanger
 
 ```{r}
 
-ima_ranger <- rand_forest(trees = 1000, mtry = 1, min_n = 109, mode = "classification") %>%
-  set_engine("ranger", importance ="impurity") %>%
+ima_ranger <- rand_forest(trees = 1000, mtry = 6, min_n = 5, mode = "classification") %>%
+  set_engine("ranger", importance ="permutation") %>%
   fit(ima_R ~ ., data = ima_training)
 
 ima_ranger
@@ -171,8 +171,7 @@ ima_ranger %>%
   theme_bw() + 
   theme(plot.title = element_text(face = "bold", hjust = 0.5, size = 20, colour = "darkgreen"), 
          axis.title = element_text(face = "bold", size = 16, colour = "darkgreen"), 
-         axis.text = element_text(face = "bold", size = 14, colour = "black")) +
-  ggsave("RANDOMFOREST_IMA.jpeg", units = "in", width = 6, height = 4, dpi = 600)
+         axis.text = element_text(face = "bold", size = 14, colour = "black"))
 
 ```
 
@@ -185,7 +184,7 @@ ima_ranger %>%
 
 gly_data <- data %>% 
   filter(herb == "glyphosate") %>% 
-  select(gly_R, SOA_2, SOA_5, SOA_9) %>% 
+  select(gly_R, SOA_1, SOA_2, SOA_4, SOA_5, SOA_6, SOA_9, SOA_10, SOA_14, SOA_15, SOA_19, SOA_27) %>% 
   mutate_if(is.character, as.factor)
   
 str(gly_data)
@@ -269,8 +268,8 @@ gly_tuneRanger
 
 ```{r}
 
-gly_ranger <- rand_forest(trees = 1000, mtry = 1, min_n = 177, mode = "classification") %>%
-  set_engine("ranger", importance ="impurity") %>%
+gly_ranger <- rand_forest(trees = 1000, mtry = 11, min_n = 11, mode = "classification") %>%
+  set_engine("ranger", importance ="permutation") %>%
   fit(gly_R ~ ., data = gly_training)
 
 gly_ranger
@@ -313,8 +312,7 @@ gly_ranger %>%
   theme_bw() + 
   theme(plot.title = element_text(face = "bold", hjust = 0.5, size = 20, colour = "darkgreen"), 
          axis.title = element_text(face = "bold", size = 16, colour = "darkgreen"), 
-         axis.text = element_text(face = "bold", size = 14, colour = "black")) +
-  ggsave("RANDOMFOREST_GLY.jpeg", units = "in", width = 6, height = 4, dpi = 600)
+         axis.text = element_text(face = "bold", size = 14, colour = "black"))
 
 ```
 
@@ -327,7 +325,7 @@ gly_ranger %>%
 
 atra_data <- data %>% 
   filter(herb == "atrazine") %>% 
-  select(atra_R, SOA_2, SOA_5, SOA_9) %>% 
+  select(atra_R, SOA_1, SOA_2, SOA_4, SOA_5, SOA_6, SOA_9, SOA_10, SOA_14, SOA_15, SOA_19, SOA_27) %>% 
   mutate_if(is.character, as.factor)
   
 str(atra_data)
@@ -411,8 +409,8 @@ atra_tuneRanger
 
 ```{r}
 
-atra_ranger <- rand_forest(trees = 1000, mtry = 1, min_n = 36, mode = "classification") %>%
-  set_engine("ranger", importance ="impurity") %>%
+atra_ranger <- rand_forest(trees = 1000, mtry = 10, min_n = 25, mode = "classification") %>%
+  set_engine("ranger", importance ="permutation") %>%
   fit(atra_R ~ ., data = atra_training)
 
 atra_ranger
@@ -455,7 +453,6 @@ atra_ranger %>%
   theme_bw() + 
   theme(plot.title = element_text(face = "bold", hjust = 0.5, size = 20, colour = "darkgreen"), 
          axis.title = element_text(face = "bold", size = 16, colour = "darkgreen"), 
-         axis.text = element_text(face = "bold", size = 14, colour = "black")) +
-  ggsave("RANDOMFOREST_ATRA.jpeg", units = "in", width = 6, height = 4, dpi = 600)
+         axis.text = element_text(face = "bold", size = 14, colour = "black"))
 
 ```

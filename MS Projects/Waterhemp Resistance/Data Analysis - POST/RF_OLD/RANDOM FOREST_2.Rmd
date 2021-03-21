@@ -1,0 +1,177 @@
+---
+title: "RAMDOM FOREST - WATERHEMP"
+author: "Felipe A. Faleco"
+date: "03/11/2021"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+
+knitr::opts_chunk$set(echo = TRUE)
+
+library(parsnip)
+library(tidymodels)
+library(vctrs)
+library(hardhat)
+library(tidyverse)
+library(ggplot2)
+library(RColorBrewer)
+library(tidyr)
+library(doParallel)
+library(ranger)
+library(vip)
+library(tuneRanger)
+library(mlr)
+
+```
+
+
+# DATA
+
+```{r}
+
+data <- read.csv("RANDOM FOREST_NOCOUNTYINMODEL_2.csv")
+
+```
+
+
+
+
+# IMAZETHAPYR
+
+```{r}
+
+ima_data <- data %>% 
+  filter(herb == "imazethapyr") %>% 
+  select(ima_R, Tillage, Manure, SOA_2) %>% 
+  mutate_if(is.character, as.factor)
+  
+str(ima_data)
+
+```
+
+
+## DATA SAMPLING
+
+```{r}
+
+# SEPARATE DATA INTO TRAINING (3/4) AND TESTING (1/4) SET. 
+
+ima_split <- initial_split(ima_data)
+
+ima_split %>%
+  training() %>%
+  glimpse()
+
+ima_split %>%
+  testing() %>%
+  glimpse()
+
+```
+
+
+
+## PRE-PROCESSING
+
+```{r}
+
+ima_recipe <- training(ima_split) %>%
+  recipe(ima_R ~ .) %>%
+  prep()
+
+ima_recipe
+
+```
+
+
+## EXECUTE PRE-PROCESSING
+
+```{r}
+
+# LOAD PREPARED TESTING DATA
+
+ima_testing <- ima_recipe %>%
+  bake(testing(ima_split)) 
+
+glimpse(ima_testing)
+
+
+
+# LOAD PREPARED TRAINING DATA
+
+ima_training <- juice(ima_recipe)
+
+glimpse(ima_training)
+
+
+```
+
+
+## MODEL TUNNING
+
+```{r}
+
+ima_task <- makeClassifTask(data = ima_data, target = "ima_R")
+
+estimateTimeTuneRanger(ima_task)
+
+ima_tuneRanger <- tuneRanger(ima_task, measure = list(auc), num.trees = 1000, num.threads = 2, iters = 70, iters.warmup = 30)
+
+ima_tuneRanger
+
+```
+
+
+
+## MODEL TRAINING
+
+```{r}
+
+ima_ranger <- rand_forest(trees = 1000, mtry = 1, min_n = 12, mode = "classification") %>%
+  set_engine("ranger", importance ="permutation") %>%
+  fit(ima_R ~ ., data = ima_training)
+
+ima_ranger
+
+```
+
+
+
+## PREDICTIONS
+
+```{r}
+
+ima_ranger %>%
+  predict(ima_testing) %>%
+  bind_cols(ima_testing) %>%
+  glimpse()
+
+```
+
+
+## MODEL VALIDATIONS
+
+```{r}
+
+ima_ranger %>%
+  predict(ima_testing) %>%
+  bind_cols(ima_testing) %>%
+  metrics(truth = ima_R, estimate = .pred_class)
+
+```
+
+
+## PLOT
+
+```{r}
+
+ima_ranger %>%
+  vip(geom = "col", horizontal = TRUE, aesthetics = list(fill = "darkred", width = 0.5)) +
+  labs(title = "Random Forest - Imazethapyr POST", x = "Variable", y = "Importance") + 
+  theme_bw() + 
+  theme(plot.title = element_text(face = "bold", hjust = 0.5, size = 20, colour = "darkgreen"), 
+         axis.title = element_text(face = "bold", size = 16, colour = "darkgreen"), 
+         axis.text = element_text(face = "bold", size = 14, colour = "black"))
+
+```
+

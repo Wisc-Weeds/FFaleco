@@ -1,0 +1,596 @@
+---
+title: "RAMDOM FOREST - WATERHEMP"
+author: "Felipe A. Faleco"
+date: "03/11/2021"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+
+knitr::opts_chunk$set(echo = TRUE)
+
+library(parsnip)
+library(tidymodels)
+library(vctrs)
+library(hardhat)
+library(tidyverse)
+library(ggplot2)
+library(RColorBrewer)
+library(tidyr)
+library(doParallel)
+library(ranger)
+library(vip)
+
+```
+
+
+# DATA
+
+```{r}
+
+data <- read.csv("RANDOM FOREST.csv")
+
+```
+
+
+
+
+# IMAZETHAPYR
+
+```{r}
+
+ima_data <- data %>% 
+  filter(herb == "imazethapyr") %>% 
+  select(ima_R, County, Tillage, Manure, SOA_2) %>%
+  mutate_if(is.character, as.factor)
+  
+str(ima_data)
+
+```
+
+
+## SPLITING
+
+```{r}
+
+set.seed(123)
+
+ima_split <- initial_split(ima_data, strata = ima_R)
+
+ima_train <- training(ima_split)
+
+ima_test <- testing(ima_split)
+
+```
+
+
+
+## RECIPE
+
+```{r}
+
+ima_recipe <- recipe(ima_R ~ ., data = ima_train)
+
+ima_prep <- prep(ima_recipe) #only for factor
+
+ima_juice <- juice(ima_prep)
+
+```
+
+
+
+## MODEL
+
+```{r}
+
+ima_model <- rand_forest(mtry = tune(), trees = 1000, min_n = tune()) %>% 
+  set_mode("classification") %>%
+  set_engine("ranger")
+
+```
+
+
+
+## WORKFLOW
+
+```{r}
+
+ima_workflow <- workflow() %>%
+  add_recipe(ima_recipe) %>% 
+  add_model(ima_model) 
+
+```
+
+
+
+## RANDOMLY PERMUTTING EXPLANATORY VARIABLES
+
+```{r}
+
+set.seed(456)
+
+ima_vfold_cv <- vfold_cv(ima_train)
+
+#doParallel::registerDoParallel() 
+
+set.seed(345)
+
+ima_tune_grid <- tune_grid(ima_workflow, resamples = ima_vfold_cv, grid = 20) 
+
+```
+
+
+## CHECK BEST MTRY & MIN.N SUGGESTED
+
+```{r}
+
+ima_tune_grid %>% select_best("roc_auc")
+
+ima_tune_grid %>%
+  collect_metrics() %>% 
+  filter(.metric =="roc_auc") %>% 
+  pivot_longer(min_n:mtry, values_to="value", names_to="parameter") %>% 
+  ggplot(aes(value, mean, color=parameter)) +
+  geom_point(show.legend=FALSE) +
+  facet_wrap(~ parameter)
+
+```
+
+
+## REFINE MTRY & MIN.N 
+
+```{r}
+
+ima_grid_reg <- grid_regular(mtry(range = c(0,5)), min_n(range = c(25,35)), levels = 5) 
+
+
+set.seed(456)
+ima_tune_grid_ref <- tune_grid(ima_workflow, resamples = ima_vfold_cv, grid = ima_grid_reg)
+
+```
+
+
+## CHECK MTRY & MIN.N REFINED
+
+```{r}
+
+ima_tune_grid_ref %>% select_best("roc_auc")
+
+
+ima_tune_grid_ref %>%
+  collect_metrics() %>%
+  filter(.metric =="roc_auc") %>% 
+  mutate(min_n = factor(min_n)) %>% 
+  ggplot(aes(mtry, mean, color = min_n)) +
+  geom_line(alpha = 0.5, size = 1.5) +
+  geom_point()
+
+```
+
+
+
+## FINALIZE MODEL
+
+```{r}
+
+ima_best_accuracy <- select_best(ima_tune_grid_ref, "roc_auc")
+
+ima_best_accuracy
+
+ima_final_model <- finalize_model(ima_model, ima_best_accuracy)
+
+```
+
+
+
+## PLOT 
+```{r}
+
+ima_final_model %>%
+  set_engine("ranger", importance ="impurity") %>% 
+  fit(ima_R ~ ., data = ima_juice) %>%
+  vip(geom = "col", horizontal = TRUE, aesthetics = list(fill = "darkred", width = 0.5)) +
+  labs(title = "Random Forest - Imazethapyr POST", x = "Variable", y = "Importance") + 
+  theme_bw() + 
+  theme(plot.title = element_text(face = "bold", hjust = 0.5, size = 20, colour = "darkgreen"), 
+         axis.title = element_text(face = "bold", size = 16, colour = "darkgreen"), 
+         axis.text = element_text(face = "bold", size = 14, colour = "black")) +
+  ggsave("RANDOMFOREST_IMA.jpeg", units = "in", width = 6, height = 4, dpi = 600)
+
+```
+
+
+## CHECKING THE MODEL
+
+```{r}
+
+ima_workflow_final <- workflow() %>%
+  add_recipe(ima_recipe) %>%
+  add_model(ima_final_model)
+
+ima_final_res <- ima_workflow_final %>%
+  last_fit(ima_split)
+
+ima_final_res %>%
+  collect_metrics()
+
+ima_final_res %>%
+  collect_predictions() %>% 
+  bind_cols(ima_test)
+
+```
+
+
+
+# GLYPHOSATE
+
+```{r}
+
+gly_data <- data %>% 
+  filter(herb == "glyphosate") %>% 
+  select(gly_R, County, Tillage, Manure, SOA_9) %>%
+  mutate_if(is.character, as.factor)
+  
+str(gly_data)
+
+```
+
+
+## SPLITING
+
+```{r}
+
+set.seed(123)
+
+gly_split <- initial_split(gly_data, strata = gly_R)
+
+gly_train <- training(gly_split)
+
+gly_test <- testing(gly_split)
+
+```
+
+
+
+## RECIPE
+
+```{r}
+
+gly_recipe <- recipe(gly_R ~ ., data = gly_train)
+
+gly_prep <- prep(gly_recipe) #only for factor
+
+gly_juice <- juice(gly_prep)
+
+```
+
+
+
+## MODEL
+
+```{r}
+
+gly_model <- rand_forest(mtry = tune(), trees = 1000, min_n = tune()) %>% 
+  set_mode("classification") %>%
+  set_engine("ranger")
+
+```
+
+
+
+## WORKFLOW
+
+```{r}
+
+gly_workflow <- workflow() %>%
+  add_recipe(gly_recipe) %>% 
+  add_model(gly_model) 
+
+```
+
+
+
+## RANDOMLY PERMUTTING EXPLANATORY VARIABLES
+
+```{r}
+
+set.seed(456)
+
+gly_vfold_cv <- vfold_cv(gly_train)
+
+#doParallel::registerDoParallel() 
+
+set.seed(345)
+
+gly_tune_grid <- tune_grid(gly_workflow, resamples = gly_vfold_cv, grid = 20) 
+
+```
+
+
+## CHECK BEST MTRY & MIN.N SUGGESTED
+
+```{r}
+
+gly_tune_grid %>% select_best("roc_auc")
+
+gly_tune_grid %>%
+  collect_metrics() %>% 
+  filter(.metric =="roc_auc") %>% 
+  pivot_longer(min_n:mtry, values_to="value", names_to="parameter") %>% 
+  ggplot(aes(value, mean, color=parameter)) +
+  geom_point(show.legend=FALSE) +
+  facet_wrap(~ parameter)
+
+```
+
+
+## REFINE MTRY & MIN.N 
+
+```{r}
+
+gly_grid_reg <- grid_regular(mtry(range = c(0,5)), min_n(range = c(5,10)), levels = 5) 
+
+
+set.seed(456)
+gly_tune_grid_ref <- tune_grid(gly_workflow, resamples = gly_vfold_cv, grid = gly_grid_reg)
+
+```
+
+
+## CHECK MTRY & MIN.N REFINED
+
+```{r}
+
+gly_tune_grid_ref %>% select_best("roc_auc")
+
+
+gly_tune_grid_ref %>%
+  collect_metrics() %>%
+  filter(.metric =="roc_auc") %>% 
+  mutate(min_n = factor(min_n)) %>% 
+  ggplot(aes(mtry, mean, color = min_n)) +
+  geom_line(alpha = 0.5, size = 1.5) +
+  geom_point()
+
+```
+
+
+
+## FINALIZE MODEL
+
+```{r}
+
+gly_best_accuracy <- select_best(gly_tune_grid_ref, "roc_auc")
+
+gly_best_accuracy
+
+gly_final_model <- finalize_model(gly_model, gly_best_accuracy)
+
+```
+
+
+
+## PLOT 
+```{r}
+
+gly_final_model %>%
+  set_engine("ranger", importance ="impurity") %>% 
+  fit(gly_R ~ ., data = gly_juice) %>%
+  vip(geom = "col", horizontal = TRUE, aesthetics = list(fill = "darkred", width = 0.5)) +
+  labs(title = "Random Forest - Glyphosate POST", x = "Variable", y = "Importance") + 
+  theme_bw() + 
+  theme(plot.title = element_text(face = "bold", hjust = 0.5, size = 20, colour = "darkgreen"), 
+         axis.title = element_text(face = "bold", size = 16, colour = "darkgreen"), 
+         axis.text = element_text(face = "bold", size = 14, colour = "black")) +
+  ggsave("RANDOMFOREST_GLY.jpeg", units = "in", width = 6, height = 4, dpi = 600)
+
+```
+
+
+## CHECKING THE MODEL
+
+```{r}
+
+gly_workflow_final <- workflow() %>%
+  add_recipe(gly_recipe) %>%
+  add_model(gly_final_model)
+
+gly_final_res <- gly_workflow_final %>%
+  last_fit(gly_split)
+
+gly_final_res %>%
+  collect_metrics()
+
+gly_final_res %>%
+  collect_predictions() %>% 
+  bind_cols(gly_test)
+
+```
+
+
+
+# ATRAZINE
+
+```{r}
+
+atra_data <- data %>% 
+  filter(herb == "atrazine") %>% 
+  select(atra_R, County, Tillage, Manure, SOA_5) %>%
+  mutate_if(is.character, as.factor)
+  
+str(atra_data)
+
+```
+
+
+## SPLITING
+
+```{r}
+
+set.seed(123)
+
+atra_split <- initial_split(atra_data, strata = atra_R)
+
+atra_train <- training(atra_split)
+
+atra_test <- testing(atra_split)
+
+```
+
+
+
+## RECIPE
+
+```{r}
+
+atra_recipe <- recipe(atra_R ~ ., data = atra_train)
+
+atra_prep <- prep(atra_recipe) #only for factor
+
+atra_juice <- juice(atra_prep)
+
+```
+
+
+
+## MODEL
+
+```{r}
+
+atra_model <- rand_forest(mtry = tune(), trees = 1000, min_n = tune()) %>% 
+  set_mode("classification") %>%
+  set_engine("ranger")
+
+```
+
+
+
+## WORKFLOW
+
+```{r}
+
+atra_workflow <- workflow() %>%
+  add_recipe(atra_recipe) %>% 
+  add_model(atra_model) 
+
+```
+
+
+
+## RANDOMLY PERMUTTING EXPLANATORY VARIABLES
+
+```{r}
+
+set.seed(456)
+
+atra_vfold_cv <- vfold_cv(atra_train)
+
+#doParallel::registerDoParallel() 
+
+set.seed(345)
+
+atra_tune_grid <- tune_grid(atra_workflow, resamples = atra_vfold_cv, grid = 20) 
+
+```
+
+
+## CHECK BEST MTRY & MIN.N SUGGESTED
+
+```{r}
+
+atra_tune_grid %>% select_best("roc_auc")
+
+atra_tune_grid %>%
+  collect_metrics() %>% 
+  filter(.metric =="roc_auc") %>% 
+  pivot_longer(min_n:mtry, values_to="value", names_to="parameter") %>% 
+  ggplot(aes(value, mean, color=parameter)) +
+  geom_point(show.legend=FALSE) +
+  facet_wrap(~ parameter)
+
+```
+
+
+## REFINE MTRY & MIN.N 
+
+```{r}
+
+atra_grid_reg <- grid_regular(mtry(range = c(0,5)), min_n(range = c(5,35)), levels = 5) 
+
+
+set.seed(456)
+atra_tune_grid_ref <- tune_grid(atra_workflow, resamples = atra_vfold_cv, grid = atra_grid_reg)
+
+```
+
+
+## CHECK MTRY & MIN.N REFINED
+
+```{r}
+
+atra_tune_grid_ref %>% select_best("roc_auc")
+
+
+atra_tune_grid_ref %>%
+  collect_metrics() %>%
+  filter(.metric =="roc_auc") %>% 
+  mutate(min_n = factor(min_n)) %>% 
+  ggplot(aes(mtry, mean, color = min_n)) +
+  geom_line(alpha = 0.5, size = 1.5) +
+  geom_point()
+
+```
+
+
+
+## FINALIZE MODEL
+
+```{r}
+
+atra_best_accuracy <- select_best(atra_tune_grid_ref, "roc_auc")
+
+atra_best_accuracy
+
+atra_final_model <- finalize_model(atra_model, atra_best_accuracy)
+
+```
+
+
+
+## PLOT 
+```{r}
+
+atra_final_model %>%
+  set_engine("ranger", importance ="impurity") %>% 
+  fit(atra_R ~ ., data = atra_juice) %>%
+  vip(geom = "col", horizontal = TRUE, aesthetics = list(fill = "darkred", width = 0.5)) +
+  labs(title = "Random Forest - Atrazine POST", x = "Variable", y = "Importance") + 
+  theme_bw() + 
+  theme(plot.title = element_text(face = "bold", hjust = 0.5, size = 20, colour = "darkgreen"), 
+         axis.title = element_text(face = "bold", size = 16, colour = "darkgreen"), 
+         axis.text = element_text(face = "bold", size = 14, colour = "black")) +
+  ggsave("RANDOMFOREST_ATRA.jpeg", units = "in", width = 6, height = 4, dpi = 600)
+
+```
+
+
+## CHECKING THE MODEL
+
+```{r}
+
+atra_workflow_final <- workflow() %>%
+  add_recipe(atra_recipe) %>%
+  add_model(atra_final_model)
+
+atra_final_res <- atra_workflow_final %>%
+  last_fit(atra_split)
+
+atra_final_res %>%
+  collect_metrics()
+
+atra_final_res %>%
+  collect_predictions() %>% 
+  bind_cols(atra_test)
+
+```
+
