@@ -115,7 +115,7 @@ ima_task <- makeClassifTask(data = ima_data, target = "ima_R")
 
 estimateTimeTuneRanger(ima_task)
 
-ima_tuneRanger <- tuneRanger(ima_task, measure = list(auc), num.trees = 1000, num.threads = 2, iters = 70, iters.warmup = 30)
+ima_tuneRanger <- tuneRanger(ima_task, num.trees = 1000, num.threads = 2, iters = 70, iters.warmup = 30)
 
 ima_tuneRanger
 
@@ -127,7 +127,7 @@ ima_tuneRanger
 
 ```{r}
 
-ima_ranger <- rand_forest(trees = 1000, mtry = 1, min_n = 109, mode = "classification") %>%
+ima_ranger <- rand_forest(trees = 1000, mtry = 1, min_n = 245, mode = "classification") %>%
   set_engine("ranger", importance ="impurity") %>%
   fit(ima_R ~ ., data = ima_training)
 
@@ -257,7 +257,7 @@ gly_task <- makeClassifTask(data = gly_data, target = "gly_R")
 
 estimateTimeTuneRanger(gly_task)
 
-gly_tuneRanger <- tuneRanger(gly_task, measure = list(auc), num.trees = 1000, num.threads = 2, iters = 70, iters.warmup = 30)
+gly_tuneRanger <- tuneRanger(gly_task, num.trees = 1000, num.threads = 2, iters = 70, iters.warmup = 30)
 
 gly_tuneRanger
 
@@ -269,7 +269,7 @@ gly_tuneRanger
 
 ```{r}
 
-gly_ranger <- rand_forest(trees = 1000, mtry = 1, min_n = 177, mode = "classification") %>%
+gly_ranger <- rand_forest(trees = 1000, mtry = 3, min_n = 10, mode = "classification") %>%
   set_engine("ranger", importance ="impurity") %>%
   fit(gly_R ~ ., data = gly_training)
 
@@ -399,7 +399,7 @@ atra_task <- makeClassifTask(data = atra_data, target = "atra_R")
 
 estimateTimeTuneRanger(atra_task)
 
-atra_tuneRanger <- tuneRanger(atra_task, measure = list(auc), num.trees = 1000, num.threads = 2, iters = 70, iters.warmup = 30)
+atra_tuneRanger <- tuneRanger(atra_task, num.trees = 1000, num.threads = 2, iters = 70, iters.warmup = 30)
 
 atra_tuneRanger
 
@@ -411,7 +411,7 @@ atra_tuneRanger
 
 ```{r}
 
-atra_ranger <- rand_forest(trees = 1000, mtry = 1, min_n = 36, mode = "classification") %>%
+atra_ranger <- rand_forest(trees = 1000, mtry = 2, min_n = 10, mode = "classification") %>%
   set_engine("ranger", importance ="impurity") %>%
   fit(atra_R ~ ., data = atra_training)
 
