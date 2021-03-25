@@ -2,7 +2,10 @@
 title: "RAMDOM FOREST - WATERHEMP"
 author: "Felipe A. Faleco"
 date: "03/11/2021"
-output: pdf_document
+output:
+  html_document:
+    df_print: paged
+  pdf_document: default
 ---
 
 ```{r setup, include=FALSE}
@@ -127,7 +130,7 @@ ima_tuneRanger
 
 ```{r}
 
-ima_ranger <- rand_forest(trees = 1000, mtry = 1, min_n = 245, mode = "classification") %>%
+ima_ranger <- rand_forest(trees = 1000, mtry = 1, min_n = 241, mode = "classification") %>%
   set_engine("ranger", importance ="impurity") %>%
   fit(ima_R ~ ., data = ima_training)
 
@@ -269,7 +272,7 @@ gly_tuneRanger
 
 ```{r}
 
-gly_ranger <- rand_forest(trees = 1000, mtry = 3, min_n = 10, mode = "classification") %>%
+gly_ranger <- rand_forest(trees = 1000, mtry = 3, min_n = 6, mode = "classification") %>%
   set_engine("ranger", importance ="impurity") %>%
   fit(gly_R ~ ., data = gly_training)
 
