@@ -46,7 +46,7 @@ data <- read.csv("RANDOM FOREST.csv")
 
 ima_data <- data %>% 
   filter(herb == "imazethapyr") %>% 
-  select(ima_R, SOA_2, SOA_5, SOA_9, SOA_1, SOA_4, SOA_6, SOA_10, SOA_14, SOA_15, SOA_19, SOA_27) %>% 
+  select(ima_R, SOA_2, SOA_5, SOA_9) %>% 
   mutate_if(is.character, as.factor)
   
 str(ima_data)
@@ -60,9 +60,7 @@ str(ima_data)
 
 # SEPARATE DATA INTO TRAINING (3/4) AND TESTING (1/4) SET. 
 
-set.seed(789)
-
-ima_split <- initial_split(ima_data, strata = "ima_R")
+ima_split <- initial_split(ima_data)
 
 ima_split %>%
   training() %>%
@@ -132,7 +130,7 @@ ima_tuneRanger
 
 ```{r}
 
-ima_ranger <- rand_forest(trees = 1000, mtry = 2, min_n = 17, mode = "classification") %>%
+ima_ranger <- rand_forest(trees = 1000, mtry = 1, min_n = 244, mode = "classification") %>%
   set_engine("ranger", importance ="impurity") %>%
   fit(ima_R ~ ., data = ima_training)
 
@@ -190,7 +188,7 @@ ima_ranger %>%
 
 gly_data <- data %>% 
   filter(herb == "glyphosate") %>% 
-  select(gly_R, SOA_2, SOA_5, SOA_9, SOA_1, SOA_4, SOA_6, SOA_10, SOA_14, SOA_15, SOA_19, SOA_27) %>% 
+  select(gly_R, SOA_2, SOA_5, SOA_9) %>% 
   mutate_if(is.character, as.factor)
   
 str(gly_data)
@@ -204,9 +202,7 @@ str(gly_data)
 
 # SEPARATE DATA INTO TRAINING (3/4) AND TESTING (1/4) SET. 
 
-set.seed(789)
-
-gly_split <- initial_split(gly_data, strata = "gly_R")
+gly_split <- initial_split(gly_data)
 
 gly_split %>%
   training() %>%
@@ -276,7 +272,7 @@ gly_tuneRanger
 
 ```{r}
 
-gly_ranger <- rand_forest(trees = 1000, mtry = 3, min_n = 18, mode = "classification") %>%
+gly_ranger <- rand_forest(trees = 1000, mtry = 3, min_n = 15, mode = "classification") %>%
   set_engine("ranger", importance ="impurity") %>%
   fit(gly_R ~ ., data = gly_training)
 
@@ -334,7 +330,7 @@ gly_ranger %>%
 
 atra_data <- data %>% 
   filter(herb == "atrazine") %>% 
-  select(atra_R, SOA_2, SOA_5, SOA_9, SOA_1, SOA_4, SOA_6, SOA_10, SOA_14, SOA_15, SOA_19, SOA_27) %>% 
+  select(atra_R, SOA_2, SOA_5, SOA_9) %>% 
   mutate_if(is.character, as.factor)
   
 str(atra_data)
@@ -348,9 +344,7 @@ str(atra_data)
 
 # SEPARATE DATA INTO TRAINING (3/4) AND TESTING (1/4) SET. 
 
-set.seed(789)
-
-atra_split <- initial_split(atra_data, strata = "atra_R")
+atra_split <- initial_split(atra_data)
 
 atra_split %>%
   training() %>%
@@ -420,7 +414,7 @@ atra_tuneRanger
 
 ```{r}
 
-atra_ranger <- rand_forest(trees = 1000, mtry = 1, min_n = 8, mode = "classification") %>%
+atra_ranger <- rand_forest(trees = 1000, mtry = 3, min_n = 143, mode = "classification") %>%
   set_engine("ranger", importance ="impurity") %>%
   fit(atra_R ~ ., data = atra_training)
 
