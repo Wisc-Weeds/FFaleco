@@ -107,14 +107,16 @@ plot(emm_pop_herb, adjust = "tukey", comparisons = T, alpha = 0.05) +
                           "a", "a", "a", 
                           "a", "a", "a")),
             vjust = -1, size = 5) +
+  xlim(0, 1.0) + 
   labs(title = "Palmer Count Reduction - PRE", 
        x = "Count Reduction (%)", 
-       y = "Population") + 
+       y = "Accession") + 
   theme_bw() + 
   theme (plot.title = element_text(face = "bold", hjust = 0.5, size = 28, colour = "darkgreen"), 
          axis.title = element_text(face = "bold", size = 22, colour = "darkgreen"), 
          axis.text = element_text(face = "bold", size = 15, colour = "black"),
-         strip.text = element_text(face = "bold", size = 18, colour = "black")) +
+         strip.text = element_text(face = "bold", size = 18, colour = "black"),
+         panel.spacing = unit(1.5, "lines")) +
   ggsave("LOGIT Tukey HSD_POPxHERB.jpeg", units="in", width = 15, height = 3, dpi = 600)
 
 
@@ -127,14 +129,16 @@ plot(emm_herb_rate, adjust = "tukey", comparisons = T, alpha = 0.05) +
                           "b", "a", "a", "a", "a", 
                           "b", "a", "a", "a", "a")),
             vjust = -1, size = 5) +
+  xlim(0, 1.0) +
   labs(title = "Palmer Count Reduction - PRE", 
        x = "Count Reduction (%)", 
-       y = "Population") + 
+       y = "Herbicide") + 
   theme_bw() + 
   theme (plot.title = element_text(face = "bold", hjust = 0.5, size = 28, colour = "darkgreen"), 
          axis.title = element_text(face = "bold", size = 22, colour = "darkgreen"), 
          axis.text = element_text(face = "bold", size = 15, colour = "black"),
-         strip.text = element_text(face = "bold", size = 18, colour = "black")) +
+         strip.text = element_text(face = "bold", size = 18, colour = "black"),
+         panel.spacing = unit(1.0, "lines")) +
   ggsave("LOGIT Tukey HSD_HERBxRATE.jpeg", units="in", width = 15, height = 4, dpi = 600)
 
 ```

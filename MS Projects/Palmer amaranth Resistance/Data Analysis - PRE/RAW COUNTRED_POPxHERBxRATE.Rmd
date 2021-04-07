@@ -70,12 +70,13 @@ ggplot(summary, aes(x = mean*100, y = pop)) +
   geom_vline(xintercept = 90, size = 1, colour = "red") +
   geom_errorbar(aes(xmin = (mean*100) - (se*100), xmax = (mean*100) + (se*100), width = 0.3)) + 
   facet_grid(rate ~ herb, labeller = label_value) +
-  labs(title = "Palmer Count Reduction - PRE", x = "Count Reduction (%)", y = "Population") + 
+  labs(title = "Palmer Count Reduction - PRE", x = "Count Reduction (%)", y = "Accession") + 
   theme_bw() + 
   theme (plot.title = element_text(face = "bold", hjust = 0.5, size = 28, colour = "darkgreen"), 
          axis.title = element_text(face = "bold", size = 22, colour = "darkgreen"), 
          axis.text = element_text(face = "bold", size = 15, colour = "black"),
-         strip.text = element_text(face = "bold", size = 18, colour = "black")) +
+         strip.text = element_text(face = "bold", size = 18, colour = "black"),
+         panel.spacing = unit(1.0, "lines")) +
   ggsave("RAW COUNTRED_POPxHERBxRATE.jpeg", units="in", width=15, height=5, dpi=600)
 
 ```
