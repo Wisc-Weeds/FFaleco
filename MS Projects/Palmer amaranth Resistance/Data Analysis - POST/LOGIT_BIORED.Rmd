@@ -96,7 +96,8 @@ plot(emm_pop_herb_rate, adjust = "tukey", comparisons = T, alpha = 0.05) +
   geom_text(aes(label = c("a", "a", "a", "b", "b", "a", "a", "a", "a", "a", "a", "a", "b", "c", "a", "b", "ab", "a", "a", "a", "a", "a", "a", "a",
                           "a", "a", "a", "a", "b", "a", "a", "a", "a", "a", "a", "a", "a", "a", "a", "b", "a", "a", "a", "a", "a", "a", "a", "a")),
             vjust = -1, size = 7) +
-  xlim(0, 1.0) +
+  scale_x_continuous(breaks = c(0, 0.25, 0.50, 0.75, 1), limits = c(0, 1),
+    labels = scales::percent_format(scale = 100, suffix = "")) +
   labs(title = "Palmer Biomass Reduction - POST", 
        x = "Biomass Reduction (%)", 
        y = "Accession") + 
@@ -105,7 +106,7 @@ plot(emm_pop_herb_rate, adjust = "tukey", comparisons = T, alpha = 0.05) +
          axis.title = element_text(face = "bold", size = 32, colour = "darkgreen"), 
          axis.text = element_text(face = "bold", size = 22, colour = "black"),
          strip.text = element_text(face = "bold", size = 25, colour = "black"),
-         panel.spacing = unit(2.0, "lines")) +
+         panel.spacing = unit(1.0, "lines")) +
   ggsave("LOGIT Tukey HSD_POPxHERBxRATE.jpeg", units="in", width=30, height=7, dpi=600)
 
 ```
