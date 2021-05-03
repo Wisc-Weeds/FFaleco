@@ -1,0 +1,151 @@
+---
+title: "Maps"
+author: "Maxwel Coura Oliveira"
+date: "5/3/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(tidyverse)
+library(maps)
+library(sf)
+library(rnaturalearth)
+library(rnaturalearthdata)
+library(ggspatial)
+```
+
+# General concepts illustrated with the world map
+
+```{r}
+world <- ne_countries(scale = "medium", returnclass = "sf")
+class(world)
+```
+
+```{r}
+usa <- subset(world, admin == "United States of America")
+```
+
+
+
+
+# States
+
+```{r}
+#add finer administrative information
+states <- st_as_sf(map("state", plot = FALSE, fill = TRUE))
+head(states)
+```
+
+```{r}
+# states
+states <- cbind(states, st_coordinates(st_centroid(states)))
+```
+
+```{r}
+# Counties
+counties <- st_as_sf(map("county", plot = FALSE, fill = TRUE))
+counties <- subset(counties, grepl("wisconsin", counties$ID))
+counties$area <- as.numeric(st_area(counties)) # calculate area
+```
+
+
+```{r}
+all_pop <- read_csv("../ALL_POP.csv")
+
+
+(wiloc <- st_as_sf(all_pop, coords = c("long", "lat"), remove = FALSE, 
+    crs = 4326, agr = "constant"))
+```
+
+
+
+
+```{r}
+ggplot(data = world) +
+  geom_sf(fill = "antiquewhite1") +
+  geom_sf(data = states, fill = NA) + 
+  geom_sf(data = counties, fill = NA, color = gray(.5)) +
+  geom_sf(data = wiloc) +
+  coord_sf(xlim = c(-93, -86.5), ylim = c(42, 47), expand = FALSE)
+```
+
+
+
+
+
+
+
+```{r}
+# https://www.census.gov/geographies/mapping-files/time-series/geo/carto-boundary-file.html
+(main_wi <- read_sf('cb_2018_us_county_500k.shp') %>%
+  filter(STATEFP %in% 55) %>%
+  ggplot() +
+  geom_sf(aes(fill = NULL)) +
+  geom_sf(data = wiloc) +
+  geom_rect(xmin = -89.7, xmax = -89, ymin = 42.47, ymax = 42.9, 
+     fill = NA, colour = "red", size = 0.5) +
+  geom_rect(xmin = -89, xmax = -87.5, ymin = 43.5, ymax = 44.9, 
+     fill = NA, colour = "red", size = 0.5) +
+  theme_void()
+   )
+```
+
+xlim = c(-89, -87.5), ylim = c(43.5, 44.9)
+
+```{r}
+# Site B
+(siteB <- read_sf('cb_2018_us_county_500k.shp') %>%
+   filter(STATEFP %in% 55)  %>% 
+   ggplot() +
+   geom_sf(aes(fill = NULL)) +
+   geom_sf(data = wiloc)  +
+   coord_sf(xlim = c(-89.7, -89), ylim = c(42.47, 42.9), expand = FALSE) + 
+#     annotate("text", x = -80.18, y = 26.92, label= "Site A", size = 6) + 
+     theme_void() )
+```
+
+
+```{r}
+# Site  A
+(siteA <- read_sf('cb_2018_us_county_500k.shp') %>%
+   filter(STATEFP %in% 55)  %>% 
+   ggplot() +
+   geom_sf(aes(fill = NULL)) +
+   geom_sf(data = wiloc)  +
+   coord_sf(xlim = c(-89, -87.5), ylim = c(43.5, 44.9), expand = FALSE) + 
+#     annotate("text", x = -80.18, y = 26.92, label= "Site A", size = 6) + 
+     theme_void() )
+```
+
+```{r}
+# specify before plotting
+arrowA <- data.frame(x1 = 17, x2 = 21, y1 = 9.5, y2 = 13.4)
+arrowB <- data.frame(x1 = 13, x2 = 20, y1 = 2.9, y2 = 6.5)
+```
+
+
+```{r}
+library(cowplot)
+ggplot() +
+    coord_equal(xlim = c(0, 28), ylim = c(0, 20), expand = FALSE) +
+    annotation_custom(ggplotGrob(main_wi), xmin = 0, xmax = 20, ymin = 0, 
+        ymax = 20) +
+    annotation_custom(ggplotGrob(siteA), xmin = 20, xmax = 28, ymin = 11.25, 
+        ymax = 19) +
+    annotation_custom(ggplotGrob(siteB), xmin = 20, xmax = 28, ymin = 2.5, 
+        ymax = 10.25) +
+    geom_segment(aes(x = x1, y = y1, xend = x2, yend = y2), data = arrowA, 
+        arrow = arrow(), lineend = "round") +
+    geom_segment(aes(x = x1, y = y1, xend = x2, yend = y2), data = arrowB, 
+        arrow = arrow(), lineend = "round") +
+  annotation_scale(location = "bl", width_hint = 0.5) + 
+  annotation_north_arrow(location = "bl", which_north = "true", 
+                         pad_x = unit(0.75, "in"), pad_y = unit(0.5, "in"), 
+                         style = north_arrow_fancy_orienteering) +
+    theme_void() +
+  ggsave("Map_geom.png")
+```
