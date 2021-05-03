@@ -1,0 +1,83 @@
+---
+title: "RAW SURVIVORSHIP - GIANT RAGWEED POP x HERB x RATE"
+author: "Felipe A. Faleco"
+date: "05/03/2021"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+
+knitr::opts_chunk$set(echo = TRUE)
+library(dplyr)
+library(ggplot2)
+library(ggpubr)
+library(car)
+
+```
+
+
+# WHOLE DATA
+
+```{r}
+
+giant_rag <- read.csv("All POST_Reduction.csv")
+
+str(giant_rag)
+
+giant_rag$run <- as.factor(giant_rag$run)
+
+giant_rag$pop <- as.factor(giant_rag$pop)
+
+giant_rag$herb <- as.factor(giant_rag$herb)
+
+giant_rag$rate <- as.factor(giant_rag$rate)
+
+giant_rag$rep <- as.factor(giant_rag$rep)
+
+str(giant_rag)
+
+```
+
+
+# DATA SUMMARY
+
+```{r}
+
+summary <- giant_rag %>% 
+  group_by(pop, herb, rate) %>% 
+  summarise(n = sum(!is.na(surv)), 
+            mean = mean(surv, na.rm = TRUE), 
+            sd = sd(surv, na.rm = TRUE),
+            se = sd / sqrt(n),
+            CI = qnorm(1- 0.05/2) * se)
+
+summary$herb <- factor(summary$herb,
+                       levels = c("cloransulam", "glyphosate", "fomesafen"))
+
+summary
+
+```
+
+
+
+# PLOT
+
+```{r}
+
+ggplot(summary, aes(x = mean*100, y = pop)) + 
+  geom_point(size = 4) + 
+  geom_vline(xintercept = 50, size = 1, colour = "red") +
+  geom_errorbar(aes(xmin = (mean*100) - (se*100), xmax = (mean*100) + (se*100), width = 0.4)) + 
+  facet_grid(rate ~ herb, labeller = label_value) +
+  labs(title = "Giant Ragweed Survivorship - POST", x = "% Survivorship", y = "Accession") + 
+  theme_bw() + 
+  theme (plot.title = element_text(face = "bold", hjust = 0.5, size = 50, colour = "darkgreen"), 
+         axis.title = element_text(face = "bold", size = 45, colour = "darkgreen"), 
+         axis.text = element_text(face = "bold", size = 28, colour = "black"),
+         strip.text = element_text(face = "bold", size = 32, colour = "black"),
+         panel.spacing = unit(1.5, "lines")) +
+  ggsave("RAW SURV_POPxHERBxRATE.jpeg", units = "in", width = 22, height = 15, dpi = 600)
+
+```
+
+
