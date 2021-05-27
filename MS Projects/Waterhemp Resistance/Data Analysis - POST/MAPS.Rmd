@@ -89,7 +89,7 @@ base +
                    seed = TRUE,
                    show.legend = FALSE) +  
   north(df, location = 'topright', symbol = 1, anchor = c(x = -92.5, y = 47)) +
-  scale_color_manual(name = "Putative-Resistance", values = c("black", "blue", "cyan4", "orange2","red", "darkorchid3")) +
+  scale_color_manual(name = "1x Putative-Resistance", values = c("darkgreen", "blue", "black", "orange2","cyan4", "darkorchid3", "red", "firebrick" )) +
   theme_map() +
   labs(fill="", y = "Latitude", x = "Longitude", title = "Waterhemp Putative-Resistance in WI - 1x POST") +
   theme(axis.text=element_blank(), 
@@ -98,14 +98,14 @@ base +
         panel.grid.major = element_line(color = "white"), 
         panel.grid.minor = element_blank(),
         panel.border = element_rect(fill = NA,color = "white", size = 0.5, linetype = "solid"),
-        legend.title = element_text(size = 16, colour = "black", face = "bold", hjust = 0),
-        legend.text = element_text(size = 16, colour = "black"), 
+        legend.title = element_text(size = 18, colour = "black", face = "bold", hjust = 0),
+        legend.text = element_text(size = 15, colour = "black"), 
         legend.key = element_rect(fill = NA),
         legend.key.width = unit(0.5, "line"),
-        legend.position = c(0.6, 0.8), 
+        legend.position = c(-0.15, 0.05), 
         legend.background = element_rect(fill =NA), 
         plot.title = element_text(color = "darkgreen", face = "bold", size = 22, hjust = 0.5)) +
-  ggsave("MAP_POPMAINPOOL_1X.jpeg", units = "in", width = 10, height = 10, dpi = 600)
+  ggsave("MAP_POPMAINPOOL_1X.jpeg", units = "in", width = 13, height = 10, dpi = 600)
 
 
 ```
