@@ -28,9 +28,9 @@ waterhemp$run <- as.factor(waterhemp$run)
 
 waterhemp$pop <- as.factor(waterhemp$pop)
 
-waterhemp$herb <- as.factor(waterhemp$herb)
+waterhemp$Herbicide <- as.factor(waterhemp$Herbicide)
 
-waterhemp$rate <- as.factor(waterhemp$rate)
+waterhemp$Dose <- as.factor(waterhemp$Dose)
 
 waterhemp$rep <- as.factor(waterhemp$rep)
 
@@ -45,14 +45,14 @@ str(waterhemp)
 ```{r}
 
 summary <- waterhemp %>% 
-  group_by(pop, herb, rate) %>% 
+  group_by(pop, Herbicide, Dose) %>% 
   summarise(n = sum(!is.na(count_red)), 
             mean = mean(count_red, na.rm = TRUE), 
             sd = sd(count_red, na.rm = TRUE),
             se = sd / sqrt(n),
             CI = qnorm(1- 0.05/2) * se)
 
-summary$herb <- factor(summary$herb,
+summary$herb <- factor(summary$Herbicide,
                        levels = c("atrazine", "fomesafen", "mesotrione", "metribuzin", "s-metolachlor"))
 
 summary
@@ -65,12 +65,14 @@ summary
 
 ```{r}
 
+dose_labels <- c("0.5x" = "Dose: 0.5x", "1x" = "Dose: 1x", "3x" = "Dose: 3x")
+
 ggplot(summary, aes(x = mean*100, y = pop)) + 
   xlim(0, 100) + 
   geom_point(size = 3) + 
   geom_vline(xintercept = 90, size = 1, colour = "red") +
   geom_errorbar(aes(xmin = (mean*100) - (se*100), xmax = (mean*100) + (se*100), width = 0.5)) + 
-  facet_grid(rate ~ herb, labeller = label_value) +
+  facet_grid(Dose ~ Herbicide, labeller = labeller(Dose = dose_labels)) +
   labs(title = "Waterhemp Count Reduction - PRE", x = "Count Reduction (%)", y = "Accession") + 
   theme_bw() + 
   theme (plot.title = element_text(face = "bold", hjust = 0.5, size = 40, colour = "darkgreen"), 
