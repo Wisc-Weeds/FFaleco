@@ -80,7 +80,7 @@ ggplot(summary, aes(x = mean*100, y = pop)) +
          axis.text = element_text(face = "bold", size = 22, colour = "black"),
          strip.text = element_text(face = "bold", size = 30, colour = "black"),
          panel.spacing = unit(1, "lines")) +
-  ggsave("RAW COUNTRED_POPxHERBxRATE.jpeg", units="in", width = 18, height = 25, dpi = 600)
+  ggsave("RAW COUNTRED_POPxHERBxRATE.jpeg", units="in", width = 18, height = 27, dpi = 600)
 
 ```
 
