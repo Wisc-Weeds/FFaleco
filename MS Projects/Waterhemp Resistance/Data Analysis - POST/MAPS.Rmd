@@ -89,7 +89,7 @@ base +
                    seed = TRUE,
                    show.legend = FALSE) +  
   north(df, location = 'topright', symbol = 1, anchor = c(x = -92.5, y = 47)) +
-  scale_color_manual(name = "1x Putative-Resistance", values = c("darkgreen", "blue", "black", "orange2","cyan4", "darkorchid3", "red", "firebrick" )) +
+  scale_color_manual(name = "Putative-Resistance 1x Dose", values = c("darkgreen", "blue", "black", "orange2","cyan4", "darkorchid3", "red", "firebrick" )) +
   theme_map() +
   labs(fill="", y = "Latitude", x = "Longitude", title = "Waterhemp Putative-Resistance in WI - 1x POST") +
   theme(axis.text=element_blank(), 
