@@ -104,8 +104,8 @@ plot(emm_herb_dose, adjust = "tukey", comparisons = F, alpha = 0.05) +
   facet_grid(~ Dose, labeller = label_both) +
   theme_bw() + 
   theme (plot.title = element_text(face = "bold", hjust = 0.5, size = 18, colour = "darkgreen"), 
-         axis.title = element_text(face = "bold", size = 16, colour = "darkgreen"), 
-         axis.text= element_text(face = "bold", size = 12, colour = "black"),
+         axis.title = element_text(face = "bold", size = 18, colour = "darkgreen"), 
+         axis.text= element_text(face = "bold", size = 14, colour = "black"),
          strip.text = element_text(face = "bold", size = 14, colour = "black"),
          panel.spacing = unit(1.0, "lines")) +
   ggsave("LOGIT Tukey HSD_HERBxRATE.jpeg", units="in", width = 10, height = 4, dpi = 600)
