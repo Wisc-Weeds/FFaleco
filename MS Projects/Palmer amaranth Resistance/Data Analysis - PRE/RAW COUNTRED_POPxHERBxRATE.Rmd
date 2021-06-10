@@ -29,7 +29,7 @@ palmer$pop <- as.factor(palmer$pop)
 
 palmer$herb <- as.factor(palmer$herb)
 
-palmer$rate <- as.factor(palmer$rate)
+palmer$Dose <- as.factor(palmer$Dose)
 
 palmer$rep <- as.factor(palmer$rep)
 
@@ -44,7 +44,7 @@ str(palmer)
 ```{r}
 
 summary <- palmer %>% 
-  group_by(pop, herb, rate) %>% 
+  group_by(pop, herb, Dose) %>% 
   summarise(n = sum(!is.na(count_red)), 
             mean = mean(count_red, na.rm = TRUE), 
             sd = sd(count_red, na.rm = TRUE),
@@ -52,7 +52,7 @@ summary <- palmer %>%
             CI = qnorm(1- 0.05/2) * se)
 
 summary$herb <- factor(summary$herb,
-                       levels = c("atrazine", "mesotrione", "metribuzin", "s-metolachlor", "sulfentrazone"))
+                       levels = c("Atrazine", "Mesotrione", "Metribuzin", "S-metolachlor", "Sulfentrazone"))
 
 summary
             
@@ -64,18 +64,21 @@ summary
 
 ```{r}
 
+dose_labels <- c("0.5x" = "Dose: 0.5x", "1x" = "Dose: 1x", "3x" = "Dose: 3x")
+
+
 ggplot(summary, aes(x = mean*100, y = pop)) + 
   xlim(0, 100) + 
   geom_point(size = 2.5) + 
   geom_vline(xintercept = 90, size = 1, colour = "red") +
   geom_errorbar(aes(xmin = (mean*100) - (se*100), xmax = (mean*100) + (se*100), width = 0.3)) + 
-  facet_grid(rate ~ herb, labeller = label_value) +
+  facet_grid(Dose ~ herb, labeller = labeller(Dose = dose_labels)) +
   labs(title = "Palmer Count Reduction - PRE", x = "Count Reduction (%)", y = "Accession") + 
   theme_bw() + 
-  theme (plot.title = element_text(face = "bold", hjust = 0.5, size = 28, colour = "darkgreen"), 
-         axis.title = element_text(face = "bold", size = 22, colour = "darkgreen"), 
-         axis.text = element_text(face = "bold", size = 15, colour = "black"),
-         strip.text = element_text(face = "bold", size = 18, colour = "black"),
+  theme (plot.title = element_text(face = "bold", hjust = 0.5, size = 25, colour = "darkgreen"), 
+         axis.title = element_text(face = "bold", size = 20, colour = "darkgreen"), 
+         axis.text = element_text(face = "bold", size = 13, colour = "black"),
+         strip.text = element_text(face = "bold", size = 13, colour = "black"),
          panel.spacing = unit(1.0, "lines")) +
   ggsave("RAW COUNTRED_POPxHERBxRATE.jpeg", units="in", width=15, height=5, dpi=600)
 
