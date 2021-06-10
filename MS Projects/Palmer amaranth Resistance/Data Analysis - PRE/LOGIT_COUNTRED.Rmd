@@ -31,7 +31,7 @@ palmer$pop <- as.factor(palmer$pop)
 
 palmer$herb <- as.factor(palmer$herb)
 
-palmer$rate <- as.factor(palmer$rate)
+palmer$Dose <- as.factor(palmer$Dose)
 
 palmer$rep <- as.factor(palmer$rep)
 
@@ -44,7 +44,7 @@ str(palmer)
 
 ```{r}
 
-model <- glmmTMB(logit(count_red) ~ pop * herb * rate + (1|run), data = palmer, family = "gaussian")
+model <- glmmTMB(logit(count_red) ~ pop * herb * Dose + (1|run), data = palmer, family = "gaussian")
 
 ```
 
@@ -82,14 +82,14 @@ CLD_emm_pop_herb
 
 
 
-emm_herb_rate <- emmeans(model, ~ herb|rate, adjust = "tukey", type = "response", contr = "pairwise")
+emm_herb_Dose <- emmeans(model, ~ herb|Dose, adjust = "tukey", type = "response", contr = "pairwise")
 
-emm_herb_rate
+emm_herb_Dose
 
-CLD_emm_herb_rate <- if(requireNamespace("multcomp")) {
-    multcomp::cld(emm_herb_rate$emmeans, alpha = 0.05, Letters=letters, adjust="tukey", reversed = T)}
+CLD_emm_herb_Dose <- if(requireNamespace("multcomp")) {
+    multcomp::cld(emm_herb_Dose$emmeans, alpha = 0.05, Letters=letters, adjust="tukey", reversed = T)}
 
-CLD_emm_herb_rate
+CLD_emm_herb_Dose
 
 ```
 
@@ -98,7 +98,7 @@ CLD_emm_herb_rate
 
 ```{r, echo=TRUE}
 
-plot(emm_pop_herb, adjust = "tukey", comparisons = T, alpha = 0.05) + 
+plot(emm_pop_herb, adjust = "tukey", comparisons = F, alpha = 0.05) + 
   geom_point(size = 2.5) +
   facet_grid( ~ herb, labeller = label_value) +
   geom_text(aes(label = c("c", "b", "a", 
@@ -123,9 +123,9 @@ plot(emm_pop_herb, adjust = "tukey", comparisons = T, alpha = 0.05) +
 
 
 
-plot(emm_herb_rate, adjust = "tukey", comparisons = T, alpha = 0.05) + 
+plot(emm_herb_Dose, adjust = "tukey", comparisons = F, alpha = 0.05) + 
   geom_point(size = 2.5) +
-  facet_grid( ~ rate, labeller = label_value) +
+  facet_grid( ~ Dose, labeller = label_both) +
   geom_text(aes(label = c("c", "b", "ab", "ab", "a", 
                           "b", "a", "a", "a", "a", 
                           "b", "a", "a", "a", "a")),
@@ -141,7 +141,7 @@ plot(emm_herb_rate, adjust = "tukey", comparisons = T, alpha = 0.05) +
          axis.text = element_text(face = "bold", size = 15, colour = "black"),
          strip.text = element_text(face = "bold", size = 18, colour = "black"),
          panel.spacing = unit(1.0, "lines")) +
-  ggsave("LOGIT Tukey HSD_HERBxRATE.jpeg", units="in", width = 15, height = 4, dpi = 600)
+  ggsave("LOGIT Tukey HSD_HERBxDOSE.jpeg", units="in", width = 15, height = 4, dpi = 600)
 
 ```
 
