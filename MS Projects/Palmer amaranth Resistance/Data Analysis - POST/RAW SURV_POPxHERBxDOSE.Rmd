@@ -29,7 +29,7 @@ palmer$pop <- as.factor(palmer$pop)
 
 palmer$herb <- as.factor(palmer$herb)
 
-palmer$rate <- as.factor(palmer$rate)
+palmer$Dose <- as.factor(palmer$Dose)
 
 palmer$rep <- as.factor(palmer$rep)
 
@@ -43,7 +43,7 @@ str(palmer)
 ```{r}
 
 summary <- palmer %>% 
-  group_by(pop, herb, rate) %>% 
+  group_by(pop, herb, Dose) %>% 
   summarise(n = sum(!is.na(surv)), 
             mean = mean(surv, na.rm = TRUE), 
             sd = sd(surv, na.rm = TRUE),
@@ -51,7 +51,7 @@ summary <- palmer %>%
             CI = qnorm(1- 0.05/2) * se)
 
 summary$herb <- factor(summary$herb,
-                       levels = c("2,4-D", "atrazine", "dicamba", "glufosinate", "glyphosate", "imazethapyr", "lactofen", "mesotrione"))
+                       levels = c("2,4-D", "Atrazine", "Dicamba", "Glufosinate", "Glyphosate", "Imazethapyr", "Lactofen", "Mesotrione"))
 
 summary
             
@@ -63,11 +63,13 @@ summary
 
 ```{r}
 
+dose_labels <- c("1x" = "Dose: 1x", "3x" = "Dose: 3x")
+
 ggplot(summary, aes(x = mean*100, y = pop)) + 
   geom_point(size = 4) + 
   geom_vline(xintercept = 50, size = 1, colour = "red") +
   geom_errorbar(aes(xmin = (mean*100) - (se*100), xmax = (mean*100) + (se*100), width = 0.2)) + 
-  facet_grid(rate ~ herb, labeller = label_value) +
+  facet_grid(Dose ~ herb, labeller = labeller(Dose = dose_labels)) +
   labs(title = "Palmer Survivorship - POST", x = "% Survivorship", y = "Accession") + 
   theme_bw() + 
   theme (plot.title = element_text(face = "bold", hjust = 0.5, size = 38, colour = "darkgreen"), 
@@ -75,7 +77,7 @@ ggplot(summary, aes(x = mean*100, y = pop)) +
          axis.text = element_text(face = "bold", size = 22, colour = "black"),
          strip.text = element_text(face = "bold", size = 25, colour = "black"),
          panel.spacing = unit(1.5, "lines")) +
-  ggsave("RAW SURV_POPxHERBxRATE.jpeg", units="in", width=30, height=7, dpi=600)
+  ggsave("RAW SURV_POPxHERBxDOSE.jpeg", units="in", width=30, height=7, dpi=600)
 
 
 ```
