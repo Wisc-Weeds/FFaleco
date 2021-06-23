@@ -30,7 +30,7 @@ giant_rag$pop <- as.factor(giant_rag$pop)
 
 giant_rag$herb <- as.factor(giant_rag$herb)
 
-giant_rag$rate <- as.factor(giant_rag$rate)
+giant_rag$Dose <- as.factor(giant_rag$Dose)
 
 giant_rag$rep <- as.factor(giant_rag$rep)
 
@@ -44,7 +44,7 @@ str(giant_rag)
 ```{r}
 
 summary <- giant_rag %>% 
-  group_by(pop, herb, rate) %>% 
+  group_by(pop, herb, Dose) %>% 
   summarise(n = sum(!is.na(surv)), 
             mean = mean(surv, na.rm = TRUE), 
             sd = sd(surv, na.rm = TRUE),
@@ -52,7 +52,7 @@ summary <- giant_rag %>%
             CI = qnorm(1- 0.05/2) * se)
 
 summary$herb <- factor(summary$herb,
-                       levels = c("cloransulam", "glyphosate", "fomesafen"))
+                       levels = c("Cloransulam", "Glyphosate", "Fomesafen"))
 
 summary
 
@@ -64,11 +64,13 @@ summary
 
 ```{r}
 
+dose_labels <- c("1x" = "Dose: 1x", "3x" = "Dose: 3x")
+
 ggplot(summary, aes(x = mean*100, y = pop)) + 
   geom_point(size = 4) + 
   geom_vline(xintercept = 50, size = 1, colour = "red") +
   geom_errorbar(aes(xmin = (mean*100) - (se*100), xmax = (mean*100) + (se*100), width = 0.4)) + 
-  facet_grid(rate ~ herb, labeller = label_value) +
+  facet_grid(Dose ~ herb, labeller = labeller(Dose = dose_labels)) +
   labs(title = "Giant Ragweed Survivorship - POST", x = "% Survivorship", y = "Accession") + 
   theme_bw() + 
   theme (plot.title = element_text(face = "bold", hjust = 0.5, size = 50, colour = "darkgreen"), 
