@@ -33,7 +33,7 @@ giant_rag$pop <- as.factor(giant_rag$pop)
 
 giant_rag$herb <- as.factor(giant_rag$herb)
 
-giant_rag$rate <- as.factor(giant_rag$rate)
+giant_rag$Dose <- as.factor(giant_rag$Dose)
 
 giant_rag$rep <- as.factor(giant_rag$rep)
 
@@ -46,7 +46,7 @@ str(giant_rag)
 
 ```{r}
 
-model <- glmmTMB(logit(bio_red) ~ herb * rate + (1|run) + (1|pop), data = giant_rag, family = "gaussian")
+model <- glmmTMB(logit(bio_red) ~ herb * Dose + (1|run) + (1|pop), data = giant_rag, family = "gaussian")
 
 
 ```
@@ -74,14 +74,14 @@ glmmTMB:::Anova.glmmTMB(model)
 
 ```{r, echo=TRUE}
 
-emm_herb_rate <- emmeans(model, ~ herb|rate, adjust = "tukey", type = "response", contr = "pairwise")
+emm_herb_Dose <- emmeans(model, ~ herb|Dose, adjust = "tukey", type = "response", contr = "pairwise")
 
-emm_herb_rate
+emm_herb_Dose
 
-CLD_emm_herb_rate <- if(requireNamespace("multcomp")) {
-    multcomp::cld(emm_herb_rate$emmeans, alpha = 0.05, Letters=letters, adjust="tukey", reversed = TRUE)}
+CLD_emm_herb_Dose <- if(requireNamespace("multcomp")) {
+    multcomp::cld(emm_herb_Dose$emmeans, alpha = 0.05, Letters=letters, adjust="tukey", reversed = TRUE)}
 
-CLD_emm_herb_rate
+CLD_emm_herb_Dose
 
 ```
 
@@ -90,7 +90,7 @@ CLD_emm_herb_rate
 
 ```{r, echo=TRUE}
 
-plot(emm_herb_rate, adjust = "tukey", comparisons = T, alpha = 0.05) + 
+plot(emm_herb_Dose, adjust = "tukey", comparisons = F, alpha = 0.05) + 
   geom_point(size = 2) +
   geom_text(aes(label = c("b", "a", "b",
                           "c", "a", "b")),
@@ -100,7 +100,7 @@ plot(emm_herb_rate, adjust = "tukey", comparisons = T, alpha = 0.05) +
   labs(title = "Giant Ragweed Biomass Reduction - POST", 
        x = "Biomass Reduction (%)", 
        y = "Herbicide") +
-  facet_grid(~ rate) +
+  facet_grid(~ Dose, labeller = label_both) +
   theme_bw() + 
   theme (plot.title = element_text(face = "bold", hjust = 0.5, size = 18, colour = "darkgreen"), 
          axis.title = element_text(face = "bold", size = 16, colour = "darkgreen"), 
