@@ -2,7 +2,9 @@
 title: "Giant Ragweed Fomesafen DR"
 author: "Felipe Faleco"
 date: "10/25/2021"
-output: pdf_document
+output:
+  html_document:
+    df_print: paged
 ---
 
 ```{r setup, include=FALSE}
@@ -19,7 +21,7 @@ library(plotrix)
 
 ```{r}
 
-data <- read.csv("Data2.csv")
+data <- read.csv("Data.csv")
 
 str(data)
 
@@ -39,7 +41,7 @@ model.LL4<- drm(biomass ~ dose, pop, fct = LL.4(),  data = data)
 
 
 
-modelFit(model.LL4)
+modelFit(model.LL4) # higher the p-value, better.
 
 summary(model.LL4) 
 
@@ -47,24 +49,24 @@ summary(model.LL4)
 
 # d: upper limit (models where the response variable is in %, upper limit bigger than 100% are biologically impossible. E.g., % biomass reduction, % control)
 
-# b: slope
+# b: slope around e (inflection point)
 
-# e: e represents the dose producing a response halfway between the u and l parameters (ED50)
+# e: e (inflection point). Represents the dose producing a response halfway between the u and l parameters (ED50)
 
 
 plot(model.LL4)
-
 
 ```
 
 
 
-# MODEL LL.3
+# MODEL SELECTION
 
 ```{r, warning=FALSE}
 
 mselect(model.LL4,  list(LL.2(), LL.3(), LL.5(), W1.3(), W1.4(), W2.4(), baro5()), linreg = T) 
-#LL.3 better option here (lower IC, which actually is AIC (default)). W1.3 could also be used, but since it is a asymmetrical model, I would give preference to LL.3 In symmetrical models, the parameter e and relative ED50 are identical, that is, they both indicate the dose that reduces the response midway between the upper and lower limits. In asymmetrical models, however, the parameter e does not have the same meaning as in symmetrical models, even though it is still the location of the inflection point.
+
+#LL.3 better option here (lower IC, which actually is AIC (default)). W1.3 could also be used, but since it is a asymmetrical model, I would give preference to LL.3 In symmetrical models, the parameter e and relative ED50 are identical, that is, they both indicate the dose that reduces the response midway between the upper and lower limits. In asymmetrical models, however, the parameter e does not have the same meaning as in symmetrical models, even though it is still the location of the inflection point. For assymetrical models, ED50 should be estimated as "absolute" and not relative.
 
 
 
@@ -91,7 +93,8 @@ anova(model.LL3, model.LL4) # p-value > 0.05 means that there is no difference b
 ```{r}
 
 ED(model.LL3, c(50, 90), type = "relative") 
-# Estimated doses required for ED50, and ED90. Estimation of ED90 is statistically less accurate and often subject to high variance
+
+# Estimated doses required for ED50, and ED90. Estimation of ED90 is statistically less accurate and often subject to high variance. Therefore, is better to use ED50.
 
 ```
 
@@ -127,29 +130,29 @@ compParm(model.LL3, strVal = "e", operator = "-") #here comparing the difference
 
 ```{r}
 
-plot(model.LL3, xlab = "g ai ha", ylab = "Biomass (g/plant)",
-     type = "average", 
-     pch = c(19, 1), lwd = 1.3, lty = c(4,1), col=c("red", "darkgreen"),
-     cex.axis = 1.4, cex.legend = 1.4, cex.lab = 1.4, 
-     legendPos = c(1500, 2))
+#plot(model.LL3, xlab = "g ai ha", ylab = "Biomass (g/plant)",
+     #type = "average", 
+     #pch = c(19, 1), lwd = 1.3, lty = c(4,1), col=c("red", "darkgreen"),
+     #cex.axis = 1.4, cex.legend = 1.4, cex.lab = 1.4, 
+     #legendPos = c(1500, 2))
 
-plot(model.LL3, broken = TRUE, type="confidence", add=TRUE, col = "blue")
+#plot(model.LL3, broken = TRUE, type="confidence", add=TRUE, col = "blue")
 
 
-plot(model.LL3, type = "average",
+#plot(model.LL3, type = "average",
      #col=c("red", "darkgreen"),
-     xlab = "g ai ha", ylab = "Biomass (g / plant)")
+     #xlab = "g ai ha", ylab = "Biomass (g / plant)")
     
 
-plot(model.LL3, broken = TRUE, type="confidence", add=TRUE, col=c("red", "darkgreen"))
+#plot(model.LL3, broken = TRUE, type="confidence", add=TRUE, col=c("red", "darkgreen"))
      
 
 
 
 
-text(1000, 1.1, "RI = 29.257(SE 6.62)", cex=1, font = 2)
+#text(1000, 1.1, "RI = 29.257(SE 6.62)", cex=1, font = 2)
 
-text(1000, 0.9, "P-value < 0.0001", cex=1, font = 2)
+#text(1000, 0.9, "P-value < 0.0001", cex=1, font = 2)
 
 
 ```
