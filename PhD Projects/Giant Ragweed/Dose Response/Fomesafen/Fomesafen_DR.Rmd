@@ -94,6 +94,7 @@ anova(model.LL3, model.LL4) # p-value > 0.05 means that there is no difference b
 
 ED(model.LL3, c(50, 90), type = "relative") 
 
+
 # Estimated doses required for ED50, and ED90. Estimation of ED90 is statistically less accurate and often subject to high variance. Therefore, is better to use ED50.
 
 ```
@@ -104,6 +105,9 @@ ED(model.LL3, c(50, 90), type = "relative")
 ```{r}
 
 EDcomp(model.LL3, c(50, 50), type = "relative", interval = "none")
+
+
+EDcomp(model.LL3, c(0.71, 0.71), type = "absolute", interval = "none")
 
 
 # Use (type = absolute) if curves are non-parallel (differs significantly in upper or lower limits; or both)
