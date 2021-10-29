@@ -36,14 +36,9 @@ fun <- function(x){
 summary.AT2 <- summaryBy(cbind(biomass, surv) ~ dose + pop, data = subset(data, pop=="AT2"),
           FUN=fun)
 
-summary.AT2
-
 
 summary.AT8.EDGE<- summaryBy(cbind(biomass, surv) ~ dose + pop, data = subset(data, pop=="AT8-EDGE"),
           FUN=fun)
-
-summary.AT8.EDGE
-
 
 ```
 
@@ -116,8 +111,6 @@ ED(model.LL3, c(50, 90), type = "relative")
 
 EDcomp(model.LL3, c(50, 50), type = "relative", interval = "none")
 
-# Use (type = absolute) if curves are non-parallel (differs significantly in upper or lower limits; or both)
-# Use (interval = delta) if asymmetrical models, like fiveparameter log-logistic, Gompertz, and Weibull. NOT SURE ABOUT THIS ONE
 
 
 # Comparing b parameter (slope)
