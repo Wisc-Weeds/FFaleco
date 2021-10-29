@@ -5,6 +5,8 @@ date: "10/25/2021"
 output:
   html_document:
     df_print: paged
+editor_options: 
+  chunk_output_type: console
 ---
 
 ```{r setup, include=FALSE}
@@ -26,11 +28,25 @@ data <- read.csv("Data.csv")
 str(data)
 
 
-mean.AT2 <- summaryBy(biomass ~ dose + pop, data = subset(data, pop=="AT2"))
 
-mean.AT8.edge<- summaryBy(biomass ~ dose + pop, data = subset(data, pop=="AT8-EDGE"))
+fun <- function(x){
+  c( mean = mean(x), VAR = var(x), SD = sd(x), SE = std.error(x), n = length(x))
+}
+
+summary.AT2 <- summaryBy(cbind(biomass, surv) ~ dose + pop, data = subset(data, pop=="AT2"),
+          FUN=fun)
+
+summary.AT2
+
+
+summary.AT8.EDGE<- summaryBy(cbind(biomass, surv) ~ dose + pop, data = subset(data, pop=="AT8-EDGE"),
+          FUN=fun)
+
+summary.AT8.EDGE
+
 
 ```
+
 
 
 # MODEL LL.4
@@ -53,9 +69,6 @@ summary(model.LL4)
 
 # e: e (inflection point). Represents the dose producing a response halfway between the u and l parameters (ED50)
 
-
-plot(model.LL4)
-
 ```
 
 
@@ -64,7 +77,7 @@ plot(model.LL4)
 
 ```{r, warning=FALSE}
 
-mselect(model.LL4,  list(LL.2(), LL.3(), LL.5(), W1.3(), W1.4(), W2.4(), baro5()), linreg = T) 
+mselect(model.LL4,  list(L.3(), l4(), L.5(), LL.2(), LL.3(), LL.5(), W1.3(), W1.4(), W2.4(), baro5()), linreg = T) 
 
 #LL.3 better option here (lower IC, which actually is AIC (default)). W1.3 could also be used, but since it is a asymmetrical model, I would give preference to LL.3 In symmetrical models, the parameter e and relative ED50 are identical, that is, they both indicate the dose that reduces the response midway between the upper and lower limits. In asymmetrical models, however, the parameter e does not have the same meaning as in symmetrical models, even though it is still the location of the inflection point. For assymetrical models, ED50 should be estimated as "absolute" and not relative.
 
@@ -78,8 +91,6 @@ modelFit(model.LL3)
 
 summary(model.LL3) # NO parameter c (lower limit). It means lower limit was set to zero.
 
-plot(model.LL3)
-
 
 
 anova(model.LL3, model.LL4) # p-value > 0.05 means that there is no difference between models. Therefore, we can use model LL.3
@@ -92,7 +103,7 @@ anova(model.LL3, model.LL4) # p-value > 0.05 means that there is no difference b
 
 ```{r}
 
-ED(model.LL3, c(50), type = "relative") 
+ED(model.LL3, c(50, 90), type = "relative") 
 
 # Estimated doses required for ED50, and ED90. Estimation of ED90 is statistically less accurate and often subject to high variance. Therefore, is better to use ED50.
 
@@ -124,35 +135,38 @@ compParm(model.LL3, strVal = "e", operator = "-") #here comparing the difference
 
 
 
-
 # PLOT
 
 ```{r}
 
-#plot(model.LL3, xlab = "g ai ha", ylab = "Biomass (g/plant)",
-     #type = "average", 
-     #pch = c(19, 1), lwd = 1.3, lty = c(4,1), col=c("red", "darkgreen"),
-     #cex.axis = 1.4, cex.legend = 1.4, cex.lab = 1.4, 
-     #legendPos = c(1500, 2))
-
-#plot(model.LL3, broken = TRUE, type="confidence", add=TRUE, col = "blue")
+tiff(file = "C:/Users/felip/OneDrive - UW-Madison/Documents/GitHub/FFaleco/PhD Projects/Giant Ragweed/Dose Response/Fomesafen/Dose-response curve.tiff",
+     width = 6, height = 4, units="in", 
+     res = 1000)
 
 
-#plot(model.LL3, type = "average",
-     #col=c("red", "darkgreen"),
-     #xlab = "g ai ha", ylab = "Biomass (g / plant)")
-    
+plot(model.LL3,
+     type = "average",
+     xlab = expression("Herbicide dose (g ai ha)" ^-1),
+     ylab = expression("Aboveground biomass (g plant)" ^-1),
+     col = c("red", "darkgreen"),
+     pch = c(19, 17),
+     cex = 1,
+     cex.axis = 1,
+     cex.lab = 1,
+     lwd = 1)
 
-#plot(model.LL3, broken = TRUE, type="confidence", add=TRUE, col=c("red", "darkgreen"))
-     
+abline(v = 263, 
+       lwd = 2, 
+       lty = "twodash",
+       col = "black")
 
+text(x = 950, y = 0.8, 
+     labels = expression("1x dose: 263 g ai ha" ^-1),
+     cex = 0.8,
+     col = "black",
+     font = 2)
 
-
-
-#text(1000, 1.1, "RI = 29.257(SE 6.62)", cex=1, font = 2)
-
-#text(1000, 0.9, "P-value < 0.0001", cex=1, font = 2)
-
+dev.off()
 
 ```
 

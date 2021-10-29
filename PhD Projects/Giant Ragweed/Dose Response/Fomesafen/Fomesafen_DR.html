@@ -188,9 +188,15 @@ str(data)</code></pre>
 ##  $ rep    : int  1 2 3 4 1 2 3 4 1 2 ...
 ##  $ surv   : int  1 1 1 1 1 1 1 1 1 1 ...
 ##  $ biomass: num  1.49 1.26 1.17 1.93 1.85 ...</code></pre>
-<pre class="r"><code>mean.AT2 &lt;- summaryBy(biomass ~ dose + pop, data = subset(data, pop==&quot;AT2&quot;))
+<pre class="r"><code>fun &lt;- function(x){
+  c( mean = mean(x), VAR = var(x), SD = sd(x), SE = std.error(x), n = length(x))
+}
 
-mean.AT8.edge&lt;- summaryBy(biomass ~ dose + pop, data = subset(data, pop==&quot;AT8-EDGE&quot;))</code></pre>
+summary.AT2 &lt;- summaryBy(cbind(biomass, surv) ~ dose + pop, data = subset(data, pop==&quot;AT2&quot;),
+          FUN=fun)
+
+summary.AT8.EDGE&lt;- summaryBy(cbind(biomass, surv) ~ dose + pop, data = subset(data, pop==&quot;AT8-EDGE&quot;),
+          FUN=fun)</code></pre>
 </div>
 <div id="model-ll.4" class="section level1">
 <h1>MODEL LL.4</h1>
@@ -239,17 +245,20 @@ plot(model.LL4)</code></pre>
 </div>
 <div id="model-selection" class="section level1">
 <h1>MODEL SELECTION</h1>
-<pre class="r"><code>mselect(model.LL4,  list(LL.2(), LL.3(), LL.5(), W1.3(), W1.4(), W2.4(), baro5()), linreg = T) </code></pre>
+<pre class="r"><code>mselect(model.LL4,  list(L.3(), l4(), L.5(), LL.2(), LL.3(), LL.5(), W1.3(), W1.4(), W2.4(), baro5()), linreg = T) </code></pre>
 <pre><code>## Error in optim(startVec, opfct, hessian = TRUE, method = optMethod, control = list(maxit = maxIt,  : 
 ##   non-finite finite-difference value [2]</code></pre>
 <pre><code>##           logLik        IC Lack of fit    Res var
-## W1.3   -38.44111  90.88222   0.8091371 0.09867982
-## LL.3   -38.66365  91.32730   0.7856787 0.09895643
-## W1.4   -38.45393  94.90786   0.6992118 0.10000296
-## LL.4   -38.52971  95.05942   0.6894580 0.10009833
-## W2.4   -39.31174  96.62348   0.5863845 0.10108784
-## LL.5   -38.18518  98.37036   0.6004976 0.10100326
-## LL.2   -46.99871 103.99741   0.1036013 0.10847676
+## W1.3   -38.44111  90.88222 0.809137050 0.09867982
+## LL.3   -38.66365  91.32730 0.785678738 0.09895643
+## W1.4   -38.45393  94.90786 0.699211802 0.10000296
+## LL.4   -38.52971  95.05942 0.689457996 0.10009833
+## l4     -38.52971  95.05942 0.689457996 0.10009833
+## W2.4   -39.31174  96.62348 0.586384529 0.10108784
+## LL.5   -38.18518  98.37036 0.600497632 0.10100326
+## LL.2   -46.99871 103.99741 0.103601305 0.10847676
+## L.3    -48.16939 110.33877 0.035903415 0.11152499
+## L.5    -47.99539 117.99077 0.009088773 0.11426858
 ## Cubic -111.48188 232.96376          NA 0.24411639
 ## Quad  -119.97457 247.94914          NA 0.26989703
 ## Lin   -130.23051 266.46101          NA 0.30510506
