@@ -6,7 +6,7 @@ output:
   html_document:
     df_print: paged
 editor_options: 
-  chunk_output_type: console
+  chunk_output_type: inline
 ---
 
 ```{r setup, include=FALSE}
@@ -139,10 +139,40 @@ compParm(model.LL3, strVal = "e", operator = "-") #here comparing the difference
 
 ```{r}
 
-tiff(file = "C:/Users/felip/OneDrive - UW-Madison/Documents/GitHub/FFaleco/PhD Projects/Giant Ragweed/Dose Response/Fomesafen/Dose-response curve.tiff",
-     width = 6, height = 4, units="in", 
-     res = 1000)
 
+plot(model.LL3,
+     type = "average",
+     xlab = expression("Herbicide dose (g ai ha)" ^-1),
+     ylab = expression("Aboveground biomass (g plant)" ^-1),
+     col = c("red", "darkgreen"),
+     pch = c(19, 17),
+     cex = 1,
+     cex.axis = 1,
+     cex.lab = 1,
+     lwd = 1)
+
+abline(v = 263, 
+       lwd = 2, 
+       lty = "twodash",
+       col = "black")
+
+text(x = 950, y = 0.8, 
+     labels = expression("1x dose: 263 g ai ha" ^-1),
+     cex = 0.8,
+     col = "black",
+     font = 2)
+
+
+```
+
+
+
+#SAVE TIFF
+
+```{r}
+
+tiff(file="C:/Users/felip/OneDrive - UW-Madison/Documents/GitHub/FFaleco/PhD Projects/Giant Ragweed/Dose Response/Fomesafen/Dose-response curve.tiff",
+width=6, height=4, units="in", res=1000)
 
 plot(model.LL3,
      type = "average",
@@ -169,7 +199,6 @@ text(x = 950, y = 0.8,
 dev.off()
 
 ```
-
 
 
 
