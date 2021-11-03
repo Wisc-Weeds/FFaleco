@@ -73,14 +73,16 @@ ggplot(summary, aes(x = mean*100, y = pop)) +
   geom_vline(xintercept = 90, size = 1, colour = "red") +
   geom_errorbar(aes(xmin = (mean*100) - (se*100), xmax = (mean*100) + (se*100), width = 0.3)) + 
   facet_grid(Dose ~ herb, labeller = labeller(Dose = dose_labels)) +
-  labs(title = "Palmer Count Reduction - PRE", x = "Plant Density Reduction (%)", y = "Accession") + 
+  labs(#title = "Plant Density Reduction - PRE", 
+       x = "Plant density reduction (%)", 
+       y = "Accession") + 
   theme_bw() + 
   theme (plot.title = element_text(face = "bold", hjust = 0.5, size = 25, colour = "darkgreen"), 
          axis.title = element_text(face = "bold", size = 20, colour = "darkgreen"), 
          axis.text = element_text(face = "bold", size = 13, colour = "black"),
          strip.text = element_text(face = "bold", size = 13, colour = "black"),
          panel.spacing = unit(1.0, "lines")) +
-  ggsave("RAW COUNTRED_POPxHERBxRATE.jpeg", units="in", width=15, height=5, dpi=600)
+  ggsave("[Faleco]Fig4.tiff", units="in", width=15, height=5, dpi=1000, compression = "lzw")
 
 ```
 

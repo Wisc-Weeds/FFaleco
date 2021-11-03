@@ -70,14 +70,16 @@ ggplot(summary, aes(x = mean*100, y = pop)) +
   geom_vline(xintercept = 50, size = 1, colour = "red") +
   geom_errorbar(aes(xmin = (mean*100) - (se*100), xmax = (mean*100) + (se*100), width = 0.2)) + 
   facet_grid(Dose ~ herb, labeller = labeller(Dose = dose_labels)) +
-  labs(title = "Palmer Survivorship - POST", x = "% Survivorship", y = "Accession") + 
+  labs(#title = "Palmer Survivorship - POST", 
+       x = "Survivorship (%)", 
+       y = "Accession") + 
   theme_bw() + 
   theme (plot.title = element_text(face = "bold", hjust = 0.5, size = 38, colour = "darkgreen"), 
          axis.title = element_text(face = "bold", size = 32, colour = "darkgreen"), 
          axis.text = element_text(face = "bold", size = 22, colour = "black"),
          strip.text = element_text(face = "bold", size = 25, colour = "black"),
          panel.spacing = unit(1.5, "lines")) +
-  ggsave("RAW SURV_POPxHERBxDOSE.jpeg", units="in", width=30, height=7, dpi=600)
+  ggsave("[Faleco]Fig2.tiff", units="in", width=30, height=7, dpi=1000, compression = "lzw")
 
 
 ```
