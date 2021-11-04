@@ -165,7 +165,7 @@ text(x = 950, y = 0.8,
 ```{r}
 
 tiff(file="C:/Users/felip/OneDrive - UW-Madison/Documents/GitHub/FFaleco/PhD Projects/Giant Ragweed/Dose Response/Fomesafen/Dose-response curve.tiff",
-width=6, height=4, units="in", res=1000)
+width=6, height=4, units="in", res=1000, compression = "lzw")
 
 plot(model.LL3,
      type = "average",
