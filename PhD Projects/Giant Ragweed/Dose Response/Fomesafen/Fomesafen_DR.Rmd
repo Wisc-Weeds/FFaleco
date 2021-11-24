@@ -72,7 +72,7 @@ summary(model.LL4)
 
 ```{r, warning=FALSE}
 
-mselect(model.LL4,  list(L.3(), l4(), L.5(), LL.2(), LL.3(), LL.5(), W1.3(), W1.4(), W2.4(), baro5()), linreg = T) 
+mselect(model.LL4,  list(L.3(), L.4(), L.5(), LL.2(), LL.3(), LL.5(), W1.3(), W1.4(), W2.4(), baro5()), linreg = T) 
 
 #LL.3 better option here (lower IC, which actually is AIC (default)). W1.3 could also be used, but since it is a asymmetrical model, I would give preference to LL.3 In symmetrical models, the parameter e and relative ED50 are identical, that is, they both indicate the dose that reduces the response midway between the upper and lower limits. In asymmetrical models, however, the parameter e does not have the same meaning as in symmetrical models, even though it is still the location of the inflection point. For assymetrical models, ED50 should be estimated as "absolute" and not relative.
 
@@ -85,7 +85,6 @@ model.LL3<- drm(biomass ~ dose, pop, fct = LL.3(),  data = data, type = "continu
 modelFit(model.LL3)
 
 summary(model.LL3) # NO parameter c (lower limit). It means lower limit was set to zero.
-
 
 
 anova(model.LL3, model.LL4) # p-value > 0.05 means that there is no difference between models. Therefore, we can use model LL.3
@@ -111,6 +110,8 @@ ED(model.LL3, c(50, 90), type = "relative")
 
 EDcomp(model.LL3, c(50, 50), type = "relative", interval = "none")
 
+EDcomp(model.LL3, c(90, 90), type = "relative", interval = "none")
+
 
 
 # Comparing b parameter (slope)
@@ -132,11 +133,12 @@ compParm(model.LL3, strVal = "e", operator = "-") #here comparing the difference
 
 ```{r}
 
+par(mar = c(5,5,2,2))
 
 plot(model.LL3,
      type = "average",
-     xlab = expression("Herbicide dose (g ai ha)" ^-1),
-     ylab = expression("Aboveground biomass (g plant)" ^-1),
+     xlab = expression(paste("Fomesafen dose (g ai ha"^-1, ")")),
+     ylab = expression(paste("Dry aboveground biomass (g plant"^-1, ")")),
      col = c("red", "darkgreen"),
      pch = c(19, 17),
      cex = 1,
@@ -149,12 +151,23 @@ abline(v = 263,
        lty = "twodash",
        col = "black")
 
-text(x = 950, y = 0.8, 
-     labels = expression("1x dose: 263 g ai ha" ^-1),
-     cex = 0.8,
+text(x = 1500, y = 1.5, 
+     labels = expression(paste("ED"[50] ~ "RI = 29.26 ("%+-% "6.63)")),
+     cex = 1,
      col = "black",
      font = 2)
 
+text(x = 1150, y = 1.35, 
+     labels = expression("p-value = < 0.0001"),
+     cex = 1,
+     col = "black",
+     font = 2)
+
+text(x = 850, y = 0.6, 
+     labels = expression("1x dose: 263 g ai ha" ^-1),
+     cex = 1,
+     col = "black",
+     font = 2)
 
 ```
 
@@ -165,12 +178,14 @@ text(x = 950, y = 0.8,
 ```{r}
 
 tiff(file="C:/Users/felip/OneDrive - UW-Madison/Documents/GitHub/FFaleco/PhD Projects/Giant Ragweed/Dose Response/Fomesafen/Dose-response curve.tiff",
-width=6, height=4, units="in", res=1000, compression = "lzw")
+width = 8, height = 6, units = "in", res = 1000, compression = "lzw")
+
+par(mar = c(5,5,2,2))
 
 plot(model.LL3,
      type = "average",
-     xlab = expression("Herbicide dose (g ai ha)" ^-1),
-     ylab = expression("Aboveground biomass (g plant)" ^-1),
+     xlab = expression(paste("Fomesafen dose (g ai ha"^-1, ")")),
+     ylab = expression(paste("Dry aboveground biomass (g plant"^-1, ")")),
      col = c("red", "darkgreen"),
      pch = c(19, 17),
      cex = 1,
@@ -183,9 +198,21 @@ abline(v = 263,
        lty = "twodash",
        col = "black")
 
-text(x = 950, y = 0.8, 
+text(x = 1500, y = 1.5, 
+     labels = expression(paste("ED"[50] ~ "RI = 29.26 ("%+-% "6.63)")),
+     cex = 1,
+     col = "black",
+     font = 2)
+
+text(x = 1150, y = 1.35, 
+     labels = expression("p-value = < 0.0001"),
+     cex = 1,
+     col = "black",
+     font = 2)
+
+text(x = 850, y = 0.6, 
      labels = expression("1x dose: 263 g ai ha" ^-1),
-     cex = 0.8,
+     cex = 1,
      col = "black",
      font = 2)
 
