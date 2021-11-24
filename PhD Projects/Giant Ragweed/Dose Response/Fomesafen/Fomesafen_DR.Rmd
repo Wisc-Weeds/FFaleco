@@ -133,7 +133,7 @@ compParm(model.LL3, strVal = "e", operator = "-") #here comparing the difference
 
 ```{r}
 
-par(mar = c(5,5,2,2))
+par(mar = c(5,5,1,1))
 
 plot(model.LL3,
      type = "average",
@@ -180,7 +180,7 @@ text(x = 850, y = 0.6,
 tiff(file="C:/Users/felip/OneDrive - UW-Madison/Documents/GitHub/FFaleco/PhD Projects/Giant Ragweed/Dose Response/Fomesafen/Dose-response curve.tiff",
 width = 8, height = 6, units = "in", res = 1000, compression = "lzw")
 
-par(mar = c(5,5,2,2))
+par(mar = c(5,5,1,1))
 
 plot(model.LL3,
      type = "average",
