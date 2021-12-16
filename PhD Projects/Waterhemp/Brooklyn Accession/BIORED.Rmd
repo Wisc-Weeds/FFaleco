@@ -1,0 +1,143 @@
+---
+title: "LOGIT BIORED - BROOKLYN"
+author: "Felipe A. Faleco"
+date: "12/16/2021"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(ggplot2)
+library(car)
+library(emmeans)
+library(multcompView)
+library(glmmTMB)
+library(ggpubr)
+
+```
+
+
+# DATA
+
+```{r}
+
+data <- read.csv("Data_biored.csv")
+
+str(data)
+
+data$run <- as.factor(data$run)
+
+data$pop <- as.factor(data$pop)
+
+data$herb <- as.factor(data$herb)
+
+data$Dose <- as.factor(data$Dose)
+
+data$rep <- as.factor(data$rep)
+
+str(data)
+
+```
+
+
+# MODEL
+
+```{r}
+
+model <- glmmTMB(logit(biored) ~ herb * Dose + (1|run), data = data, family = "gaussian")
+
+```
+
+
+# SUMMARY
+
+```{r, echo=TRUE}
+
+summary(model)
+
+```
+
+
+# ANOVA
+
+```{r, echo=TRUE}
+
+glmmTMB:::Anova.glmmTMB(model)
+
+```
+
+
+# EMM & CLD
+
+```{r, echo=TRUE}
+
+emm_herb <- emmeans(model, ~ herb, adjust = "tukey", type = "response", contr = "pairwise")
+
+emm_herb
+
+CLD_emm_herb <- if(requireNamespace("multcomp")) {
+    multcomp::cld(emm_herb$emmeans, alpha = 0.05, Letters=letters, adjust="tukey", reversed = TRUE)}
+
+CLD_emm_herb
+
+
+
+
+emm_dose <- emmeans(model, ~ Dose, adjust = "tukey", type = "response", contr = "pairwise")
+
+emm_dose
+
+CLD_emm_dose <- if(requireNamespace("multcomp")) {
+    multcomp::cld(emm_dose$emmeans, alpha = 0.05, Letters=letters, adjust="tukey", reversed = TRUE)}
+
+CLD_emm_dose
+
+```
+
+
+# PLOT
+
+```{r, echo=TRUE}
+
+plot(emm_herb, adjust = "tukey", comparisons = F, alpha = 0.05) + 
+  geom_point(size = 1) +
+  geom_text(aes(label = c("a", "a", "a", "a", "b", "b", "a")),
+            vjust = -0.8, size = 3) +
+  scale_x_continuous(breaks = c(0, 0.25, 0.50, 0.75, 1), limits = c(0, 1),
+                     labels = scales::percent_format(scale = 100, suffix = "")) +
+  labs(title = "Brooklyn Biomass Reduction - POST", 
+       x = "Biomass Reduction (%)", 
+       y = "Herbicide") +
+  theme_bw() +
+  theme (plot.title = element_text(face = "bold", hjust = 0.5, size = 12, colour = "darkgreen"), 
+         axis.title = element_text(face = "bold", size = 10, colour = "darkgreen"), 
+         axis.text= element_text(face = "bold", size = 8, colour = "black"),
+         strip.text = element_text(face = "bold", size = 10, colour = "black"),
+         panel.spacing = unit(0.5, "lines")) +
+  ggsave("BIOMASS REDUCTION_HERB_Brooklyn.jpeg", units="in", width = 8, height = 5, dpi = 600)
+
+
+
+
+plot(emm_dose, adjust = "tukey", comparisons = F, alpha = 0.05) + 
+  geom_point(size = 1) +
+  geom_text(aes(label = c("b", "a")),
+            vjust = -0.8, size = 3) +
+  scale_x_continuous(breaks = c(0, 0.25, 0.50, 0.75, 1), limits = c(0, 1),
+                     labels = scales::percent_format(scale = 100, suffix = "")) +
+  labs(title = "Brooklyn Biomass Reduction - POST", 
+       x = "Biomass Reduction (%)", 
+       y = "Dose") +
+  theme_bw() +
+  theme (plot.title = element_text(face = "bold", hjust = 0.5, size = 12, colour = "darkgreen"), 
+         axis.title = element_text(face = "bold", size = 10, colour = "darkgreen"), 
+         axis.text= element_text(face = "bold", size = 8, colour = "black"),
+         strip.text = element_text(face = "bold", size = 10, colour = "black"),
+         panel.spacing = unit(0.5, "lines")) +
+  ggsave("BIOMASS REDUCTION_DOSE_Brooklyn.jpeg", units="in", width = 8, height = 5, dpi = 600)
+
+```
+
+
