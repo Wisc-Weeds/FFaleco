@@ -64,7 +64,7 @@ summary
 
 ```{r}
 
-dose_labels <- c("0.5x" = "Dose: 0.5x", "1x" = "Dose: 1x", "3x" = "Dose: 3x")
+rate_labels <- c("0.5x" = "Rate: 0.5x", "1x" = "Rate: 1x", "3x" = "Rate: 3x")
 
 
 ggplot(summary, aes(x = mean*100, y = pop)) + 
@@ -72,7 +72,7 @@ ggplot(summary, aes(x = mean*100, y = pop)) +
   geom_point(size = 2.5) + 
   geom_vline(xintercept = 90, size = 1, colour = "red") +
   geom_errorbar(aes(xmin = (mean*100) - (se*100), xmax = (mean*100) + (se*100), width = 0.3)) + 
-  facet_grid(Dose ~ herb, labeller = labeller(Dose = dose_labels)) +
+  facet_grid(Dose ~ herb, labeller = labeller(Dose = rate_labels)) +
   labs(#title = "Plant Density Reduction - PRE", 
        x = "Plant density reduction (%)", 
        y = "Accession") + 
@@ -82,7 +82,10 @@ ggplot(summary, aes(x = mean*100, y = pop)) +
          axis.text = element_text(face = "bold", size = 13, colour = "black"),
          strip.text = element_text(face = "bold", size = 13, colour = "black"),
          panel.spacing = unit(1.0, "lines")) +
-  ggsave("[Faleco]Fig4.tiff", units="in", width=15, height=5, dpi=1000, compression = "lzw")
+  ggsave("RAW COUNTRED_POPxHERBxDOSE.tiff", units="in", width=15, height=5, dpi=1000, compression = "lzw")
+  
+  
+#ggsave("[Faleco]Fig4.tiff", units="in", width=15, height=5, dpi=1000, compression = "lzw")
 
 ```
 
