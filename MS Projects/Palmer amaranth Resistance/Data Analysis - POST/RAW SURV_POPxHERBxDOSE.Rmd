@@ -63,13 +63,13 @@ summary
 
 ```{r}
 
-dose_labels <- c("1x" = "Dose: 1x", "3x" = "Dose: 3x")
+rate_labels <- c("1x" = "Rate: 1x", "3x" = "Rate: 3x")
 
 ggplot(summary, aes(x = mean*100, y = pop)) + 
   geom_point(size = 4) + 
   geom_vline(xintercept = 50, size = 1, colour = "red") +
   geom_errorbar(aes(xmin = (mean*100) - (se*100), xmax = (mean*100) + (se*100), width = 0.2)) + 
-  facet_grid(Dose ~ herb, labeller = labeller(Dose = dose_labels)) +
+  facet_grid(Dose ~ herb, labeller = labeller(Dose = rate_labels)) +
   labs(#title = "Palmer Survivorship - POST", 
        x = "Survivorship (%)", 
        y = "Accession") + 
@@ -79,7 +79,11 @@ ggplot(summary, aes(x = mean*100, y = pop)) +
          axis.text = element_text(face = "bold", size = 22, colour = "black"),
          strip.text = element_text(face = "bold", size = 25, colour = "black"),
          panel.spacing = unit(1.5, "lines")) +
-  ggsave("[Faleco]Fig2.tiff", units="in", width=30, height=7, dpi=1000, compression = "lzw")
+  ggsave("RAW SURV_POPxHERBxDOSE.tiff", units="in", width=30, height=7, dpi=1000, compression = "lzw")
+  
+  
+  
+#ggsave("[Faleco]Fig2.tiff", units="in", width=30, height=7, dpi=1000, compression = "lzw")
 
 
 ```
