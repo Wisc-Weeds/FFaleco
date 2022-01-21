@@ -90,11 +90,11 @@ CLD_emm_pop_herb_Dose
 
 ```{r, echo=TRUE}
 
-dose_labels <- c("1x" = "Dose: 1x", "3x" = "Dose: 3x")
+rate_labels <- c("1x" = "Rate: 1x", "3x" = "Rate: 3x")
 
 plot(emm_pop_herb_Dose, adjust = "tukey", comparisons = F, alpha = 0.05) + 
   geom_point(size = 4) +
-  facet_grid(Dose ~ herb, labeller = labeller(Dose = dose_labels)) +
+  facet_grid(Dose ~ herb, labeller = labeller(Dose = rate_labels)) +
   geom_text(aes(label = c("a", "a", "a", "b", "b", "a", "a", "a", "a", "a", "a", "a", "b", "c", "a", "b", "ab", "a", "a", "a", "a", "a", "a", "a",
                           "a", "a", "a", "a", "b", "a", "a", "a", "a", "a", "a", "a", "a", "a", "a", "b", "a", "a", "a", "a", "a", "a", "a", "a")),
             vjust = -1, size = 7) +
@@ -109,7 +109,11 @@ plot(emm_pop_herb_Dose, adjust = "tukey", comparisons = F, alpha = 0.05) +
          axis.text = element_text(face = "bold", size = 22, colour = "black"),
          strip.text = element_text(face = "bold", size = 25, colour = "black"),
          panel.spacing = unit(1.0, "lines")) +
-  ggsave("[Faleco]Fig3.tiff", units="in", width=30, height=7, dpi=1000, compression = "lzw")
+  ggsave("LOGIT Tukey HSD_POPxHERBxDOSE.tiff", units="in", width=30, height=7, dpi=1000, compression = "lzw")
+  
+  
+#ggsave("[Faleco]Fig3.tiff", units="in", width=30, height=7, dpi=1000, compression = "lzw")
+  
 
 ```
 
