@@ -71,7 +71,7 @@ ggplot(summary, aes(x = mean*100, y = pop)) +
   geom_errorbar(aes(xmin = (mean*100) - (se*100), xmax = (mean*100) + (se*100), width = 0.2)) + 
   facet_grid(Dose ~ herb, labeller = labeller(Dose = rate_labels)) +
   labs(#title = "Palmer Survivorship - POST", 
-       x = "Survivorship (%)", 
+       x = "Plant survival (%)", 
        y = "Accession") + 
   theme_bw() + 
   theme (plot.title = element_text(face = "bold", hjust = 0.5, size = 38, colour = "darkgreen"), 
