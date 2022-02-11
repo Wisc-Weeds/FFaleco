@@ -61,7 +61,7 @@ summary
 
 ## PLOT
 
-```{r}
+#```{r}
 
 rate_labels <- c("1x" = "Rate: 1x", "3x" = "Rate: 3x")
 
