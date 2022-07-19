@@ -91,12 +91,9 @@ ggplot(summary, aes(x = mean*100, y = pop)) +
          axis.text = element_text(face = "bold", size = 28, colour = "black"),
          strip.text = element_text(face = "bold", size = 32, colour = "black"),
          panel.spacing = unit(1.5, "lines")) +
-  ggsave("RAW SURV_POPxHERBxDOSE.tiff", units = "in", width = 35, height = 22, dpi = 1000, compression = "lzw")
+  ggsave("RAW SURV_POPxHERBxDOSE.tiff", units = "in", width = 35, height = 22, dpi = 600, compression = "lzw")
   
-  
-  
-  
-  #ggsave("RAW SURV_POPxHERBxRATE.jpeg", units = "in", width = 35, height = 22, dpi = 600)
+
 
 ```
 
