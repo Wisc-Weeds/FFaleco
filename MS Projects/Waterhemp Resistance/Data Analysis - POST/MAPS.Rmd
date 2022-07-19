@@ -28,6 +28,7 @@ library(stringr)
 library(dplyr)
 library(choroplethr)
 
+
 states <- map_data("state")
 df <- subset(states, region =="wisconsin")
 
@@ -89,9 +90,11 @@ base +
                    seed = TRUE,
                    show.legend = FALSE) +  
   north(df, location = 'topright', symbol = 1, anchor = c(x = -92.5, y = 47)) +
-  scale_color_manual(name = "Herbicide Resistance 1x Dose POST", values = c("darkgreen", "blue", "black", "orange2","cyan4", "darkorchid3", "red", "firebrick" )) +
+  scale_color_manual(name = "Herbicide Resistance 1x Rate POST", 
+                     values = c("darkgreen", "blue", "black", "orange2","cyan4", "darkorchid3", "red", "firebrick" )) +
   theme_map() +
-  labs(fill="", y = "Latitude", x = "Longitude", title = "Waterhemp Response to POST Herbicides") +
+  labs(fill="", y = "Latitude", x = "Longitude") + 
+       #title = "Waterhemp Response to POST Herbicides") +
   theme(axis.text=element_blank(), 
         axis.title=element_blank(), 
         panel.background = element_rect(fill="white", color = "black"), 
@@ -105,7 +108,7 @@ base +
         legend.position = c(0.65, 0.78), 
         legend.background = element_rect(fill =NA), 
         plot.title = element_text(color = "darkgreen", face = "bold", size = 30, hjust = 0.5)) +
-  ggsave("MAP_POPMAINPOOL_1X.jpeg", units = "in", width = 13, height = 11, dpi = 600)
+  ggsave("MAP_POPMAINPOOL_1X.tiff", units = "in", width = 13, height = 11, dpi = 600, compression = "lzw")
 
 
 ```
