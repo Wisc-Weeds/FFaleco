@@ -30,7 +30,7 @@ waterhemp$pop <- as.factor(waterhemp$pop)
 
 waterhemp$Herbicide <- as.factor(waterhemp$Herbicide)
 
-waterhemp$Dose <- as.factor(waterhemp$Dose)
+waterhemp$Rate <- as.factor(waterhemp$Rate)
 
 waterhemp$rep <- as.factor(waterhemp$rep)
 
@@ -45,7 +45,7 @@ str(waterhemp)
 ```{r}
 
 summary <- waterhemp %>% 
-  group_by(pop, Herbicide, Dose) %>% 
+  group_by(pop, Herbicide, Rate) %>% 
   summarise(n = sum(!is.na(count_red)), 
             mean = mean(count_red, na.rm = TRUE), 
             sd = sd(count_red, na.rm = TRUE),
@@ -65,22 +65,24 @@ summary
 
 ```{r}
 
-dose_labels <- c("0.5x" = "Dose: 0.5x", "1x" = "Dose: 1x", "3x" = "Dose: 3x")
+rate_labels <- c("0.5x" = "Rate: 0.5x", "1x" = "Rate: 1x", "3x" = "Rate: 3x")
 
 ggplot(summary, aes(x = mean*100, y = pop)) + 
   xlim(0, 100) + 
   geom_point(size = 3) + 
   geom_vline(xintercept = 90, size = 1, colour = "red") +
   geom_errorbar(aes(xmin = (mean*100) - (se*100), xmax = (mean*100) + (se*100), width = 0.5)) + 
-  facet_grid(Dose ~ Herbicide, labeller = labeller(Dose = dose_labels)) +
-  labs(title = "Waterhemp Plant Density Reduction - PRE", x = "Plant Density Reduction (%)", y = "Accession") + 
+  facet_grid(Rate ~ Herbicide, labeller = labeller(Rate = rate_labels)) +
+  labs(#title = "Waterhemp Plant Density Reduction - PRE", 
+       x = "Plant Density Reduction (%)", 
+       y = "Accession") + 
   theme_bw() + 
   theme (plot.title = element_text(face = "bold", hjust = 0.5, size = 40, colour = "darkgreen"), 
          axis.title = element_text(face = "bold", size = 35, colour = "darkgreen"), 
          axis.text = element_text(face = "bold", size = 22, colour = "black"),
          strip.text = element_text(face = "bold", size = 30, colour = "black"),
          panel.spacing = unit(1, "lines")) +
-  ggsave("RAW COUNTRED_POPxHERBxRATE.jpeg", units="in", width = 18, height = 27, dpi = 600)
+  ggsave("RAW COUNTRED_POPxHERBxRATE.tiff", units="in", width = 18, height = 27, dpi = 600, compression = "lzw")
 
 ```
 
