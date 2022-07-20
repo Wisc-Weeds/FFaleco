@@ -34,7 +34,7 @@ waterhemp$pop <- as.factor(waterhemp$pop)
 
 waterhemp$Herbicide <- as.factor(waterhemp$Herbicide)
 
-waterhemp$Dose <- as.factor(waterhemp$Rate)
+waterhemp$Rate <- as.factor(waterhemp$Rate)
 
 waterhemp$rep <- as.factor(waterhemp$rep)
 

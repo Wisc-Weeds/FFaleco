@@ -30,7 +30,7 @@ waterhemp$pop <- as.factor(waterhemp$pop)
 
 waterhemp$Herbicide <- as.factor(waterhemp$Herbicide)
 
-waterhemp$Dose <- as.factor(waterhemp$Dose)
+waterhemp$Rate <- as.factor(waterhemp$Rate)
 
 waterhemp$rep <- as.factor(waterhemp$rep)
 
@@ -55,7 +55,7 @@ selected <- waterhemp %>% filter(selected == "x")
 ```{r}
 
 summary <- selected %>% 
-  group_by(pop, Herbicide, Dose) %>% 
+  group_by(pop, Herbicide, Rate) %>% 
   summarise(n = sum(!is.na(surv)), 
             mean = mean(surv, na.rm = TRUE), 
             sd = sd(surv, na.rm = TRUE),
@@ -75,13 +75,13 @@ summary
 
 ```{r}
 
-dose_labels <- c("1x" = "Rate: 1x", "3x" = "Rate: 3x")
+rate_labels <- c("1x" = "Rate: 1x", "3x" = "Rate: 3x")
 
 ggplot(summary, aes(x = mean*100, y = pop)) + 
   geom_point(size = 4) + 
   geom_vline(xintercept = 50, size = 1, colour = "red") +
   geom_errorbar(aes(xmin = (mean*100) - (se*100), xmax = (mean*100) + (se*100), width = 0.4)) + 
-  facet_grid(Dose ~ Herbicide, labeller = labeller(Dose = dose_labels))  +
+  facet_grid(Rate ~ Herbicide, labeller = labeller(Rate = rate_labels))  +
   labs(#title = "Waterhemp Survivorship - POST", 
     x = "Plant Survival (%)", 
     y = "Accession") + 
@@ -91,9 +91,8 @@ ggplot(summary, aes(x = mean*100, y = pop)) +
          axis.text = element_text(face = "bold", size = 28, colour = "black"),
          strip.text = element_text(face = "bold", size = 32, colour = "black"),
          panel.spacing = unit(1.5, "lines")) +
-  ggsave("RAW SURV_POPxHERBxDOSE.tiff", units = "in", width = 35, height = 22, dpi = 600, compression = "lzw")
+  ggsave("RAW SURV_POPxHERBxRATE.tiff", units = "in", width = 35, height = 22, dpi = 600, compression = "lzw")
   
-
 
 ```
 
