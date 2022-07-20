@@ -1,4 +1,4 @@
-run,pop,Herbicide,Dose,rep,ve,surv,bio,ve_red,bio_red,selected
+run,pop,Herbicide,Rate,rep,ve,surv,bio,ve_red,bio_red,selected
 1,A1,Glyphosate,1x,1,9,1,1.9145,0.1,0.192795806,
 1,A1,Glyphosate,1x,2,9,1,2.1792,0.1,0.081191236,
 1,A1,Glyphosate,1x,3,8,1,0.9946,0.2,0.580650148,
