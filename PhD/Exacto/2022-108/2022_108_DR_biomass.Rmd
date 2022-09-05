@@ -1,5 +1,5 @@
 ---
-title: "Exacto 2022-108 Dose Response"
+title: "Exacto 2022-108 Dose Response Biomass"
 author: "Felipe Faleco"
 date: "09/05/2022"
 output:
@@ -178,7 +178,7 @@ text(x = 650, y = 0.5,
 
 ```{r}
 
-tiff(file="C:/Users/felip/OneDrive - UW-Madison/Documents/GitHub/FFaleco/PhD/Exacto/2022-108/DR Curve.tiff",
+tiff(file="C:/Users/felip/OneDrive - UW-Madison/Documents/GitHub/FFaleco/PhD/Exacto/2022-108/DR_biomass.tiff",
      width = 10, height = 8, units = "in", res = 600, compression = "lzw")
 
 par(mar = c(5,5,1,1))
