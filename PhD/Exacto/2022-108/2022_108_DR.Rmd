@@ -1,7 +1,7 @@
 ---
-title: "Giant Ragweed Fomesafen DR"
+title: "Exacto 2022-108 Dose Response"
 author: "Felipe Faleco"
-date: "10/25/2021"
+date: "09/05/2022"
 output:
   html_document:
     df_print: paged
@@ -23,7 +23,7 @@ library(plotrix)
 
 ```{r}
 
-data <- read.csv("Data.csv")
+data <- read.csv("data_2022_108.csv")
 
 str(data)
 
@@ -33,11 +33,11 @@ fun <- function(x){
   c( mean = mean(x), VAR = var(x), SD = sd(x), SE = std.error(x), n = length(x))
 }
 
-summary.AT2 <- summaryBy(cbind(biomass, surv) ~ dose + pop, data = subset(data, pop=="AT2"),
+summary.Reflex <- summaryBy(cbind(vr_7dat, vr_14dat, vr_21dat,biomass, surv) ~ rate + name, data = subset(data, name=="Reflex"),
           FUN=fun)
 
 
-summary.AT8.EDGE<- summaryBy(cbind(biomass, surv) ~ dose + pop, data = subset(data, pop=="AT8-EDGE"),
+summary.EXT1490 <- summaryBy(cbind(vr_7dat, vr_14dat, vr_21dat,biomass, surv) ~ rate + name, data = subset(data, name=="EXT 1490"),
           FUN=fun)
 
 ```
@@ -48,7 +48,7 @@ summary.AT8.EDGE<- summaryBy(cbind(biomass, surv) ~ dose + pop, data = subset(da
 
 ```{r}
 
-model.LL4<- drm(biomass ~ dose, pop, fct = LL.4(),  data = data)
+model.LL4<- drm(biomass ~ rate, name, fct = LL.4(),  data = data)
 
 
 
@@ -74,11 +74,11 @@ summary(model.LL4)
 
 mselect(model.LL4,  list(L.3(), L.4(), L.5(), LL.2(), LL.3(), LL.5(), W1.3(), W1.4(), W2.4(), baro5()), linreg = T) 
 
-#LL.3 better option here (lower IC, which actually is AIC (default)). W1.3 could also be used, but since it is a asymmetrical model, I would give preference to LL.3 In symmetrical models, the parameter e and relative ED50 are identical, that is, they both indicate the dose that reduces the response midway between the upper and lower limits. In asymmetrical models, however, the parameter e does not have the same meaning as in symmetrical models, even though it is still the location of the inflection point. For assymetrical models, ED50 should be estimated as "absolute" and not relative.
+#LL.3 better option here (lower IC, which actually is AIC (default)). W1.3 could also be used, but since it is a asymmetrical model, I would give preference to LL.3 In symmetrical models, the parameter e and relative ED50 are identical, that is, they both indicate the dose that reduces the response midway between the upper and lower limits. In asymmetrical models, however, the parameter e does not have the same meaning as in symmetrical models, even though it is still the location of the inflection point. For asymmetrical models, ED50 should be estimated as "absolute" and not relative.
 
 
 
-model.LL3<- drm(biomass ~ dose, pop, fct = LL.3(),  data = data, type = "continuous")
+model.LL3<- drm(biomass ~ rate, name, fct = LL.3(),  data = data, type = "continuous")
 
 
 
@@ -146,7 +146,7 @@ plot(model.LL3,
      cex.lab = 2,
      lwd = 1)
 
-abline(v = 263, 
+abline(v = 280, 
        lwd = 2, 
        lty = "twodash",
        col = "black")
