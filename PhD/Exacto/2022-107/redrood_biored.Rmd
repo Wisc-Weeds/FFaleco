@@ -1,0 +1,112 @@
+---
+title: "Exacto 2022-107_Redroot Biored"
+author: "Felipe Faleco"
+date: "2022-09-09"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+
+knitr::opts_chunk$set(echo = TRUE)
+
+library(car)
+library(glmmTMB)
+library(DHARMa)
+library(emmeans)
+library(ggplot2)
+
+
+```
+
+
+# PREPARING DATA
+
+```{r}
+
+data <- read.csv("data_redroot_reduction2.csv")
+
+str(data)
+
+data$run <- as.factor(data$run)
+
+data$trt <- as.factor(data$trt)
+
+data$rep <- as.factor(data$rep)
+
+str(data)
+
+```
+
+
+# MODEL
+
+```{r}
+
+model <- glmmTMB(bio_red ~ trt, data = data, family = beta_family())
+
+```
+
+
+
+# CHECKING ASSUMPTIONS
+
+```{r}
+
+summary(model)
+
+resid <- simulateResiduals(model)
+
+plot(resid)
+
+```
+
+
+
+# ANOVA
+
+```{r, echo=TRUE}
+
+glmmTMB:::Anova.glmmTMB(model)
+
+```
+
+
+
+# EMM & CLD
+
+```{r, echo=TRUE}
+
+emm_trt <- emmeans(model, ~ trt, adjust = "tukey", type = "response", contr = "pairwise")
+
+emm_trt
+
+CLD_emm_trt <- if(requireNamespace("multcomp")) {
+    multcomp::cld(emm_trt$emmeans, alpha = 0.05, Letters=letters, adjust="tukey", reversed = TRUE)}
+
+CLD_emm_trt
+
+```
+
+
+
+# PLOT
+
+```{r, echo=TRUE}
+
+plot(emm_trt, adjust = "tukey", comparisons = F, alpha = 0.05,  horizontal = T) + 
+  geom_point(size = 2) +
+  geom_text(aes(label = c("d", "c", "e", "cd", "b", "ab", "a", "ab", "ab", "ab")),
+            vjust = -0.8, size = 4) +
+  scale_x_continuous(breaks = c(0, 0.25, 0.50, 0.75, 1), limits = c(0, 1),
+    labels = scales::percent_format(scale = 100, suffix = "")) +
+  labs(#title = "Waterhemp Biomass Reduction - POST", 
+       x = "Biomass Reduction (%)", 
+       y = "Treatment") +
+  theme_bw() + 
+  theme (plot.title = element_text(face = "bold", hjust = 0.5, size = 18, colour = "darkgreen"), 
+         axis.title = element_text(face = "bold", size = 18, colour = "darkgreen"), 
+         axis.text= element_text(face = "bold", size = 14, colour = "black"))
+
+  ggsave("ANOVA_biomass.tiff", units="in", width = 10, height = 8, dpi = 600, compression = "lzw")
+
+```
