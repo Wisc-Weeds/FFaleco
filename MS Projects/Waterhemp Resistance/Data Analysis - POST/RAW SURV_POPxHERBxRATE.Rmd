@@ -39,7 +39,7 @@ str(waterhemp)
 ```
 
 
-# FILTERING SELECTED
+# FILTERING TESTED ALL HERBICIDES
 
 ```{r}
 

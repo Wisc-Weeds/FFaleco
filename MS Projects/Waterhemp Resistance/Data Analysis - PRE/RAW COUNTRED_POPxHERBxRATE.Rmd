@@ -39,12 +39,20 @@ str(waterhemp)
 ```
 
 
+# FILTERING TESTED ALL HERBICIDES
+
+```{r}
+
+tested_all_herbs <- waterhemp %>% filter(tested_all_herbs == "x")
+
+```
+
 
 # DATA SUMMARY
 
 ```{r}
 
-summary <- waterhemp %>% 
+summary <- tested_all_herbs %>% 
   group_by(pop, Herbicide, Rate) %>% 
   summarise(n = sum(!is.na(count_red)), 
             mean = mean(count_red, na.rm = TRUE), 
