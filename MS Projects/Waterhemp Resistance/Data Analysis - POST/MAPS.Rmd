@@ -58,7 +58,7 @@ waterhemp <- read.csv("MAPS.csv")
 
 
 
-# POPULATIONS MAIN POOL_1X MAP
+# POPULATIONS MAIN POOL_RESISTANCE 1X MAP
 
 
 ## FILTERING
@@ -170,6 +170,64 @@ base +
         legend.background = element_rect(fill =NA), 
         plot.title = element_text(color = "darkgreen", face = "bold", size = 30, hjust = 0.5)) +
   ggsave("MAP_POP_ALLHERBS_1X.tiff", units = "in", width = 13, height = 11, dpi = 600, compression = "lzw")
+
+
+```
+
+
+
+# ALL 88 POPULATIONS COLLECTED
+
+## FILTERING
+
+```{r}
+
+all_pops <- waterhemp
+
+```
+
+
+
+## NAMES MAP
+
+```{r}
+
+base + 
+  geom_point(data = all_pops, 
+             mapping = aes(x = long, y = lat, group = pop, label = pop), 
+             size = 2.5) +
+  geom_polygon(data = county, 
+               fill = "NA", 
+               color = "gray") +
+  geom_label_repel(data = all_pops, 
+                   aes(label = pop, group = 1),
+                   max.overlaps = 100,
+                   box.padding   = 0.5, 
+                   point.padding = 0.2,
+                   segment.color = 'grey50', 
+                   size = 4,
+                   seed = TRUE,
+                   show.legend = FALSE) +  
+  north(df, location = 'topright', symbol = 1, anchor = c(x = -92.5, y = 47)) +
+  #scale_color_manual(name = "Herbicide Resistance 1x Rate POST", 
+                     #values = c("darkgreen", "blue", "black", "orange2","cyan4", "darkorchid3", "red", "firebrick")) +
+  theme_map() +
+  labs(fill="", y = "Latitude", x = "Longitude") + 
+     #title = "Waterhemp Response to POST Herbicides") +
+  theme(axis.text=element_blank(), 
+        axis.title=element_blank(), 
+        panel.background = element_rect(fill="white", color = "black"), 
+        panel.grid.major = element_line(color = "white"), 
+        panel.grid.minor = element_blank(),
+        panel.border = element_rect(fill = NA,color = "white", size = 0.5, linetype = "solid"),
+        legend.title = element_text(size = 18, colour = "black", face = "bold", hjust = 0),
+        legend.text = element_text(size = 15, colour = "black"), 
+        legend.key = element_rect(fill = NA),
+        legend.key.width = unit(0.5, "line"),
+        legend.position = c(0.65, 0.78), 
+        legend.background = element_rect(fill =NA), 
+        plot.title = element_text(color = "darkgreen", face = "bold", size = 30, hjust = 0.5)) +
+  ggsave("MAP_ALL POPS.tiff", units = "in", width = 13, height = 11, dpi = 600, compression = "lzw")
 
 
 ```
