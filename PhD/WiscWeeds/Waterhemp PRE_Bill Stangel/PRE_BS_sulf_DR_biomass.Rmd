@@ -1,7 +1,7 @@
 ---
-title: "Exacto 2022-108 Dose Response Biomass"
+title: "Waterhemp PRE BS Sulfentrazone DR Biomass"
 author: "Felipe Faleco"
-date: "09/05/2022"
+date: "10/19/2022"
 output:
   html_document:
     df_print: paged
@@ -23,7 +23,7 @@ library(plotrix)
 
 ```{r}
 
-data <- read.csv("data_2022_108.csv")
+data <- read.csv("data_PRE_BS_sulf.csv")
 
 str(data)
 
@@ -33,12 +33,13 @@ fun <- function(x){
   c( mean = mean(x), VAR = var(x), SD = sd(x), SE = std.error(x), n = length(x))
 }
 
-summary.Reflex <- summaryBy(cbind(vr_7dat, vr_14dat, vr_21dat,biomass, surv) ~ rate + name, data = subset(data, name=="Reflex"),
+summary.BS <- summaryBy(cbind(count, biomass) ~ dose + pop, data = subset(data, pop=="BS"),
           FUN=fun)
 
 
-summary.EXT1490 <- summaryBy(cbind(vr_7dat, vr_14dat, vr_21dat,biomass, surv) ~ rate + name, data = subset(data, name=="EXT 1490"),
+summary.A66 <- summaryBy(cbind(count, biomass) ~ dose + pop, data = subset(data, pop=="A66"),
           FUN=fun)
+
 
 ```
 
@@ -48,7 +49,7 @@ summary.EXT1490 <- summaryBy(cbind(vr_7dat, vr_14dat, vr_21dat,biomass, surv) ~ 
 
 ```{r}
 
-model.LL4<- drm(biomass ~ rate, name, fct = LL.4(),  data = data)
+model.LL4<- drm(biomass ~ dose, pop, fct = LL.4(), data = data)
 
 
 
@@ -78,7 +79,7 @@ mselect(model.LL4,  list(L.3(), L.4(), L.5(), LL.2(), LL.3(), LL.5(), W1.3(), W1
 
 
 
-model.LL3<- drm(biomass ~ rate, name, fct = LL.3(),  data = data, type = "continuous")
+model.LL3<- drm(biomass ~ dose, pop, fct = LL.3(),  data = data, type = "continuous")
 
 
 
