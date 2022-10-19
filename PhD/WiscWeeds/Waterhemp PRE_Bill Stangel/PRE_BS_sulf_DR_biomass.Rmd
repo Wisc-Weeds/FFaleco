@@ -15,6 +15,7 @@ knitr::opts_chunk$set(echo = TRUE)
 library(drc)
 library(doBy)
 library(plotrix)
+library(dplyr)
 
 ```
 
@@ -26,6 +27,14 @@ library(plotrix)
 data <- read.csv("data_PRE_BS_sulf.csv")
 
 str(data)
+
+
+data2 <- read.csv("data_PRE_BS_sulf2.csv")
+
+str(data2)
+
+
+
 
 
 
@@ -49,10 +58,14 @@ summary.A66 <- summaryBy(cbind(count, biomass) ~ rate + pop, data = subset(data,
 
 ```{r}
 
-model.LL4<- drm(biomass ~ rate, pop, fct = LL.4(), data = data)
+model.LL4<- drm(biomass ~ rate, pop, fct = LL.4(), data = data, type = "continuous", control = drmc(constr = F, errorm = F, method = "Brent"))
 
 
 
+model.LL4<- drm(count ~ rate, pop, fct = LL.4(), data = data2, type = "continuous")
+
+
+                
 modelFit(model.LL4) # higher the p-value, better.
 
 summary(model.LL4) 
@@ -79,7 +92,7 @@ mselect(model.LL4,  list(L.3(), L.4(), L.5(), LL.2(), LL.3(), LL.5(), W1.3(), W1
 
 
 
-model.LL3<- drm(count ~ dose, pop, fct = LL.3(),  data = data, type = "continuous")
+model.LL3<- drm(biomass ~ rate, pop, fct = LL.3(),  data = data, type = "continuous")
 
 
 
