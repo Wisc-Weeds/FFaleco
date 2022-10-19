@@ -33,11 +33,11 @@ fun <- function(x){
   c( mean = mean(x), VAR = var(x), SD = sd(x), SE = std.error(x), n = length(x))
 }
 
-summary.BS <- summaryBy(cbind(count, biomass) ~ dose + pop, data = subset(data, pop=="BS"),
+summary.BS <- summaryBy(cbind(count, biomass) ~ rate + pop, data = subset(data, pop=="BS"),
           FUN=fun)
 
 
-summary.A66 <- summaryBy(cbind(count, biomass) ~ dose + pop, data = subset(data, pop=="A66"),
+summary.A66 <- summaryBy(cbind(count, biomass) ~ rate + pop, data = subset(data, pop=="A66"),
           FUN=fun)
 
 
@@ -49,7 +49,7 @@ summary.A66 <- summaryBy(cbind(count, biomass) ~ dose + pop, data = subset(data,
 
 ```{r}
 
-model.LL4<- drm(biomass ~ dose, pop, fct = LL.4(), data = data)
+model.LL4<- drm(biomass ~ rate, pop, fct = LL.4(), data = data)
 
 
 
@@ -79,7 +79,7 @@ mselect(model.LL4,  list(L.3(), L.4(), L.5(), LL.2(), LL.3(), LL.5(), W1.3(), W1
 
 
 
-model.LL3<- drm(biomass ~ dose, pop, fct = LL.3(),  data = data, type = "continuous")
+model.LL3<- drm(count ~ dose, pop, fct = LL.3(),  data = data, type = "continuous")
 
 
 
