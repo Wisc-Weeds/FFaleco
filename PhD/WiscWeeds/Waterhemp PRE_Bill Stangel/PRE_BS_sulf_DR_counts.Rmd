@@ -1,5 +1,5 @@
 ---
-title: "Waterhemp PRE BS Sulfentrazone DR Biomass"
+title: "Waterhemp PRE BS Sulfentrazone DR Counts"
 author: "Felipe Faleco"
 date: "10/19/2022"
 output:
@@ -134,7 +134,7 @@ compParm(model.LL3, strVal = "e", operator = "-") #here comparing the difference
 
 ```{r}
 
-tiff(file="C:/Users/felip/OneDrive - UW-Madison/Documents/GitHub/FFaleco/PhD/WiscWeeds/Waterhemp PRE_Bill Stangel/Sulf_DR_biomass.tiff",
+tiff(file="C:/Users/felip/OneDrive - UW-Madison/Documents/GitHub/FFaleco/PhD/WiscWeeds/Waterhemp PRE_Bill Stangel/Sulf_DR_counts.tiff",
      width = 10, height = 8, units = "in", res = 600, compression = "lzw")
 
 
