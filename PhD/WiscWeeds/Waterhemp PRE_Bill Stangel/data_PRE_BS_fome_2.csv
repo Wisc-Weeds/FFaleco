@@ -103,7 +103,7 @@ run,pop,herb,rate,rep,count,biomass
 2,A66,fome,33,2,4,0.018
 2,A66,fome,33,3,4,0.018
 2,A66,fome,33,4,4,0.018
-2,A66,fome,66,1,1,0.008
+2,A66,fome,66,1,0,0
 2,A66,fome,66,2,0,0
 2,A66,fome,66,3,0,0
 2,A66,fome,66,4,0,0
