@@ -24,7 +24,7 @@ library(dplyr)
 
 ```{r}
 
-data <- read.csv("Data Sheet_Meso_GH.csv")
+data <- read.csv("Data Sheet_Meso_GH_A20.csv")
 
 str(data)
 
@@ -34,11 +34,15 @@ fun <- function(x){
   c( mean = mean(x), VAR = var(x), SD = sd(x), SE = std.error(x), n = length(x))
 }
 
-summary.BS <- summaryBy(cbind(count, biomass) ~ rate + pop, data = subset(data, pop=="BS"),
+summary.meso <- summaryBy(cbind(biomass) ~ herb + rate, data = subset(data, herb=="meso"),
           FUN=fun)
 
 
-summary.A66 <- summaryBy(cbind(count, biomass) ~ rate + pop, data = subset(data, pop=="A66"),
+summary.meso_GST <- summaryBy(cbind(biomass) ~ herb + rate, data = subset(data, herb=="meso+GST"),
+          FUN=fun)
+
+
+summary.meso_P450 <- summaryBy(cbind(biomass) ~ herb + rate, data = subset(data, herb=="meso+P450"),
           FUN=fun)
 
 
@@ -50,8 +54,7 @@ summary.A66 <- summaryBy(cbind(count, biomass) ~ rate + pop, data = subset(data,
 
 ```{r}
 
-model.LL4<- drm(biomass ~ rate, pop, herb, fct = LL.4(), data = data, type = "continuous")
-
+model.LL4<- drm(biomass ~ rate, herb, fct = LL.4(), data = data, type = "continuous")
 
 
                 
@@ -80,8 +83,7 @@ mselect(model.LL4,  list(L.3(), L.4(), L.5(), LL.2(), LL.3(), LL.5(), W1.3(), W1
 #LL.3 better option here (lower IC, which actually is AIC (default)). W1.3 could also be used, but since it is a asymmetrical model, I would give preference to LL.3 In symmetrical models, the parameter e and relative ED50 are identical, that is, they both indicate the dose that reduces the response midway between the upper and lower limits. In asymmetrical models, however, the parameter e does not have the same meaning as in symmetrical models, even though it is still the location of the inflection point. For asymmetrical models, ED50 should be estimated as "absolute" and not relative.
 
 
-
-model.LL3<- drm(count ~ rate, pop, fct = LL.3(),  data = data, type = "continuous")
+model.LL3<- drm(biomass ~ rate, herb, fct = LL.3(),  data = data, type = "continuous")
 
 
 
@@ -102,6 +104,7 @@ anova(model.LL3, model.LL4) # p-value > 0.05 means that there is no difference b
 
 ED(model.LL3, c(50, 90), type = "relative") 
 
+
 # Estimated doses required for ED50, and ED90. Estimation of ED90 is statistically less accurate and often subject to high variance. Therefore, is better to use ED50.
 
 ```
@@ -111,9 +114,9 @@ ED(model.LL3, c(50, 90), type = "relative")
 
 ```{r}
 
-EDcomp(model.LL3, c(50, 50), type = "relative", interval = "none", reverse = TRUE)
+EDcomp(model.LL3, c(50, 50), type = "relative", interval = "none", reverse = F)
 
-EDcomp(model.LL3, c(90, 90), type = "relative", interval = "none", reverse = TRUE)
+EDcomp(model.LL3, c(90, 90), type = "relative", interval = "none", reverse = F)
 
 
 # Comparing b parameter (slope)
@@ -133,7 +136,7 @@ compParm(model.LL3, strVal = "e", operator = "-") #here comparing the difference
 
 #SAVE TIFF
 
-```{r}
+#```{r}
 
 tiff(file="C:/Users/felip/OneDrive - UW-Madison/Documents/GitHub/FFaleco/PhD/WiscWeeds/Waterhemp PRE_Bill Stangel/Sulf_DR_counts.tiff",
      width = 10, height = 8, units = "in", res = 600, compression = "lzw")
