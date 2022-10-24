@@ -24,9 +24,11 @@ library(dplyr)
 
 ```{r}
 
-data <- read.csv("Data Sheet_2,4-D_GH_Brook.csv")
+data <- read.csv("Data Sheet_2,4-D_GH.csv")
 
 str(data)
+
+data_Brook <- data %>% filter(pop == "Brook")
 
 
 
@@ -34,15 +36,15 @@ fun <- function(x){
   c( mean = mean(x), VAR = var(x), SD = sd(x), SE = std.error(x), n = length(x))
 }
 
-summary.24D <- summaryBy(cbind(biomass) ~ herb + rate, data = subset(data, herb=="2,4D"),
+summary.24D <- summaryBy(cbind(biomass) ~ herb + rate, data = subset(data_Brook, herb=="2,4D"),
           FUN=fun)
 
 
-summary.24D_GST <- summaryBy(cbind(biomass) ~ herb + rate, data = subset(data, herb=="2,4D+GST"),
+summary.24D_GST <- summaryBy(cbind(biomass) ~ herb + rate, data = subset(data_Brook, herb=="2,4D+GST"),
           FUN=fun)
 
 
-summary.24D_P450 <- summaryBy(cbind(biomass) ~ herb + rate, data = subset(data, herb=="2,4D+P450"),
+summary.24D_P450 <- summaryBy(cbind(biomass) ~ herb + rate, data = subset(data_Brook, herb=="2,4D+P450"),
           FUN=fun)
 
 
@@ -54,7 +56,7 @@ summary.24D_P450 <- summaryBy(cbind(biomass) ~ herb + rate, data = subset(data, 
 
 ```{r}
 
-model.LL4<- drm(biomass ~ rate, herb, fct = LL.4(), data = data, type = "continuous")
+model.LL4<- drm(biomass ~ rate, herb, fct = LL.4(), data = data_Brook, type = "continuous")
 
 
                 
@@ -83,7 +85,7 @@ mselect(model.LL4,  list(L.3(), L.4(), L.5(), LL.2(), LL.3(), LL.5(), W1.3(), W1
 #LL.3 better option here (lower IC, which actually is AIC (default)). W1.3 could also be used, but since it is a asymmetrical model, I would give preference to LL.3 In symmetrical models, the parameter e and relative ED50 are identical, that is, they both indicate the dose that reduces the response midway between the upper and lower limits. In asymmetrical models, however, the parameter e does not have the same meaning as in symmetrical models, even though it is still the location of the inflection point. For asymmetrical models, ED50 should be estimated as "absolute" and not relative.
 
 
-model.LL3<- drm(biomass ~ rate, herb, fct = LL.3(),  data = data, type = "continuous")
+model.LL3<- drm(biomass ~ rate, herb, fct = LL.3(),  data = data_Brook, type = "continuous")
 
 
 modelFit(model.LL3)

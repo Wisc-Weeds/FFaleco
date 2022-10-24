@@ -24,9 +24,11 @@ library(dplyr)
 
 ```{r}
 
-data <- read.csv("Data Sheet_2,4-D_GH_A82.csv")
+data <- read.csv("Data Sheet_2,4-D_GH.csv")
 
 str(data)
+
+data_A82 <- data %>% filter(pop == "A82")
 
 
 
@@ -34,15 +36,15 @@ fun <- function(x){
   c( mean = mean(x), VAR = var(x), SD = sd(x), SE = std.error(x), n = length(x))
 }
 
-summary.24D <- summaryBy(cbind(biomass) ~ herb + rate, data = subset(data, herb=="2,4D"),
+summary.24D <- summaryBy(cbind(biomass) ~ herb + rate, data = subset(data_A82, herb=="2,4D"),
           FUN=fun)
 
 
-summary.24D_GST <- summaryBy(cbind(biomass) ~ herb + rate, data = subset(data, herb=="2,4D+GST"),
+summary.24D_GST <- summaryBy(cbind(biomass) ~ herb + rate, data = subset(data_A82, herb=="2,4D+GST"),
           FUN=fun)
 
 
-summary.24D_P450 <- summaryBy(cbind(biomass) ~ herb + rate, data = subset(data, herb=="2,4D+P450"),
+summary.24D_P450 <- summaryBy(cbind(biomass) ~ herb + rate, data = subset(data_A82, herb=="2,4D+P450"),
           FUN=fun)
 
 
@@ -54,7 +56,7 @@ summary.24D_P450 <- summaryBy(cbind(biomass) ~ herb + rate, data = subset(data, 
 
 ```{r}
 
-model.LL4<- drm(biomass ~ rate, herb, fct = LL.4(), data = data, type = "continuous")
+model.LL4<- drm(biomass ~ rate, herb, fct = LL.4(), data = data_A82, type = "continuous")
 
 
                 
@@ -84,7 +86,7 @@ mselect(model.LL4,  list(L.3(), L.4(), L.5(), LL.2(), LL.3(), LL.5(), W1.3(), W1
 
 
 
-model.LL3<- drm(biomass ~ rate, herb, fct = LL.3(),  data = data, type = "continuous")
+model.LL3<- drm(biomass ~ rate, herb, fct = LL.3(),  data = data_A82, type = "continuous")
 
 
 modelFit(model.LL3)
