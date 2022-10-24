@@ -3,9 +3,10 @@ title: "Waterhemp PRE BS Fomesafen DR Counts"
 author: "Felipe Faleco"
 date: "10/19/2022"
 output:
+  pdf_document: default
   html_document:
     df_print: paged
-editor_options: 
+editor_options:
   chunk_output_type: inline
 ---
 
@@ -133,7 +134,7 @@ compParm(model.W1.3, strVal = "e", operator = "-") #here comparing the differenc
 
 #SAVE TIFF
 
-```{r}
+```{r eval=FALSE, include=FALSE}
 
 tiff(file="C:/Users/felip/OneDrive - UW-Madison/Documents/GitHub/FFaleco/PhD/WiscWeeds/Waterhemp PRE_Bill Stangel/Fome_DR_counts.tiff",
      width = 10, height = 8, units = "in", res = 600, compression = "lzw")
