@@ -1,0 +1,241 @@
+---
+title: "Waterhemp MIs GH Mesotrione Biomass"
+author: "Felipe Faleco"
+date: "10/21/2022"
+output:
+  html_document:
+    df_print: paged
+editor_options: 
+  chunk_output_type: inline
+---
+
+```{r setup, include=FALSE}
+
+knitr::opts_chunk$set(echo = TRUE)
+library(drc)
+library(doBy)
+library(plotrix)
+library(dplyr)
+
+```
+
+
+# CONFIRMING RESISTANCE
+
+
+## READ DATA
+
+```{r}
+
+data <- read.csv("Data Sheet_Meso_GH_2.csv")
+
+str(data)
+
+
+data_meso <- data %>% filter(herb == "meso")
+
+
+
+fun <- function(x){
+  c( mean = mean(x), VAR = var(x), SD = sd(x), SE = std.error(x), n = length(x))
+}
+
+summary.meso <- summaryBy(cbind(biomass) ~ pop + rate, data = subset(data_meso),
+          FUN=fun)
+
+
+```
+
+
+
+## MODEL LL.4
+
+```{r}
+
+model.LL4 <- drm(biomass ~ rate, pop, fct = LL.4(), data = data_meso, type = "continuous")
+
+
+model.LL4_biored<- drm(bio_red ~ rate, pop, fct = LL.4(), data = data_meso, type = "continuous")
+
+
+                
+modelFit(model.LL4) # higher the p-value, better.
+
+modelFit(model.LL4_biored)
+
+
+
+summary(model.LL4) 
+
+summary(model.LL4_biored) 
+
+# c: lower limit (models with negative lower limit are biologically impossible. E.g., negative biomass, negative % biomass reduction, or negative % control)
+
+# d: upper limit (models where the response variable is in %, upper limit bigger than 100% are biologically impossible. E.g., % biomass reduction, % control)
+
+# b: slope around e (inflection point)
+
+# e: e (inflection point). Represents the dose producing a response halfway between the u and l parameters (ED50)
+
+```
+
+
+
+## MODEL SELECTION
+
+```{r, warning=FALSE}
+
+mselect(model.LL4,  list(L.3(), L.4(), L.5(), LL.2(), LL.3(), LL.5(), W1.3(), W1.4(), W2.4(), baro5()), linreg = T) 
+
+mselect(model.LL4_biored,  list(L.3(), L.4(), L.5(), LL.2(), LL.3(), LL.5(), W1.3(), W1.4(), W2.4(), baro5()), linreg = T) 
+
+#LL.3 better option here (lower IC, which actually is AIC (default)). W1.3 could also be used, but since it is a asymmetrical model, I would give preference to LL.3 In symmetrical models, the parameter e and relative ED50 are identical, that is, they both indicate the dose that reduces the response midway between the upper and lower limits. In asymmetrical models, however, the parameter e does not have the same meaning as in symmetrical models, even though it is still the location of the inflection point. For asymmetrical models, ED50 should be estimated as "absolute" and not relative.
+
+
+model.LL3<- drm(biomass ~ rate, pop, fct = LL.3(),  data = data_meso, type = "continuous")
+
+model.LL3_biored<- drm(bio_red ~ rate, pop, fct = LL.3(),  data = data_meso, type = "continuous")
+
+
+modelFit(model.LL3)
+
+modelFit(model.LL3_biored)
+
+
+summary(model.LL3) # NO parameter c (lower limit). It means lower limit was set to zero.
+
+summary(model.LL3_biored)
+
+
+anova(model.LL3, model.LL4) # p-value > 0.05 means that there is no difference between models. Therefore, we can use model LL.3
+
+```
+
+
+
+## ED50 AND ED 90
+
+```{r}
+
+ED(model.LL3, c(50, 90), type = "relative") 
+
+ED(model.LL3_biored, c(50, 90), type = "relative")
+
+
+# Estimated doses required for ED50, and ED90. Estimation of ED90 is statistically less accurate and often subject to high variance. Therefore, is better to use ED50.
+
+```
+
+
+## ED 50 RI AND PARAMETERS STUDENT T-TEST COMPARISONS
+
+```{r}
+
+EDcomp(model.LL3, c(50, 50), type = "relative", interval = "none", reverse = F)
+
+EDcomp(model.LL3, c(90, 90), type = "relative", interval = "none", reverse = F)
+
+
+# Comparing b parameter (slope)
+compParm(model.LL3, strVal = "b", operator = "-")
+
+
+# Comparing d parameter (upper limit)
+compParm(model.LL3, strVal = "d", operator = "-")
+
+
+# Comparing e parameter (ED50)
+compParm(model.LL3, strVal = "e", operator = "-") #here comparing the difference, and not the ratio like in the EDcomp
+
+compParm(model.LL3_biored, strVal = "e", operator = "-")
+
+
+```
+
+
+
+##SAVE TIFF
+
+```{r}
+
+tiff(file="C:/Users/felip/OneDrive - UW-Madison/Documents/GitHub/FFaleco/PhD/PhD Projects/Waterhemp/Metabolism Inhibitors/GH - Copy/Mesotrione/Meso_DR_biomass.tiff",
+     width = 10, height = 8, units = "in", res = 600, compression = "lzw")
+
+
+par(mar = c(5,5,1,1))
+
+
+plot(model.LL3,
+     type = "average",
+     xlab = expression(paste("Mesotrione dose (g ai ha"^-1, ")")),
+     ylab = expression(paste("Biomass (g plant"^-1, ")")),
+     ylim = c(0, 4),
+     col = c("darkgreen", "red", "navy", "orange"),
+     pch = c(19, 17, 15, 18),
+     cex = 1.1,
+     cex.axis = 1,
+     cex.lab = 1.5,
+     cex.legend = 1.2,
+     legendPos = c(1100, 3.5),
+     lwd = 1)
+
+
+points(x = c(summary(model.LL3)$coefficients[9, 1], 
+             summary(model.LL3)$coefficients[10, 1], 
+             summary(model.LL3)$coefficients[11, 1], 
+             summary(model.LL3)$coefficients[12, 1]),
+       y = c((summary(model.LL3)$coefficients[5, 1]/2), 
+             (summary(model.LL3)$coefficients[6, 1]/2), 
+             (summary(model.LL3)$coefficients[7, 1]/2), 
+             (summary(model.LL3)$coefficients[8, 1]/2)),
+       pch = 8)
+
+
+abline(v = 105.1, 
+       lwd = 2, 
+       lty = "twodash",
+       col = "black")
+
+
+#text(x = 350, y = 1.5, 
+     #labels = expression(paste("ED"[50] ~ "meso = 11.4 ("%+-% "2.5)")),
+     #cex = 1.0,
+     #col = "black",
+     #font = 2)
+
+
+#text(x = 460, y = 1.3, 
+     #labels = expression(paste("ED"[50] ~ "meso+P450 = 5.8 ("%+-% "1.5)*")),
+     #cex = 1.0,
+     #col = "black",
+     #font = 2)
+
+
+#text(x = 460, y = 1.1, 
+     #labels = expression(paste("ED"[50] ~ "meso+GST = 4.8 ("%+-% "1.2)**")),
+     #cex = 1.0,
+     #col = "black",
+     #font = 2)
+
+
+#text(x = 500, y = 2.2, 
+     #labels = expression("p-value = 0.01"),
+     #cex = 1.3,
+     #col = "black",
+     #font = 2)
+
+
+text(x = 320, y = 0.4, 
+     labels = expression("1x rate: 105.1 g ai ha" ^-1),
+     cex = 1.0,
+     col = "black",
+     font = 2)
+
+
+
+dev.off()
+
+
+```
+
+
