@@ -139,9 +139,9 @@ compParm(model.LL3, strVal = "e", operator = "-") #here comparing the difference
 
 #SAVE TIFF
 
-#```{r}
+```{r}
 
-tiff(file="C:/Users/felip/OneDrive - UW-Madison/Documents/GitHub/FFaleco/PhD/PhD Projects/Waterhemp/Metabolism Inhibitors/GH/2,4-D/2,4-D_Brook_DR_biomass.tiff",
+tiff(file="C:/Users/felip/OneDrive - UW-Madison/Documents/GitHub/FFaleco/PhD/PhD Projects/Waterhemp/Metabolism Inhibitors/GH/2,4-D/GH_2,4-D+MIs_A82_DR biomass.tiff",
      width = 10, height = 8, units = "in", res = 600, compression = "lzw")
 
 
@@ -151,7 +151,7 @@ par(mar = c(5,5,1,1))
 plot(model.LL3,
      type = "average",
      xlab = expression(paste("2,4-D dose (g ai ha"^-1, ")")),
-     ylab = expression(paste("Brook Biomass (g plant"^-1, ")")),
+     ylab = expression(paste("A82 Biomass (g plant"^-1, ")")),
      ylim = c(0, 4),
      col = c("darkgreen", "red", "navy"),
      pch = c(19, 17, 15),
@@ -164,41 +164,25 @@ plot(model.LL3,
 
 
 
+points(x = c(summary(model.LL3)$coefficients[7, 1], 
+             summary(model.LL3)$coefficients[8, 1],
+             summary(model.LL3)$coefficients[9, 1]),
+       y = c((summary(model.LL3)$coefficients[4, 1]/2), 
+             (summary(model.LL3)$coefficients[5, 1]/2),
+             (summary(model.LL3)$coefficients[6, 1]/2)),
+       pch = 8,
+       cex = 1.3)
+
+
+
 abline(v = 1065, 
        lwd = 2, 
        lty = "twodash",
        col = "black")
 
 
-text(x = 4000, y = 2.0, 
-     labels = expression(paste("ED"[50] ~ "2,4-D= 297.6 ("%+-% "68.6)")),
-     cex = 0.95,
-     col = "black",
-     font = 2)
 
-
-text(x = 5300, y = 1.8, 
-     labels = expression(paste("ED"[50] ~ "meso+P450= 193.0 ("%+-% "63.8)")),
-     cex = 0.95,
-     col = "black",
-     font = 2)
-
-
-text(x = 5600, y = 1.6, 
-     labels = expression(paste("ED"[50] ~ "meso+GST= 116.6 ("%+-% "37.4)**")),
-     cex = 0.95,
-     col = "black",
-     font = 2)
-
-
-#text(x = 500, y = 2.2, 
-     #labels = expression("p-value = 0.01"),
-     #cex = 1.3,
-     #col = "black",
-     #font = 2)
-
-
-text(x = 3200, y = 1, 
+text(x = 3200, y = 0.5, 
      labels = expression("1x rate: 1065 g ai ha" ^-1),
      cex = 0.95,
      col = "black",
