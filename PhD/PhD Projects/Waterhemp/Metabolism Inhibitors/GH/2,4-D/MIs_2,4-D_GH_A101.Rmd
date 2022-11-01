@@ -28,7 +28,7 @@ data <- read.csv("Data Sheet_2,4-D_GH.csv")
 
 str(data)
 
-data_Brook <- data %>% filter(pop == "Brook")
+data_A101 <- data %>% filter(pop == "A101")
 
 
 
@@ -36,15 +36,15 @@ fun <- function(x){
   c( mean = mean(x), VAR = var(x), SD = sd(x), SE = std.error(x), n = length(x))
 }
 
-summary.24D <- summaryBy(cbind(biomass) ~ herb + rate, data = subset(data_Brook, herb=="2,4D"),
+summary.24D <- summaryBy(cbind(biomass) ~ herb + rate, data = subset(data_A101, herb=="2,4D"),
           FUN=fun)
 
 
-summary.24D_GST <- summaryBy(cbind(biomass) ~ herb + rate, data = subset(data_Brook, herb=="2,4D+GST"),
+summary.24D_GST <- summaryBy(cbind(biomass) ~ herb + rate, data = subset(data_A101, herb=="2,4D+GST"),
           FUN=fun)
 
 
-summary.24D_P450 <- summaryBy(cbind(biomass) ~ herb + rate, data = subset(data_Brook, herb=="2,4D+P450"),
+summary.24D_P450 <- summaryBy(cbind(biomass) ~ herb + rate, data = subset(data_A101, herb=="2,4D+P450"),
           FUN=fun)
 
 
@@ -56,7 +56,7 @@ summary.24D_P450 <- summaryBy(cbind(biomass) ~ herb + rate, data = subset(data_B
 
 ```{r}
 
-model.LL4<- drm(biomass ~ rate, herb, fct = LL.4(), data = data_Brook, type = "continuous")
+model.LL4<- drm(biomass ~ rate, herb, fct = LL.4(), data = data_A101, type = "continuous")
 
 
                 
@@ -85,7 +85,7 @@ mselect(model.LL4,  list(L.3(), L.4(), L.5(), LL.2(), LL.3(), LL.5(), W1.3(), W1
 #LL.3 better option here (lower IC, which actually is AIC (default)). W1.3 could also be used, but since it is a asymmetrical model, I would give preference to LL.3 In symmetrical models, the parameter e and relative ED50 are identical, that is, they both indicate the dose that reduces the response midway between the upper and lower limits. In asymmetrical models, however, the parameter e does not have the same meaning as in symmetrical models, even though it is still the location of the inflection point. For asymmetrical models, ED50 should be estimated as "absolute" and not relative.
 
 
-model.LL3<- drm(biomass ~ rate, herb, fct = LL.3(),  data = data_Brook, type = "continuous")
+model.LL3<- drm(biomass ~ rate, herb, fct = LL.3(),  data = data_A101, type = "continuous")
 
 
 modelFit(model.LL3)
@@ -140,7 +140,7 @@ compParm(model.LL3, strVal = "e", operator = "-") #here comparing the difference
 
 ```{r}
 
-tiff(file="C:/Users/felip/OneDrive - UW-Madison/Documents/GitHub/FFaleco/PhD/PhD Projects/Waterhemp/Metabolism Inhibitors/GH/2,4-D/2,4-D_Brook_DR_biomass.tiff",
+tiff(file="C:/Users/felip/OneDrive - UW-Madison/Documents/GitHub/FFaleco/PhD/PhD Projects/Waterhemp/Metabolism Inhibitors/GH/2,4-D/GH_2,4-D+MIs_A101_DR biomass.tiff",
      width = 10, height = 8, units = "in", res = 600, compression = "lzw")
 
 
@@ -150,7 +150,7 @@ par(mar = c(5,5,1,1))
 plot(model.LL3,
      type = "average",
      xlab = expression(paste("2,4-D dose (g ai ha"^-1, ")")),
-     ylab = expression(paste("Brook Biomass (g plant"^-1, ")")),
+     ylab = expression(paste("A101 Biomass (g plant"^-1, ")")),
      ylim = c(0, 4),
      col = c("darkgreen", "red", "navy"),
      pch = c(19, 17, 15),
@@ -163,41 +163,46 @@ plot(model.LL3,
 
 
 
+points(x = c(summary(model.LL3)$coefficients[7, 1], 
+             summary(model.LL3)$coefficients[8, 1],
+             summary(model.LL3)$coefficients[9, 1]),
+       y = c((summary(model.LL3)$coefficients[4, 1]/2), 
+             (summary(model.LL3)$coefficients[5, 1]/2),
+             (summary(model.LL3)$coefficients[6, 1]/2)),
+       pch = 8,
+       cex = 1.3)
+
+
+
 abline(v = 1065, 
        lwd = 2, 
        lty = "twodash",
        col = "black")
 
 
-text(x = 4000, y = 2.0, 
-     labels = expression(paste("ED"[50] ~ "2,4-D= 297.6 ("%+-% "68.6)")),
+text(x = 4800, y = 2.0, 
+     labels = expression(paste("ED"[50] ~ "2,4-D+GST= 116.6 ("%+-% "37.4)" ^A)),
      cex = 0.95,
      col = "black",
      font = 2)
 
 
-text(x = 5300, y = 1.8, 
-     labels = expression(paste("ED"[50] ~ "meso+P450= 193.0 ("%+-% "63.8)")),
+text(x = 5200, y = 1.8, 
+     labels = expression(paste("ED"[50] ~ "2,4-D+P450= 193.0 ("%+-% "63.8)" ^AB)),
      cex = 0.95,
      col = "black",
      font = 2)
 
 
-text(x = 5600, y = 1.6, 
-     labels = expression(paste("ED"[50] ~ "meso+GST= 116.6 ("%+-% "37.4)**")),
+text(x = 3800, y = 1.6, 
+     labels = expression(paste("ED"[50] ~ "2,4-D= 297.6 ("%+-% "68.6)" ^B)),
      cex = 0.95,
      col = "black",
      font = 2)
 
 
-#text(x = 500, y = 2.2, 
-     #labels = expression("p-value = 0.01"),
-     #cex = 1.3,
-     #col = "black",
-     #font = 2)
 
-
-text(x = 3200, y = 1, 
+text(x = 3200, y = 0.9, 
      labels = expression("1x rate: 1065 g ai ha" ^-1),
      cex = 0.95,
      col = "black",

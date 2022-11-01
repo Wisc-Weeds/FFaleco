@@ -174,33 +174,31 @@ points(x = c(summary(model.LL3)$coefficients[7, 1],
        cex = 1.3)
 
 
-
 abline(v = 105.1, 
        lwd = 2, 
        lty = "twodash",
        col = "black")
 
 
-text(x = 350, y = 1.5, 
-     labels = expression(paste("ED"[50] ~ "meso = 11.4 ("%+-% "2.5)")),
+text(x = 460, y = 1.5, 
+     labels = expression(paste("ED"[50] ~ "meso+GST = 4.8 ("%+-% "1.2)" ^A)),
      cex = 1.0,
      col = "black",
      font = 2)
 
 
-text(x = 460, y = 1.3, 
-     labels = expression(paste("ED"[50] ~ "meso+P450 = 5.8 ("%+-% "1.5)*")),
+text(x = 500, y = 1.3, 
+     labels = expression(paste("ED"[50] ~ "meso+P450 = 5.8 ("%+-% "1.5)" ^AB)),
      cex = 1.0,
      col = "black",
      font = 2)
 
 
-text(x = 460, y = 1.1, 
-     labels = expression(paste("ED"[50] ~ "meso+GST = 4.8 ("%+-% "1.2)**")),
+text(x = 380, y = 1.1, 
+     labels = expression(paste("ED"[50] ~ "meso = 11.4 ("%+-% "2.5)" ^B)),
      cex = 1.0,
      col = "black",
      font = 2)
-
 
 
 text(x = 320, y = 0.4, 
