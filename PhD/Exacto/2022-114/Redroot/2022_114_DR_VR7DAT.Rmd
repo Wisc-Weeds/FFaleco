@@ -1,7 +1,7 @@
 ---
-title: "Exacto 2022-108 Dose Response VR7DAT"
+title: "Exacto 2022-114 Dose Response Redroot VR7DAT"
 author: "Felipe Faleco"
-date: "09/05/2022"
+date: "11/07/2022"
 output:
   html_document:
     df_print: paged
@@ -23,7 +23,7 @@ library(plotrix)
 
 ```{r}
 
-data <- read.csv("data_2022_108.csv")
+data <- read.csv("data_2022_114_redroot.csv")
 
 str(data)
 
@@ -33,11 +33,11 @@ fun <- function(x){
   c( mean = mean(x), VAR = var(x), SD = sd(x), SE = std.error(x), n = length(x))
 }
 
-summary.Reflex <- summaryBy(cbind(vr_7dat, vr_14dat, vr_21dat,biomass, surv) ~ rate + name, data = subset(data, name=="Reflex"),
+summary.EXT1494 <- summaryBy(cbind(vr_7dat, vr_14dat) ~ rate + name, data = subset(data, name=="EXT1494"),
           FUN=fun)
 
 
-summary.EXT1490 <- summaryBy(cbind(vr_7dat, vr_14dat, vr_21dat,biomass, surv) ~ rate + name, data = subset(data, name=="EXT 1490"),
+summary.Pursuit <- summaryBy(cbind(vr_7dat, vr_14dat) ~ rate + name, data = subset(data, name=="Pursuit"),
           FUN=fun)
 
 ```
@@ -72,10 +72,6 @@ summary(model.LL4)
 
 ```{r, warning=FALSE}
 
-getMeanFunctions(3)
-
-getMeanFunctions(4)
-
 mselect(model.LL4,  list(L.3(),  L.4(), L.5(), LL.2(), LL.3(), LL.3u(), LL2.3(), LL2.3u(), LL.4(), LL2.4(), LL.5(), W1.3(), W1.4(), W2.4(), baro5()),
         linreg = T) 
 
@@ -85,21 +81,16 @@ mselect(model.LL4,  list(L.3(),  L.4(), L.5(), LL.2(), LL.3(), LL.3u(), LL2.3(),
 
 model.LL3<- drm(vr_7dat ~ rate, name, fct = LL.3(),  data = data, type = "continuous")
 
-model.L.3<- drm(vr_7dat ~ rate, name, fct = L.3(),  data = data, type = "continuous")
 
 
 modelFit(model.LL3)
 
-modelFit(model.L.3)
-
 
 summary(model.LL3) # NO parameter c (lower limit). It means lower limit was set to zero.
 
-summary(model.L.3)
 
 
-
-anova(model.LL4, model.L.3) # p-value > 0.05 means that there is no difference between models. Therefore, we can use model LL.3
+anova(model.LL4, model.LL3) # p-value > 0.05 means that there is no difference between models. Therefore, we can use model LL.3
 
 ```
 
@@ -141,37 +132,9 @@ compParm(model.LL3, strVal = "e", operator = "-") #here comparing the difference
 
 
 
-# PLOT
-
-```{r}
-
-par(mar = c(5,5,1,1))
-
-plot(model.LL3,
-     type = "average",
-     xlab = expression(paste("Fomesafen dose (g ai ha"^-1, ")")),
-     ylab = expression(paste("Control 7 DAT (%)")),
-     col = c("red", "darkgreen"),
-     pch = c(19, 17),
-     cex = 1.2,
-     cex.axis = 1,
-     cex.lab = 1.5,
-     #cex.legend = 1.4,
-     #legendPos = c(1450, 85),
-     lwd = 1)
-
-abline(v = 280, 
-       lwd = 2, 
-       lty = "twodash",
-       col = "black")
-
-```
-
-
-
 #SAVE TIFF
 
-```{r}
+#```{r}
 
 tiff(file="C:/Users/felip/OneDrive - UW-Madison/Documents/GitHub/FFaleco/PhD/Exacto/2022-108/DR_vr7DAT.tiff",
      width = 10, height = 8, units = "in", res = 600, compression = "lzw")
