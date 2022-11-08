@@ -179,36 +179,36 @@ abline(v = 1121,
 
 
 
-text(x = 4500, y = 2.0, 
-     labels = expression(paste("ED"[50] ~ "A101 = 297.6 ("%+-% "61.7)" ^A)),
+text(x = 4500, y = 2.3, 
+     labels = expression(paste("ED"[50] ~ "A75 = 728.1 ("%+-% "146.2)" ^A)),
      cex = 1.0,
      col = "black",
      font = 2)
 
 
-text(x = 4200, y = 1.8, 
-     labels = expression(paste("ED"[50] ~ "A75 = 111.6 ("%+-% "25.8)" ^B)),
+text(x = 5000, y = 2.1, 
+     labels = expression(paste("ED"[50] ~ "A103 = 488.9 ("%+-% "128.0)" ^AB)),
      cex = 1.0,
      col = "black",
      font = 2)
 
 
-text(x = 4200, y = 1.6, 
-     labels = expression(paste("ED"[50] ~ "A82 = 104.7 ("%+-% "21.5)" ^B)),
+text(x = 4700, y = 1.9, 
+     labels = expression(paste("ED"[50] ~ "A101 = 200.7 ("%+-% "71.0)" ^BC)),
      cex = 1.0,
      col = "black",
      font = 2)
 
 
-text(x = 4200, y = 1.4, 
-     labels = expression(paste("ED"[50] ~ "A103 = 55.2 ("%+-% "12.3)" ^C)),
+text(x = 4100, y = 1.7, 
+     labels = expression(paste("ED"[50] ~ "A82 = 71.6 ("%+-% "29.7)" ^C)),
      cex = 1.0,
      col = "black",
      font = 2)
 
 
-text(x = 3200, y = 0.7, 
-     labels = expression("1x rate: 1065 g ai ha" ^-1),
+text(x = 3200, y = 1.1, 
+     labels = expression("1x rate: 1121 g ai ha" ^-1),
      cex = 1.0,
      col = "black",
      font = 2)
