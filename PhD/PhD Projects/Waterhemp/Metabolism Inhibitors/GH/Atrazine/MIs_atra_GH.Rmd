@@ -1,5 +1,5 @@
 ---
-title: "Waterhemp MIs GH 2,4-D Biomass"
+title: "Waterhemp MIs GH Atrazine Biomass"
 author: "Felipe Faleco"
 date: "10/21/2022"
 output:
@@ -27,19 +27,19 @@ library(dplyr)
 
 ```{r}
 
-data <- read.csv("Data Sheet_2,4-D_GH.csv")
+data <- read.csv("Data Sheet_Atrazine_GH_2.csv")
 
 str(data)
 
 
-data_24D <- data %>% filter(herb == "2,4D")
+data_atra <- data %>% filter(herb == "atra")
 
 
 fun <- function(x){
   c( mean = mean(x), VAR = var(x), SD = sd(x), SE = std.error(x), n = length(x))
 }
 
-summary.24D <- summaryBy(cbind(biomass) ~ pop + rate, data = subset(data_24D),
+summary.atra <- summaryBy(cbind(biomass) ~ pop + rate, data = data_atra,
           FUN=fun)
 
 
@@ -51,7 +51,7 @@ summary.24D <- summaryBy(cbind(biomass) ~ pop + rate, data = subset(data_24D),
 
 ```{r}
 
-model.LL4<- drm(biomass ~ rate, pop, fct = LL.4(), data = data_24D, type = "continuous")
+model.LL4<- drm(biomass ~ rate, pop, fct = LL.4(), data = data_atra, type = "continuous")
 
 
                 
@@ -80,7 +80,7 @@ mselect(model.LL4,  list(L.3(), L.4(), L.5(), LL.2(), LL.3(), LL.5(), W1.3(), W1
 #LL.3 better option here (lower IC, which actually is AIC (default)). W1.3 could also be used, but since it is a asymmetrical model, I would give preference to LL.3 In symmetrical models, the parameter e and relative ED50 are identical, that is, they both indicate the dose that reduces the response midway between the upper and lower limits. In asymmetrical models, however, the parameter e does not have the same meaning as in symmetrical models, even though it is still the location of the inflection point. For asymmetrical models, ED50 should be estimated as "absolute" and not relative.
 
 
-model.LL3<- drm(biomass ~ rate, pop, fct = LL.3(),  data = data_24D, type = "continuous")
+model.LL3<- drm(biomass ~ rate, pop, fct = LL.3(),  data = data_atra, type = "continuous")
 
 
 
@@ -136,7 +136,7 @@ compParm(model.LL3, strVal = "e", operator = "-") #here comparing the difference
 
 ```{r}
 
-tiff(file="C:/Users/felip/OneDrive - UW-Madison/Documents/GitHub/FFaleco/PhD/PhD Projects/Waterhemp/Metabolism Inhibitors/GH/2,4-D/GH_2,4D Only_All Pops_DR biomass.tiff",
+tiff(file="C:/Users/felip/OneDrive - UW-Madison/Documents/GitHub/FFaleco/PhD/PhD Projects/Waterhemp/Metabolism Inhibitors/GH/Atrazine/GH_Atra Only_All Pops_DR biomass.tiff",
      width = 10, height = 8, units = "in", res = 600, compression = "lzw")
 
 
@@ -145,7 +145,7 @@ par(mar = c(5,5,1,1))
 
 plot(model.LL3,
      type = "average",
-     xlab = expression(paste("2,4-D dose (g ai ha"^-1, ")")),
+     xlab = expression(paste("Atrazine dose (g ai ha"^-1, ")")),
      ylab = expression(paste("Biomass (g plant"^-1, ")")),
      ylim = c(0, 4),
      col = c("darkgreen", "red", "navy", "orange"),
@@ -172,7 +172,7 @@ points(x = c(summary(model.LL3)$coefficients[9, 1],
 
 
 
-abline(v = 1065, 
+abline(v = 1121, 
        lwd = 2, 
        lty = "twodash",
        col = "black")
