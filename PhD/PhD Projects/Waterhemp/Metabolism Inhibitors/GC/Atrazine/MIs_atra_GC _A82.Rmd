@@ -80,6 +80,8 @@ mselect(model.LL4,  list(L.3(), L.4(), L.5(), LL.2(), LL.3(), LL.5(), W1.3(), W1
 #LL.3 better option here (lower IC, which actually is AIC (default)). W1.3 could also be used, but since it is a asymmetrical model, I would give preference to LL.3 In symmetrical models, the parameter e and relative ED50 are identical, that is, they both indicate the dose that reduces the response midway between the upper and lower limits. In asymmetrical models, however, the parameter e does not have the same meaning as in symmetrical models, even though it is still the location of the inflection point. For asymmetrical models, ED50 should be estimated as "absolute" and not relative.
 
 
+model.LL3<- drm(biomass ~ rate, temp, fct = LL.3(), data = data_A82_atra, type = "continuous")
+
 
 modelFit(model.LL3)
 
@@ -142,10 +144,10 @@ par(mar = c(5,5,1,1))
 
 plot(model.LL3,
      type = "average",
-     xlab = expression(paste("Atrazine dose (g ai ha"^-1, ")")),
+     xlab = expression(paste("Atrazine rate (g ai ha"^-1, ")")),
      ylab = expression(paste("A82 Biomass (g plant"^-1, ")")),
      ylim = c(0, 3),
-     col = c("darkgreen", "red"),
+     col = c("red", "darkgreen"),
      pch = c(19, 17),
      cex = 1.0,
      cex.axis = 1,
