@@ -145,7 +145,7 @@ par(mar = c(5,5,1,1))
 
 plot(model.LL3,
      type = "average",
-     xlab = expression(paste("Atrazine dose (g ai ha"^-1, ")")),
+     xlab = expression(paste("Atrazine rate (g ai ha"^-1, ")")),
      ylab = expression(paste("Biomass (g plant"^-1, ")")),
      ylim = c(0, 4),
      col = c("darkgreen", "red", "navy", "orange"),

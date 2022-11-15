@@ -145,7 +145,7 @@ par(mar = c(5,5,1,1))
 
 plot(model.LL3,
      type = "average",
-     xlab = expression(paste("Mesotrione dose (g ai ha"^-1, ")")),
+     xlab = expression(paste("Mesotrione rate (g ai ha"^-1, ")")),
      ylab = expression(paste("Biomass (g plant"^-1, ")")),
      ylim = c(0, 4),
      col = c("darkgreen", "red", "navy", "orange"),
@@ -154,7 +154,7 @@ plot(model.LL3,
      cex.axis = 1,
      cex.lab = 1.5,
      cex.legend = 1.2,
-     legendPos = c(1100, 3.5),
+     legendPos = c(600, 3.5),
      lwd = 1)
 
 
@@ -180,7 +180,7 @@ abline(v = 105.1,
 
 
 text(x = 320, y = 0.4, 
-     labels = expression("1x rate: 105.1 g ai ha" ^-1),
+     labels = expression("1x rate: 105 g ai ha" ^-1),
      cex = 1.0,
      col = "black",
      font = 2)

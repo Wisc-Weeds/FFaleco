@@ -149,7 +149,7 @@ par(mar = c(5,5,1,1))
 
 plot(model.LL3,
      type = "average",
-     xlab = expression(paste("2,4-D dose (g ai ha"^-1, ")")),
+     xlab = expression(paste("2,4-D rate (g ae ha"^-1, ")")),
      ylab = expression(paste("A101 Biomass (g plant"^-1, ")")),
      ylim = c(0, 4),
      col = c("darkgreen", "red", "navy"),
@@ -203,7 +203,7 @@ text(x = 3800, y = 1.6,
 
 
 text(x = 3200, y = 0.9, 
-     labels = expression("1x rate: 1065 g ai ha" ^-1),
+     labels = expression("1x rate: 1065 g ae ha" ^-1),
      cex = 0.95,
      col = "black",
      font = 2)
