@@ -144,7 +144,7 @@ par(mar = c(5,5,1,1))
 plot(model.LL3,
      type = "average",
      xlab = expression(paste("Sulfentrazone rate (g ai ha"^-1, ")")),
-     ylab = expression(paste("Plant Density (plant EU"^-1, ")")),
+     ylab = expression(paste("Plant Density (plant pot"^-1, ")")),
      ylim = c(0, 8),
      col = c("red", "darkgreen"),
      pch = c(19, 17),
