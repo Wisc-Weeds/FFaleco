@@ -146,7 +146,7 @@ par(mar = c(5,5,1,1))
 plot(model.LL4,
      type = "average",
      xlab = expression(paste("Fomesafen rate (g ai ha"^-1, ")")),
-     ylab = expression(paste("Plant Density (plant EU"^-1, ")")),
+     ylab = expression(paste("Plant Density (plant pot"^-1, ")")),
      ylim = c(0, 15),
      col = c("red", "darkgreen"),
      pch = c(19, 17),
