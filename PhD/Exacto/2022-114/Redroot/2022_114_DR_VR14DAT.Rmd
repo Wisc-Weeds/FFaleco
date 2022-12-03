@@ -1,5 +1,5 @@
 ---
-title: "Exacto 2022-114 Dose Response Redroot VR7DAT"
+title: "Exacto 2022-114 Dose Response Redroot VR14DAT"
 author: "Felipe Faleco"
 date: "11/07/2022"
 output:
@@ -33,11 +33,11 @@ fun <- function(x){
   c( mean = mean(x), VAR = var(x), SD = sd(x), SE = std.error(x), n = length(x))
 }
 
-summary.EXT1494 <- summaryBy(cbind(vr_7dat) ~ rate + name, data = subset(data, name=="EXT1494"),
+summary.EXT1494 <- summaryBy(cbind(vr_14dat) ~ rate + name, data = subset(data, name=="EXT1494"),
           FUN=fun)
 
 
-summary.Pursuit <- summaryBy(cbind(vr_7dat) ~ rate + name, data = subset(data, name=="Pursuit"),
+summary.Pursuit <- summaryBy(cbind(vr_14dat) ~ rate + name, data = subset(data, name=="Pursuit"),
           FUN=fun)
 
 ```
@@ -48,7 +48,7 @@ summary.Pursuit <- summaryBy(cbind(vr_7dat) ~ rate + name, data = subset(data, n
 
 ```{r}
 
-model.LL4<- drm(vr_7dat ~ rate, name, fct = LL.4(),  data = data)
+model.LL4<- drm(vr_14dat ~ rate, name, fct = LL.4(),  data = data)
 
 
 
@@ -79,7 +79,7 @@ mselect(model.LL4,  list(L.3(),  L.4(), L.5(), LL.2(), LL.3(), LL.3u(), LL2.3(),
 
 
 
-model.LL3<- drm(vr_7dat ~ rate, name, fct = LL.3(),  data = data, type = "continuous")
+model.LL3<- drm(vr_14dat ~ rate, name, fct = LL.3(),  data = data, type = "continuous")
 
 
 
@@ -136,7 +136,7 @@ compParm(model.LL3, strVal = "e", operator = "-") #here comparing the difference
 
 ```{r}
 
-tiff(file="C:/Users/felip/OneDrive - UW-Madison/Documents/GitHub/FFaleco/PhD/Exacto/2022-114/Redroot/2022_114_DR_VR7DAT.tiff",
+tiff(file="C:/Users/felip/OneDrive - UW-Madison/Documents/GitHub/FFaleco/PhD/Exacto/2022-114/Redroot/2022_114_DR_VR14DAT.tiff",
      width = 10, height = 8, units = "in", res = 600, compression = "lzw")
 
 
@@ -146,7 +146,7 @@ par(mar = c(5,5,1,1))
 plot(model.LL3,
      type = "average",
      xlab = expression(paste("Imazethapyr rate (g ai ha"^-1, ")")),
-     ylab = expression(paste("Control 7 DAT (%)")),
+     ylab = expression(paste("Control 14 DAT (%)")),
      col = c("darkgreen", "red"),
      pch = c(19, 17),
      cex = 1.5,
