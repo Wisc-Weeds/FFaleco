@@ -23,7 +23,7 @@ library(plotrix)
 
 ```{r}
 
-data <- read.csv("data_2022_114_redroot.csv")
+data <- read.csv("data_2022_114_sorghum.csv")
 
 str(data)
 
@@ -136,7 +136,7 @@ compParm(model.LL3, strVal = "e", operator = "-") #here comparing the difference
 
 ```{r}
 
-tiff(file="C:/Users/felip/OneDrive - UW-Madison/Documents/GitHub/FFaleco/PhD/Exacto/2022-114/Redroot/2022_114_DR_survival.tiff",
+tiff(file="C:/Users/felip/OneDrive - UW-Madison/Documents/GitHub/FFaleco/PhD/Exacto/2022-114/Sorghum/2022_114_DR_survival.tiff",
      width = 10, height = 8, units = "in", res = 600, compression = "lzw")
 
 
