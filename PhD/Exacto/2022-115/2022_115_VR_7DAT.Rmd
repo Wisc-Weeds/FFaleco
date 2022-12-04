@@ -1,5 +1,5 @@
 ---
-title: "Exacto 2022-107_Redroot VR-7DAT"
+title: "Exacto 2022-115 VR 7DAT"
 author: "Felipe Faleco"
 date: "2022-09-09"
 output: html_document
@@ -23,7 +23,7 @@ library(ggplot2)
 
 ```{r}
 
-data <- read.csv("data_redroot_reduction.csv")
+data <- read.csv("data_2022_115.csv")
 
 str(data)
 
