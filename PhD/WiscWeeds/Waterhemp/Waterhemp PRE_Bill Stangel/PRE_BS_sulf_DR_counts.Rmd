@@ -134,7 +134,7 @@ compParm(model.LL3, strVal = "e", operator = "-") #here comparing the difference
 
 ```{r}
 
-tiff(file="C:/Users/felip/OneDrive - UW-Madison/Documents/GitHub/FFaleco/PhD/WiscWeeds/Waterhemp PRE_Bill Stangel/Sulf_DR_counts.tiff",
+tiff(file="C:/Users/felip/OneDrive - UW-Madison/Documents/GitHub/FFaleco/PhD/WiscWeeds/Waterhemp/Waterhemp PRE_Bill Stangel/Sulf_DR_counts.tiff",
      width = 10, height = 8, units = "in", res = 600, compression = "lzw")
 
 
@@ -148,12 +148,12 @@ plot(model.LL3,
      ylim = c(0, 8),
      col = c("red", "darkgreen"),
      pch = c(19, 17),
-     cex = 1.0,
-     cex.axis = 1,
-     cex.lab = 1.5,
-     cex.legend = 1.4,
-     legendPos = c(700, 7.0),
-     lwd = 1)
+     cex = 1.5,
+     cex.axis = 1.3,
+     cex.lab = 1.9,
+     cex.legend = 2.0,
+     legendPos = c(1000, 8.0),
+     lwd = 1.5)
 
 
 
@@ -162,41 +162,41 @@ points(x = c(summary(model.LL3)$coefficients[5, 1],
        y = c((summary(model.LL3)$coefficients[3, 1]/2), 
              (summary(model.LL3)$coefficients[4, 1]/2)),
        pch = 8,
-       cex = 1.3)
+       cex = 1.5)
 
 
-abline(v = 280, 
-       lwd = 2, 
-       lty = "twodash",
-       col = "black")
+#abline(v = 280, 
+       #lwd = 2, 
+       #lty = "twodash",
+       #col = "black")
 
 
-text(x = 750, y = 4.0, 
-     labels = expression(paste("ED"[50] ~ "A92 = 87.6 ("%+-% "18.1)"^A)),
-     cex = 1.3,
-     col = "black",
-     font = 2)
+#text(x = 750, y = 4.0, 
+     #labels = expression(paste("ED"[50] ~ "A92 = 87.6 ("%+-% "18.1)"^A)),
+     #cex = 1.3,
+     #col = "black",
+     #font = 2)
 
 
-text(x = 750, y = 3.6, 
-     labels = expression(paste("ED"[50] ~ "A66 = 32.8 ("%+-% "11.3)"^B)),
-     cex = 1.3,
-     col = "black",
-     font = 2)
+#text(x = 750, y = 3.6, 
+     #labels = expression(paste("ED"[50] ~ "A66 = 32.8 ("%+-% "11.3)"^B)),
+     #cex = 1.3,
+     #col = "black",
+     #font = 2)
 
 
-text(x = 520, y = 3.2, 
-     labels = expression("p-value = 0.01"),
-     cex = 1.3,
-     col = "black",
-     font = 2)
+#text(x = 520, y = 3.2, 
+     #labels = expression("p-value = 0.01"),
+     #cex = 1.3,
+     #col = "black",
+     #font = 2)
 
 
-text(x = 580, y = 0.9, 
-     labels = expression("1x rate: 280 g ai ha" ^-1),
-     cex = 1.2,
-     col = "black",
-     font = 2)
+#text(x = 580, y = 0.9, 
+     #labels = expression("1x rate: 280 g ai ha" ^-1),
+     #cex = 1.2,
+     #col = "black",
+     #font = 2)
 
 
 dev.off()
