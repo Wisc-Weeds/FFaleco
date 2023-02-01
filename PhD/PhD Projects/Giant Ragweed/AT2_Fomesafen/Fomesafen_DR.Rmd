@@ -78,7 +78,7 @@ mselect(model.LL4,  list(L.3(), L.4(), L.5(), LL.2(), LL.3(), LL.5(), W1.3(), W1
 
 
 
-model.LL3<- drm(biomass ~ dose, pop, fct = LL.3(),  data = data, type = "continuous")
+model.LL3 <- drm(biomass ~ dose, pop, fct = LL.3(),  data = data, type = "continuous")
 
 
 
@@ -129,93 +129,65 @@ compParm(model.LL3, strVal = "e", operator = "-") #here comparing the difference
 
 
 
-# PLOT
-
-```{r}
-
-par(mar = c(5,5,1,1))
-
-plot(model.LL3,
-     type = "average",
-     xlab = expression(paste("Fomesafen dose (g ai ha"^-1, ")")),
-     ylab = expression(paste("Dry aboveground biomass (g plant"^-1, ")")),
-     col = c("red", "darkgreen"),
-     pch = c(19, 17),
-     cex = 1,
-     cex.axis = 1,
-     cex.lab = 2,
-     lwd = 1)
-
-abline(v = 263, 
-       lwd = 2, 
-       lty = "twodash",
-       col = "black")
-
-text(x = 1500, y = 1.5, 
-     labels = expression(paste("ED"[50] ~ "RI = 29.26 ("%+-% "6.63)")),
-     cex = 1,
-     col = "black",
-     font = 2)
-
-text(x = 1150, y = 1.35, 
-     labels = expression("p-value = < 0.0001"),
-     cex = 1,
-     col = "black",
-     font = 2)
-
-text(x = 850, y = 0.6, 
-     labels = expression("1x dose: 263 g ai ha" ^-1),
-     cex = 1,
-     col = "black",
-     font = 2)
-
-```
-
-
 
 #SAVE TIFF
 
 ```{r}
 
-tiff(file="C:/Users/felip/OneDrive - UW-Madison/Documents/GitHub/FFaleco/PhD Projects/Giant Ragweed/Dose Response/Fomesafen/Dose-response curve.tiff",
-width = 8, height = 6, units = "in", res = 1000, compression = "lzw")
+tiff(file="C:/Users/felip/OneDrive - UW-Madison/Documents/GitHub/FFaleco/PhD/PhD Projects/Giant Ragweed/AT2_Fomesafen/Dose-response curve.tiff",
+     width = 10, height = 8, units = "in", res = 600, compression = "lzw")
+
 
 par(mar = c(5,5,1,1))
+
 
 plot(model.LL3,
      type = "average",
      xlab = expression(paste("Fomesafen dose (g ai ha"^-1, ")")),
-     ylab = expression(paste("Dry aboveground biomass (g plant"^-1, ")")),
+     ylab = expression(paste("Biomass (g plant"^-1, ")")),
+     ylim = c(0, 2),
      col = c("red", "darkgreen"),
      pch = c(19, 17),
-     cex = 1,
-     cex.axis = 1.2,
-     cex.lab = 1.5,
-     cex.legend = 1.2,
-     lwd = 1)
+     cex = 1.5,
+     cex.axis = 1.3,
+     cex.lab = 1.9,
+     cex.legend = 1.8,
+     legendPos = c(3000, 2.1),
+     lwd = 1.5)
 
-abline(v = 263, 
-       lwd = 2, 
-       lty = "twodash",
-       col = "black")
 
-text(x = 1400, y = 1.5, 
-     labels = expression(paste("ED"[50] ~ "RI = 29.26 ("%+-% "6.63)")),
-     cex = 1.1,
-     col = "black",
-     font = 2)
 
-text(x = 1050, y = 1.35, 
-     labels = expression("p-value = < 0.0001"),
-     cex = 1.1,
-     col = "black",
-     font = 2)
+points(x = c(summary(model.LL3)$coefficients[5, 1], 
+             summary(model.LL3)$coefficients[6, 1]),
+       y = c((summary(model.LL3)$coefficients[3, 1]/2), 
+             (summary(model.LL3)$coefficients[4, 1]/2)),
+       pch = 8,
+       cex = 1.5)
 
-text(x = 950, y = 0.6, 
-     labels = expression("1x dose: 263 g ai ha" ^-1),
-     cex = 1.1,
-     col = "black",
-     font = 2)
+
+#abline(v = 263, 
+       #lwd = 2, 
+       #lty = "twodash",
+       #col = "black")
+
+#text(x = 1400, y = 1.5, 
+     #labels = expression(paste("ED"[50] ~ "RI = 29.26 ("%+-% "6.63)")),
+     #cex = 1.1,
+     #col = "black",
+     #font = 2)
+
+#text(x = 1050, y = 1.35, 
+     #labels = expression("p-value = < 0.0001"),
+     #cex = 1.1,
+     #col = "black",
+     #font = 2)
+
+#text(x = 950, y = 0.6, 
+     #labels = expression("1x dose: 263 g ai ha" ^-1),
+     #cex = 1.1,
+     #col = "black",
+     #font = 2)
+
 
 dev.off()
 
