@@ -1,0 +1,221 @@
+---
+title: "Waterhemp MIs GH 2,4-D Biomass"
+author: "Felipe Faleco"
+date: "10/21/2022"
+output:
+  html_document:
+    df_print: paged
+editor_options: 
+  chunk_output_type: inline
+---
+
+```{r setup, include=FALSE}
+
+knitr::opts_chunk$set(echo = TRUE)
+library(drc)
+library(doBy)
+library(plotrix)
+library(dplyr)
+
+```
+
+
+# READ DATA
+
+```{r}
+
+data <- read.csv("Data Sheet_2,4-D_GH.csv")
+
+str(data)
+
+data_A103 <- data %>% filter(pop == "A103")
+
+
+
+fun <- function(x){
+  c( mean = mean(x), VAR = var(x), SD = sd(x), SE = std.error(x), n = length(x))
+}
+
+summary.24D <- summaryBy(cbind(biomass) ~ herb + rate, data = subset(data_A103, herb=="2,4D"),
+          FUN=fun)
+
+
+summary.24D_GST <- summaryBy(cbind(biomass) ~ herb + rate, data = subset(data_A103, herb=="2,4D+GST"),
+          FUN=fun)
+
+
+summary.24D_P450 <- summaryBy(cbind(biomass) ~ herb + rate, data = subset(data_A103, herb=="2,4D+P450"),
+          FUN=fun)
+
+
+```
+
+
+
+# MODEL LL.4
+
+```{r}
+
+model.LL4<- drm(biomass ~ rate, herb, fct = LL.4(), data = data_A103, type = "continuous")
+
+
+                
+modelFit(model.LL4) # higher the p-value, better.
+
+summary(model.LL4) 
+
+# c: lower limit (models with negative lower limit are biologically impossible. E.g., negative biomass, negative % biomass reduction, or negative % control)
+
+# d: upper limit (models where the response variable is in %, upper limit bigger than 100% are biologically impossible. E.g., % biomass reduction, % control)
+
+# b: slope around e (inflection point)
+
+# e: e (inflection point). Represents the dose producing a response halfway between the u and l parameters (ED50)
+
+```
+
+
+
+# MODEL SELECTION
+
+```{r, warning=FALSE}
+
+mselect(model.LL4,  list(L.3(), L.4(), L.5(), LL.2(), LL.3(), LL.5(), W1.3(), W1.4(), W2.4(), baro5()), linreg = T) 
+
+#LL.3 better option here (lower IC, which actually is AIC (default)). W1.3 could also be used, but since it is a asymmetrical model, I would give preference to LL.3 In symmetrical models, the parameter e and relative ED50 are identical, that is, they both indicate the dose that reduces the response midway between the upper and lower limits. In asymmetrical models, however, the parameter e does not have the same meaning as in symmetrical models, even though it is still the location of the inflection point. For asymmetrical models, ED50 should be estimated as "absolute" and not relative.
+
+
+model.LL3<- drm(biomass ~ rate, herb, fct = LL.3(),  data = data_A103, type = "continuous")
+
+
+modelFit(model.LL3)
+
+
+summary(model.LL3) # NO parameter c (lower limit). It means lower limit was set to zero.
+
+
+anova(model.LL3, model.LL4) # p-value > 0.05 means that there is no difference between models. Therefore, we can use model LL.3
+
+```
+
+
+
+# ED50 AND ED 90
+
+```{r}
+
+ED(model.LL3, c(50, 90), type = "relative") 
+
+
+# Estimated doses required for ED50, and ED90. Estimation of ED90 is statistically less accurate and often subject to high variance. Therefore, is better to use ED50.
+
+```
+
+
+# ED 50 RI AND PARAMETERS STUDENT T-TEST COMPARISONS
+
+```{r}
+
+EDcomp(model.LL3, c(50, 50), type = "relative", interval = "none", reverse = F)
+
+EDcomp(model.LL3, c(90, 90), type = "relative", interval = "none", reverse = F)
+
+
+# Comparing b parameter (slope)
+compParm(model.LL3, strVal = "b", operator = "-")
+
+
+# Comparing d parameter (upper limit)
+compParm(model.LL3, strVal = "d", operator = "-")
+
+# Comparing e parameter (ED50)
+compParm(model.LL3, strVal = "e", operator = "-") #here comparing the difference, and not the ratio like in the EDcomp
+
+
+```
+
+
+
+#SAVE TIFF
+
+```{r}
+
+tiff(file="C:/Users/felip/OneDrive - UW-Madison/Documents/GitHub/FFaleco/PhD/PhD Projects/Waterhemp/Metabolism Inhibitors/GH/2,4-D/GH_2,4-D+MIs_A103_DR biomass.tiff.tiff",
+     width = 10, height = 8, units = "in", res = 600, compression = "lzw")
+
+
+par(mar = c(5,5,1,1))
+
+
+plot(model.LL3,
+     type = "average",
+     xlab = expression(paste("2,4-D dose (g ai ha"^-1, ")")),
+     ylab = expression(paste("A103 Biomass (g plant"^-1, ")")),
+     ylim = c(0, 4),
+     col = c("darkgreen", "red", "navy"),
+     pch = c(19, 17, 15),
+     cex = 1.1,
+     cex.axis = 1,
+     cex.lab = 1.5,
+     cex.legend = 1.2,
+     legendPos = c(9000, 3.5),
+     lwd = 1)
+
+
+
+points(x = c(summary(model.LL3)$coefficients[7, 1], 
+             summary(model.LL3)$coefficients[8, 1],
+             summary(model.LL3)$coefficients[9, 1]),
+       y = c((summary(model.LL3)$coefficients[4, 1]/2), 
+             (summary(model.LL3)$coefficients[5, 1]/2),
+             (summary(model.LL3)$coefficients[6, 1]/2)),
+       pch = 8,
+       cex = 1.3)
+
+
+
+abline(v = 1065, 
+       lwd = 2, 
+       lty = "twodash",
+       col = "black")
+
+
+text(x = 3600, y = 2.0, 
+     labels = expression(paste("ED"[50] ~ "2,4-D= 55.2 ("%+-% "11.0)" ^A)),
+     cex = 0.95,
+     col = "black",
+     font = 2)
+
+
+text(x = 4600, y = 1.8, 
+     labels = expression(paste("ED"[50] ~ "2,4-D+GST= 74.6 ("%+-% "14.8)" ^A)),
+     cex = 0.95,
+     col = "black",
+     font = 2)
+
+
+text(x = 5000, y = 1.6, 
+     labels = expression(paste("ED"[50] ~ "2,4-D+P450= 174.8 ("%+-% "42.4)" ^B)),
+     cex = 0.95,
+     col = "black",
+     font = 2)
+
+
+
+text(x = 3200, y = 0.5, 
+     labels = expression("1x rate: 1065 g ai ha" ^-1),
+     cex = 0.95,
+     col = "black",
+     font = 2)
+
+
+dev.off()
+
+
+```
+
+
+
+
+
+
