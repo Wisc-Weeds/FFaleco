@@ -110,13 +110,13 @@ anova(model.W1.3, model.LL4) # p-value > 0.05 means that there is no difference 
 #ED(model.W1.3, c(50), type = "relative", interval = "delta")
 
 
-ED(model.W1.3, (summary(model.W1.3)$coefficients[5, 1] * 0.5), clevel = "A82", type = "absolute", interval = "delta")
+ED50.A82 <- ED(model.W1.3, (summary(model.W1.3)$coefficients[5, 1] * 0.5), clevel = "A82", type = "absolute", interval = "delta")
 
-ED(model.W1.3, (summary(model.W1.3)$coefficients[6, 1] * 0.5), clevel = "A101", type = "absolute", interval = "delta")
+ED50.A101 <- ED(model.W1.3, (summary(model.W1.3)$coefficients[6, 1] * 0.5), clevel = "A101", type = "absolute", interval = "delta")
 
-ED(model.W1.3, (summary(model.W1.3)$coefficients[7, 1] * 0.5), clevel = "A103", type = "absolute", interval = "delta")
+ED50.A103 <- ED(model.W1.3, (summary(model.W1.3)$coefficients[7, 1] * 0.5), clevel = "A103", type = "absolute", interval = "delta")
 
-ED(model.W1.3, (summary(model.W1.3)$coefficients[8, 1] * 0.5), clevel = "A75", type = "absolute", interval = "delta")
+ED50.A75 <- ED(model.W1.3, (summary(model.W1.3)$coefficients[8, 1] * 0.5), clevel = "A75", type = "absolute", interval = "delta")
 
 # In this case, fitting relative and absolute resulted in the same ED50. Perhaps because W1.3 has a lower limit = 0. In simulations using the W1.4, then the relative and absolute ED50 are different. 
 
@@ -167,82 +167,83 @@ compParm(model.W1.3, strVal = "e", operator = "-") # Remember that for assymetri
 
 ```{r}
 
-tiff(file="C:/Users/felip/OneDrive - UW-Madison/Documents/GitHub/FFaleco/PhD/PhD Projects/Waterhemp/Metabolism Inhibitors/GH/2,4-D/GH_2,4D Only_All Pops_DR biomass.tiff",
+tiff(file="C:/Users/felip/OneDrive - UW-Madison/Documents/GitHub/FFaleco/PhD/PhD Projects/Waterhemp/Metabolism Inhibitors/GH/2,4-D/2,4-D_Absolute ED/GH_2,4D Only_All Pops_DR Biomass.tiff",
      width = 10, height = 8, units = "in", res = 600, compression = "lzw")
 
 
 par(mar = c(5,5,1,1))
 
 
-plot(model.LL3,
+plot(model.W1.3,
      type = "average",
      xlab = expression(paste("2,4-D rate (g ae ha"^-1, ")")),
      ylab = expression(paste("Biomass (g plant"^-1, ")")),
      ylim = c(0, 4),
+     #broken = T,
      col = c("darkgreen", "red", "navy", "orange"),
      pch = c(19, 17, 15, 18),
-     cex = 1.0,
-     cex.axis = 1,
-     cex.lab = 1.5,
-     cex.legend = 1.2,
-     legendPos = c(4800, 3.5),
-     lwd = 1)
+     cex = 1.5,
+     cex.axis = 1.3,
+     cex.lab = 1.9,
+     cex.legend = 2.0,
+     legendPos = c(4800, 4.0),
+     lwd = 1.5)
 
 
 
-points(x = c(summary(model.LL3)$coefficients[9, 1], 
-             summary(model.LL3)$coefficients[10, 1],
-             summary(model.LL3)$coefficients[11, 1],
-             summary(model.LL3)$coefficients[12, 1]),
-       y = c((summary(model.LL3)$coefficients[5, 1]/2), 
-             (summary(model.LL3)$coefficients[6, 1]/2),
-             (summary(model.LL3)$coefficients[7, 1]/2),
-             (summary(model.LL3)$coefficients[8, 1]/2)),
+points(x = c(ED50.A82[1, 1], 
+             ED50.A101[1, 1],
+             ED50.A103[1, 1],
+             ED50.A75[1, 1]),
+       y = c((summary(model.W1.3)$coefficients[5, 1]/2), 
+             (summary(model.W1.3)$coefficients[6, 1]/2),
+             (summary(model.W1.3)$coefficients[7, 1]/2),
+             (summary(model.W1.3)$coefficients[8, 1]/2)),
        pch = 8,
        cex = 1.3)
 
 
 
-abline(v = 1065, 
-       lwd = 2, 
-       lty = "twodash",
-       col = "black")
+#abline(v = 1065, 
+       #lwd = 2, 
+       #lty = "twodash",
+       #col = "black")
 
 
 
-text(x = 4500, y = 2.0, 
-     labels = expression(paste("ED"[50] ~ "A101 = 297.6 ("%+-% "61.7)" ^A)),
-     cex = 1.0,
-     col = "black",
-     font = 2)
+#text(x = 4500, y = 2.0, 
+     #labels = expression(paste("ED"[50] ~ "A101 = 297.6 ("%+-% "61.7)" ^A)),
+     #cex = 1.0,
+     #col = "black",
+     #font = 2)
 
 
-text(x = 4200, y = 1.8, 
-     labels = expression(paste("ED"[50] ~ "A75 = 111.6 ("%+-% "25.8)" ^B)),
-     cex = 1.0,
-     col = "black",
-     font = 2)
+#text(x = 4200, y = 1.8, 
+     #labels = expression(paste("ED"[50] ~ "A75 = 111.6 ("%+-% "25.8)" ^B)),
+     #cex = 1.0,
+     #col = "black",
+     #font = 2)
 
 
-text(x = 4200, y = 1.6, 
-     labels = expression(paste("ED"[50] ~ "A82 = 104.7 ("%+-% "21.5)" ^B)),
-     cex = 1.0,
-     col = "black",
-     font = 2)
+#text(x = 4200, y = 1.6, 
+     #labels = expression(paste("ED"[50] ~ "A82 = 104.7 ("%+-% "21.5)" ^B)),
+     #cex = 1.0,
+     #col = "black",
+     #font = 2)
 
 
-text(x = 4200, y = 1.4, 
-     labels = expression(paste("ED"[50] ~ "A103 = 55.2 ("%+-% "12.3)" ^C)),
-     cex = 1.0,
-     col = "black",
-     font = 2)
+#text(x = 4200, y = 1.4, 
+     #labels = expression(paste("ED"[50] ~ "A103 = 55.2 ("%+-% "12.3)" ^C)),
+     #cex = 1.0,
+     #col = "black",
+     #font = 2)
 
 
-text(x = 3200, y = 0.7, 
-     labels = expression("1x rate: 1065 g ae ha" ^-1),
-     cex = 1.0,
-     col = "black",
-     font = 2)
+#text(x = 3200, y = 0.7, 
+     #labels = expression("1x rate: 1065 g ae ha" ^-1),
+     #cex = 1.0,
+     #col = "black",
+     #font = 2)
 
 
 dev.off()
