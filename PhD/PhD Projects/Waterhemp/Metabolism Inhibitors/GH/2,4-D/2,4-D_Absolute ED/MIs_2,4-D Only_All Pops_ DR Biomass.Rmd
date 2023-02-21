@@ -51,7 +51,7 @@ summary.24D <- summaryBy(cbind(biomass) ~ pop + rate, data = subset(data_24D),
 
 ```{r}
 
-model.LL4<- drm(biomass ~ rate, pop, fct = LL.4(), data = data_24D, type = "continuous")
+model.LL4 <- drm(biomass ~ rate, pop, fct = LL.4(), data = data_24D, type = "continuous")
 
 
 plot(fitted(model.LL4), residuals(model.LL4))
