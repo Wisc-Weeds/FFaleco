@@ -1,7 +1,7 @@
 ---
-title: "Waterhemp MIs GH 2,4-D Biomass"
+title: "Waterhemp MIs GH Mesotrione Biomass"
 author: "Felipe Faleco"
-date: "10/21/2022"
+date: "02/21/2023"
 output:
   html_document:
     df_print: paged
@@ -24,11 +24,11 @@ library(dplyr)
 
 ```{r}
 
-data <- read.csv("Data Sheet_2,4-D_GH.csv")
+data <- read.csv("Data Sheet_Meso_GH.csv")
 
 str(data)
 
-data_A101 <- data %>% filter(pop == "A101")
+data_A82 <- data %>% filter(pop == "A82")
 
 
 
@@ -36,15 +36,15 @@ fun <- function(x){
   c( mean = mean(x), VAR = var(x), SD = sd(x), SE = std.error(x), n = length(x))
 }
 
-summary.24D <- summaryBy(cbind(biomass) ~ herb + rate, data = subset(data_A101, herb=="2,4D"),
+summary.meso <- summaryBy(cbind(biomass) ~ herb + rate, data = subset(data_A82, herb=="meso"),
           FUN=fun)
 
 
-summary.24D_GST <- summaryBy(cbind(biomass) ~ herb + rate, data = subset(data_A101, herb=="2,4D+GST"),
+summary.meso_GST <- summaryBy(cbind(biomass) ~ herb + rate, data = subset(data_A82, herb=="meso+GST"),
           FUN=fun)
 
 
-summary.24D_P450 <- summaryBy(cbind(biomass) ~ herb + rate, data = subset(data_A101, herb=="2,4D+P450"),
+summary.meso_P450 <- summaryBy(cbind(biomass) ~ herb + rate, data = subset(data_A82, herb=="meso+P450"),
           FUN=fun)
 
 
@@ -56,7 +56,7 @@ summary.24D_P450 <- summaryBy(cbind(biomass) ~ herb + rate, data = subset(data_A
 
 ```{r}
 
-model.LL4 <- drm(biomass ~ rate, herb, fct = LL.4(), data = data_A101, type = "continuous")
+model.LL4 <- drm(biomass ~ rate, herb, fct = LL.4(), data = data_A82, type = "continuous")
 
 
 plot(fitted(model.LL4), residuals(model.LL4))
@@ -91,7 +91,7 @@ mselect(model.LL4,  list(L.3(), L.4(), L.5(), LL.2(), LL.3(), LL.3u(), LL.4(), L
 # Lower IC, which actually is AIC (default), indicates the best model to be used. On the other hand, the highest the Lack of Fit, better the model. The two-, three-, and four-parameter log-logistic models are are symmetrical around the inflection point (parameter "e") while others (e.g. fiveparameter log-logistic, Gompertz, and Weibull) are asymmetrical. In symmetrical models, the parameter "e" and relative ED50 are identical, that is, they both indicate the dose that reduces the response midway between the upper and lower limits. In asymmetrical models, however, the parameter "e" does not have the same meaning as in symmetrical models, even though it is still the location of the inflection point. Therefore, in asymmetrical models, ED50 should be estimated as "absolute" and not relative.
 
 
-model.W1.3 <- drm(biomass ~ rate, herb, fct = W1.3(), data = data_A101, type = "continuous")
+model.W1.3 <- drm(biomass ~ rate, herb, fct = W1.3(), data = data_A82, type = "continuous")
 
 plot(fitted(model.W1.3), residuals(model.W1.3))
 
@@ -114,11 +114,11 @@ anova(model.W1.3, model.LL4) # p-value > 0.05 means that there is no difference 
 #ED(model.W1.3, c(50), type = "relative", interval = "delta")
 
 
-ED50.24D <- ED(model.W1.3, (summary(model.W1.3)$coefficients[4, 1] * 0.5), clevel = "2,4D", type = "absolute", interval = "delta")
+ED50.meso <- ED(model.W1.3, (summary(model.W1.3)$coefficients[4, 1] * 0.5), clevel = "meso", type = "absolute", interval = "delta")
 
-ED50.24D.P450 <- ED(model.W1.3, (summary(model.W1.3)$coefficients[5, 1] * 0.5), clevel = "2,4D+P450", type = "absolute", interval = "delta")
+ED50.meso.P450 <- ED(model.W1.3, (summary(model.W1.3)$coefficients[5, 1] * 0.5), clevel = "meso+P450", type = "absolute", interval = "delta")
 
-ED50.24D.GST <- ED(model.W1.3, (summary(model.W1.3)$coefficients[6, 1] * 0.5), clevel = "2,4D+GST", type = "absolute", interval = "delta")
+ED50.meso.GST <- ED(model.W1.3, (summary(model.W1.3)$coefficients[6, 1] * 0.5), clevel = "meso+GST", type = "absolute", interval = "delta")
 
 
 # In this case, fitting relative and absolute resulted in the same ED50. Perhaps because W1.3 has a lower limit = 0. In simulations using the W1.4, then the relative and absolute ED50 are different. 
@@ -135,12 +135,12 @@ ED50.24D.GST <- ED(model.W1.3, (summary(model.W1.3)$coefficients[6, 1] * 0.5), c
 
 EDcomp(model.W1.3, c((summary(model.W1.3)$coefficients[4, 1] * 0.5),
                      (summary(model.W1.3)$coefficients[5, 1] * 0.5)), 
-       compMatch = c("2,4D", "2,4D+P450"), type = "absolute", interval = "none", reverse = T)
+       compMatch = c("meso", "meso+P450"), type = "absolute", interval = "none", reverse = T)
 
 
 EDcomp(model.W1.3, c((summary(model.W1.3)$coefficients[4, 1] * 0.5),
                      (summary(model.W1.3)$coefficients[6, 1] * 0.5)), 
-       compMatch = c("2,4D", "2,4D+GST"), type = "absolute", interval = "none", reverse = T)
+       compMatch = c("meso", "meso+GST"), type = "absolute", interval = "none", reverse = T)
 
 
 # Comparing b parameter (slope)
@@ -163,7 +163,7 @@ compParm(model.W1.3, strVal = "e", operator = "-") # Remember that for assymetri
 
 ```{r}
 
-tiff(file="C:/Users/felip/OneDrive - UW-Madison/Documents/GitHub/FFaleco/PhD/PhD Projects/Waterhemp/Metabolism Inhibitors/GH/2,4-D/2,4-D_Absolute ED/GH_2,4-D_A101_DR Biomass.tiff",
+tiff(file="C:/Users/felip/OneDrive - UW-Madison/Documents/GitHub/FFaleco/PhD/PhD Projects/Waterhemp/Metabolism Inhibitors/GH/Mesotrione/Mesotrione_Absolute ED/GH_Meso_A82_DR Biomass.tiff",
      width = 10, height = 8, units = "in", res = 600, compression = "lzw")
 
 
@@ -172,8 +172,8 @@ par(mar = c(5,5,1,1))
 
 plot(model.W1.3,
      type = "average",
-     xlab = expression(paste("2,4-D rate (g ae ha"^-1, ")")),
-     ylab = expression(paste("A101 Biomass (g plant"^-1, ")")),
+     xlab = expression(paste("Mesotrione rate (g ai ha"^-1, ")")),
+     ylab = expression(paste("A82 Biomass (g plant"^-1, ")")),
      ylim = c(0, 4),
      #broken = T,
      col = c("darkgreen", "red", "navy"),
@@ -182,14 +182,14 @@ plot(model.W1.3,
      cex.axis = 1.3,
      cex.lab = 1.9,
      cex.legend = 2.0,
-     legendPos = c(9000, 4.0),
+     legendPos = c(600, 4.0),
      lwd = 1.5)
 
 
 
-points(x = c(ED50.24D[1, 1],
-             ED50.24D.P450[1, 1],
-             ED50.24D.GST[1, 1]),
+points(x = c(ED50.meso[1, 1],
+             ED50.meso.P450[1, 1],
+             ED50.meso.GST[1, 1]),
        y = c((summary(model.W1.3)$coefficients[4, 1]/2), 
              (summary(model.W1.3)$coefficients[5, 1]/2),
              (summary(model.W1.3)$coefficients[6, 1]/2)),
