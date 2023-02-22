@@ -1,5 +1,5 @@
 ---
-title: "Waterhemp MIs GH Mesotrione Biomass"
+title: "Waterhemp MIs GH Atrazine Biomass"
 author: "Felipe Faleco"
 date: "02/21/2023"
 output:
@@ -24,7 +24,7 @@ library(dplyr)
 
 ```{r}
 
-data <- read.csv("Data Sheet_Meso_GH.csv")
+data <- read.csv("Data Sheet_Atrazine_GH.csv")
 
 str(data)
 
@@ -36,15 +36,15 @@ fun <- function(x){
   c( mean = mean(x), VAR = var(x), SD = sd(x), SE = std.error(x), n = length(x))
 }
 
-summary.meso <- summaryBy(cbind(biomass) ~ herb + rate, data = subset(data_A101, herb=="meso"),
+summary.atra <- summaryBy(cbind(biomass) ~ herb + rate, data = subset(data_A101, herb=="atra"),
           FUN=fun)
 
 
-summary.meso_GST <- summaryBy(cbind(biomass) ~ herb + rate, data = subset(data_A101, herb=="meso+GST"),
+summary.atra_GST <- summaryBy(cbind(biomass) ~ herb + rate, data = subset(data_A101, herb=="atra+GST"),
           FUN=fun)
 
 
-summary.meso_P450 <- summaryBy(cbind(biomass) ~ herb + rate, data = subset(data_A101, herb=="meso+P450"),
+summary.atra_P450 <- summaryBy(cbind(biomass) ~ herb + rate, data = subset(data_A101, herb=="atra+P450"),
           FUN=fun)
 
 
@@ -114,11 +114,11 @@ anova(model.W1.3, model.LL4) # p-value > 0.05 means that there is no difference 
 #ED(model.W1.3, c(50), type = "relative", interval = "delta")
 
 
-ED50.meso <- ED(model.W1.3, (summary(model.W1.3)$coefficients[4, 1] * 0.5), clevel = "meso", type = "absolute", interval = "delta")
+ED50.atra <- ED(model.W1.3, (summary(model.W1.3)$coefficients[4, 1] * 0.5), clevel = "atra", type = "absolute", interval = "delta")
 
-ED50.meso.P450 <- ED(model.W1.3, (summary(model.W1.3)$coefficients[5, 1] * 0.5), clevel = "meso+P450", type = "absolute", interval = "delta")
+ED50.atra.P450 <- ED(model.W1.3, (summary(model.W1.3)$coefficients[5, 1] * 0.5), clevel = "atra+P450", type = "absolute", interval = "delta")
 
-ED50.meso.GST <- ED(model.W1.3, (summary(model.W1.3)$coefficients[6, 1] * 0.5), clevel = "meso+GST", type = "absolute", interval = "delta")
+ED50.atra.GST <- ED(model.W1.3, (summary(model.W1.3)$coefficients[6, 1] * 0.5), clevel = "atra+GST", type = "absolute", interval = "delta")
 
 
 # In this case, fitting relative and absolute resulted in the same ED50. Perhaps because W1.3 has a lower limit = 0. In simulations using the W1.4, then the relative and absolute ED50 are different. 
@@ -135,12 +135,12 @@ ED50.meso.GST <- ED(model.W1.3, (summary(model.W1.3)$coefficients[6, 1] * 0.5), 
 
 EDcomp(model.W1.3, c((summary(model.W1.3)$coefficients[4, 1] * 0.5),
                      (summary(model.W1.3)$coefficients[5, 1] * 0.5)), 
-       compMatch = c("meso", "meso+P450"), type = "absolute", interval = "none", reverse = T)
+       compMatch = c("atra", "atra+P450"), type = "absolute", interval = "none", reverse = T)
 
 
 EDcomp(model.W1.3, c((summary(model.W1.3)$coefficients[4, 1] * 0.5),
                      (summary(model.W1.3)$coefficients[6, 1] * 0.5)), 
-       compMatch = c("meso", "meso+GST"), type = "absolute", interval = "none", reverse = T)
+       compMatch = c("atra", "atra+GST"), type = "absolute", interval = "none", reverse = T)
 
 
 # Comparing b parameter (slope)
@@ -163,7 +163,7 @@ compParm(model.W1.3, strVal = "e", operator = "-") # Remember that for assymetri
 
 ```{r}
 
-tiff(file="C:/Users/felip/OneDrive - UW-Madison/Documents/GitHub/FFaleco/PhD/PhD Projects/Waterhemp/Metabolism Inhibitors/GH/Mesotrione/Mesotrione_Absolute ED/GH_Meso_A101_DR Biomass.tiff",
+tiff(file="C:/Users/felip/OneDrive - UW-Madison/Documents/GitHub/FFaleco/PhD/PhD Projects/Waterhemp/Metabolism Inhibitors/GH/Atrazine/Atrazine_Absolute ED/GH_Atra_A101_DR Biomass.tiff",
      width = 10, height = 8, units = "in", res = 600, compression = "lzw")
 
 
@@ -172,7 +172,7 @@ par(mar = c(5,5,1,1))
 
 plot(model.W1.3,
      type = "average",
-     xlab = expression(paste("Mesotrione rate (g ai ha"^-1, ")")),
+     xlab = expression(paste("Atrazine rate (g ai ha"^-1, ")")),
      ylab = expression(paste("A101 Biomass (g plant"^-1, ")")),
      ylim = c(0, 4),
      #broken = T,
@@ -182,14 +182,14 @@ plot(model.W1.3,
      cex.axis = 1.3,
      cex.lab = 1.9,
      cex.legend = 2.0,
-     legendPos = c(600, 4.0),
+     legendPos = c(4800, 4.0),
      lwd = 1.5)
 
 
 
-points(x = c(ED50.meso[1, 1],
-             ED50.meso.P450[1, 1],
-             ED50.meso.GST[1, 1]),
+points(x = c(ED50.atra[1, 1],
+             ED50.atra.P450[1, 1],
+             ED50.atra.GST[1, 1]),
        y = c((summary(model.W1.3)$coefficients[4, 1]/2), 
              (summary(model.W1.3)$coefficients[5, 1]/2),
              (summary(model.W1.3)$coefficients[6, 1]/2)),
