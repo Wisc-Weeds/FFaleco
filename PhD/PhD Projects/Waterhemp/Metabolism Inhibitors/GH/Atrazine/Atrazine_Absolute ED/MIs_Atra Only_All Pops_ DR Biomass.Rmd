@@ -1,5 +1,5 @@
 ---
-title: "Waterhemp MIs GH Mesotrione Biomass"
+title: "Waterhemp MIs GH Atrazine Biomass"
 author: "Felipe Faleco"
 date: "02/21/2023"
 output:
@@ -27,19 +27,19 @@ library(dplyr)
 
 ```{r}
 
-data <- read.csv("Data Sheet_Meso_GH.csv")
+data <- read.csv("Data Sheet_Atrazine_GH.csv")
 
 str(data)
 
 
-data_meso <- data %>% filter(herb == "meso")
+data_atra <- data %>% filter(herb == "atra")
 
 
 fun <- function(x){
   c( mean = mean(x), VAR = var(x), SD = sd(x), SE = std.error(x), n = length(x))
 }
 
-summary.meso <- summaryBy(cbind(biomass) ~ pop + rate, data = subset(data_meso),
+summary.atra <- summaryBy(cbind(biomass) ~ pop + rate, data = subset(data_atra),
           FUN=fun)
 
 
@@ -51,7 +51,7 @@ summary.meso <- summaryBy(cbind(biomass) ~ pop + rate, data = subset(data_meso),
 
 ```{r}
 
-model.LL4 <- drm(biomass ~ rate, pop, fct = LL.4(), data = data_meso, type = "continuous")
+model.LL4 <- drm(biomass ~ rate, pop, fct = LL.4(), data = data_atra, type = "continuous")
 
 
 plot(fitted(model.LL4), residuals(model.LL4))
@@ -86,18 +86,17 @@ mselect(model.LL4,  list(L.3(), L.4(), L.5(), LL.2(), LL.3(), LL.3u(), LL.4(), L
 # Lower IC, which actually is AIC (default), indicates the best model to be used. On the other hand, the highest the Lack of Fit, better the model. The two-, three-, and four-parameter log-logistic models are are symmetrical around the inflection point (parameter "e") while others (e.g. fiveparameter log-logistic, Gompertz, and Weibull) are asymmetrical. In symmetrical models, the parameter "e" and relative ED50 are identical, that is, they both indicate the dose that reduces the response midway between the upper and lower limits. In asymmetrical models, however, the parameter "e" does not have the same meaning as in symmetrical models, even though it is still the location of the inflection point. Therefore, in asymmetrical models, ED50 should be estimated as "absolute" and not relative.
 
 
-model.W1.3 <- drm(biomass ~ rate, pop, fct = W1.3(),  data = data_meso, type = "continuous")
+model.LL2.3 <- drm(biomass ~ rate, pop, fct = LL2.3(),  data = data_atra, type = "continuous")
 
-plot(fitted(model.W1.3), residuals(model.W1.3))
-
-
-modelFit(model.W1.3)
-
-summary(model.W1.3)
+plot(fitted(model.LL2.3), residuals(model.LL2.3))
 
 
+modelFit(model.LL2.3)
 
-anova(model.W1.3, model.LL4) # p-value > 0.05 means that there is no difference between models. Therefore, we can use model LL.3
+summary(model.LL2.3)
+
+
+anova(model.LL2.3, model.LL4) # p-value > 0.05 means that there is no difference between models. Therefore, we can use model LL.3
 
 ```
 
@@ -110,13 +109,14 @@ anova(model.W1.3, model.LL4) # p-value > 0.05 means that there is no difference 
 #ED(model.W1.3, c(50), type = "relative", interval = "delta")
 
 
-ED50.A82 <- ED(model.W1.3, (summary(model.W1.3)$coefficients[5, 1] * 0.5), clevel = "A82", type = "absolute", interval = "delta")
+ED50.A82 <- ED(model.LL2.3, (summary(model.LL2.3)$coefficients[5, 1] * 0.5), clevel = "A82", type = "absolute", interval = "delta", logBase = exp(1))
 
-ED50.A101 <- ED(model.W1.3, (summary(model.W1.3)$coefficients[6, 1] * 0.5), clevel = "A101", type = "absolute", interval = "delta")
+ED50.A101 <- ED(model.LL2.3, (summary(model.LL2.3)$coefficients[6, 1] * 0.5), clevel = "A101", type = "absolute", interval = "delta", logBase = exp(1))
 
-ED50.A103 <- ED(model.W1.3, (summary(model.W1.3)$coefficients[7, 1] * 0.5), clevel = "A103", type = "absolute", interval = "delta")
+ED50.A103 <- ED(model.LL2.3, (summary(model.LL2.3)$coefficients[7, 1] * 0.5), clevel = "A103", type = "absolute", interval = "delta", logBase = exp(1))
 
-ED50.A75 <- ED(model.W1.3, (summary(model.W1.3)$coefficients[8, 1] * 0.5), clevel = "A75", type = "absolute", interval = "delta")
+ED50.A75 <- ED(model.LL2.3, (summary(model.LL2.3)$coefficients[8, 1] * 0.5), clevel = "A75", type = "absolute", interval = "delta",logBase = exp(1))
+
 
 # In this case, fitting relative and absolute resulted in the same ED50. Perhaps because W1.3 has a lower limit = 0. In simulations using the W1.4, then the relative and absolute ED50 are different. 
 
@@ -130,33 +130,31 @@ ED50.A75 <- ED(model.W1.3, (summary(model.W1.3)$coefficients[8, 1] * 0.5), cleve
 #EDcomp(model.W1.3, c(50, 50), type = "relative", interval = "none", reverse = F)
 
 
-EDcomp(model.W1.3, c((summary(model.W1.3)$coefficients[6, 1] * 0.5),
-                     (summary(model.W1.3)$coefficients[5, 1] * 0.5)), 
-       compMatch = c("A101", "A82"), type = "absolute", interval = "none", reverse = F)
+EDcomp(model.LL2.3, c((summary(model.LL2.3)$coefficients[6, 1] * 0.5),
+                     (summary(model.LL2.3)$coefficients[5, 1] * 0.5)), 
+       compMatch = c("A101", "A82"), type = "absolute", interval = "none", reverse = F, logBase = exp(1))
 
 
-EDcomp(model.W1.3, c((summary(model.W1.3)$coefficients[7, 1] * 0.5),
-                     (summary(model.W1.3)$coefficients[5, 1] * 0.5)), 
-       compMatch = c("A103", "A82"), type = "absolute", interval = "none", reverse = F)
+EDcomp(model.LL2.3, c((summary(model.LL2.3)$coefficients[7, 1] * 0.5),
+                     (summary(model.LL2.3)$coefficients[5, 1] * 0.5)), 
+       compMatch = c("A103", "A82"), type = "absolute", interval = "none", reverse = F, logBase = exp(1))
 
 
-EDcomp(model.W1.3, c((summary(model.W1.3)$coefficients[8, 1] * 0.5),
-                     (summary(model.W1.3)$coefficients[5, 1] * 0.5)), 
-       compMatch = c("A75", "A82"), type = "absolute", interval = "none", reverse = F)
-
-
+EDcomp(model.LL2.3, c((summary(model.LL2.3)$coefficients[8, 1] * 0.5),
+                     (summary(model.LL2.3)$coefficients[5, 1] * 0.5)), 
+       compMatch = c("A75", "A82"), type = "absolute", interval = "none", reverse = F, logBase = exp(1))
 
 
 # Comparing b parameter (slope)
-compParm(model.W1.3, strVal = "b", operator = "-")
+compParm(model.LL2.3, strVal = "b", operator = "-")
 
 
 # Comparing d parameter (upper limit)
-compParm(model.W1.3, strVal = "d", operator = "-")
+compParm(model.LL2.3, strVal = "d", operator = "-")
 
 
 # Comparing e parameter (Infletion Point)
-compParm(model.W1.3, strVal = "e", operator = "-") # Remember that for assymetric models, the paramenter"e" does not reflect the ED50. 
+compParm(model.LL2.3, strVal = "e", operator = "-") # Remember that for assymetric models, the paramenter"e" does not reflect the ED50. 
 
 
 ```
@@ -167,16 +165,16 @@ compParm(model.W1.3, strVal = "e", operator = "-") # Remember that for assymetri
 
 ```{r}
 
-tiff(file="C:/Users/felip/OneDrive - UW-Madison/Documents/GitHub/FFaleco/PhD/PhD Projects/Waterhemp/Metabolism Inhibitors/GH/Mesotrione/Mesotrione_Absolute ED/GH_Meso Only_All Pops_DR Biomass.tiff",
+tiff(file="C:/Users/felip/OneDrive - UW-Madison/Documents/GitHub/FFaleco/PhD/PhD Projects/Waterhemp/Metabolism Inhibitors/GH/Atrazine/Atrazine_Absolute ED/GH_Atra Only_All Pops_DR Biomass.tiff",
      width = 10, height = 8, units = "in", res = 600, compression = "lzw")
 
 
 par(mar = c(5,5,1,1))
 
 
-plot(model.W1.3,
+plot(model.LL2.3,
      type = "average",
-     xlab = expression(paste("Mesotrione rate (g ai ha"^-1, ")")),
+     xlab = expression(paste("Atrazine rate (g ai ha"^-1, ")")),
      ylab = expression(paste("Biomass (g plant"^-1, ")")),
      ylim = c(0, 4),
      #broken = T,
@@ -186,7 +184,7 @@ plot(model.W1.3,
      cex.axis = 1.3,
      cex.lab = 1.9,
      cex.legend = 2.0,
-     legendPos = c(600, 4.0),
+     legendPos = c(4800, 4.0),
      lwd = 1.5)
 
 
@@ -195,10 +193,10 @@ points(x = c(ED50.A82[1, 1],
              ED50.A101[1, 1],
              ED50.A103[1, 1],
              ED50.A75[1, 1]),
-       y = c((summary(model.W1.3)$coefficients[5, 1]/2), 
-             (summary(model.W1.3)$coefficients[6, 1]/2),
-             (summary(model.W1.3)$coefficients[7, 1]/2),
-             (summary(model.W1.3)$coefficients[8, 1]/2)),
+       y = c((summary(model.LL2.3)$coefficients[5, 1]/2), 
+             (summary(model.LL2.3)$coefficients[6, 1]/2),
+             (summary(model.LL2.3)$coefficients[7, 1]/2),
+             (summary(model.LL2.3)$coefficients[8, 1]/2)),
        pch = 8,
        cex = 1.3)
 
