@@ -153,7 +153,7 @@ compParm(model.W1.3, strVal = "e", operator = "-") # Remember that for asymmetri
 
 ```{r}
 
-tiff(file="C:/Users/felip/OneDrive - UW-Madison/Documents/GitHub/FFaleco/PhD/PhD Projects/Waterhemp/Metabolism Inhibitors/GC/2,4-D/2,4-D_Absolute ED/MIs_2,4-D Only_GC_A101_ DR Biomass.tiff",
+tiff(file="C:/Users/felip/OneDrive - UW-Madison/Documents/GitHub/FFaleco/PhD/PhD Projects/Waterhemp/Metabolism Inhibitors/GC/2,4-D/2,4-D_Absolute ED/MIs_2,4-D+P450_GC_A101_ DR Biomass.tiff",
      width = 10, height = 8, units = "in", res = 600, compression = "lzw")
 
 
