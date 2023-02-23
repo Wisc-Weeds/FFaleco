@@ -133,6 +133,22 @@ EDcomp(model.LL2.3, c((summary(model.LL2.3)$coefficients[4, 1] * 0.5),
        compMatch = c("elevated", "ambient"), type = "absolute", interval = "none", reverse = T, logBase = exp(1))
 
 
+EDcomp(model.LL2.3, c((summary(model.LL2.3)$coefficients[4, 1] * 0.5),
+                     (summary(model.LL2.3)$coefficients[3, 1] * 0.5)), 
+       compMatch = c("elevated", "ambient"), type = "absolute", interval = "fls", reverse = F, logBase = exp(1))
+
+
+
+comped <- comped(c(ED50.elevated[1, 1], ED50.ambient[1, 1]), c(ED50.elevated[1, 2], ED50.ambient[1, 2]), log = F, operator = "/", level = 0.95)
+
+
+comped <- comped(c(ED50.ambient[1, 1], ED50.elevated[1, 1]), c(ED50.ambient[1, 2], ED50.elevated[1, 2]), log = F, operator = "/", level = 0.95)
+
+
+
+EDcomp(ED50.elevated[1, 1], ED50.ambient[1, 1], type = "absolute")
+
+
 # Comparing b parameter (slope)
 compParm(model.LL2.3, strVal = "b", operator = "-")
 
