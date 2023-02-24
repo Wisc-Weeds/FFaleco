@@ -89,8 +89,9 @@ mselect(model.LL4,  list(L.3(), L.4(), L.5(), LL.2(), LL.3(), LL.3u(), LL.4(), L
 model.W1.3 <- drm(biomass ~ rate, temp, fct = W1.3(), data = data.A101.24D, type = "continuous")
 
 
-
 plot(fitted(model.W1.3), residuals(model.W1.3))
+
+qqnorm(residuals(model.W1.3))
 
                 
 modelFit(model.W1.3)
@@ -130,7 +131,7 @@ ED50.ambient <- ED(model.W1.3, (summary(model.W1.3)$coefficients[4, 1] * 0.5), c
 
 EDcomp(model.W1.3, c((summary(model.W1.3)$coefficients[4, 1] * 0.5),
                      (summary(model.W1.3)$coefficients[3, 1] * 0.5)), 
-       compMatch = c("elevated", "ambient"), type = "absolute", interval = "none", reverse = T)
+       compMatch = c("elevated", "ambient"), type = "absolute", interval = "none", reverse = F)
 
 
 # Comparing b parameter (slope)
