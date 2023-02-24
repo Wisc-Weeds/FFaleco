@@ -90,6 +90,8 @@ model.W1.3 <- drm(biomass ~ rate, pop, fct = W1.3(),  data = data_meso, type = "
 
 plot(fitted(model.W1.3), residuals(model.W1.3))
 
+qqnorm(residuals(model.W1.3))
+
 
 modelFit(model.W1.3)
 
