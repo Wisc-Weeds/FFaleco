@@ -89,8 +89,9 @@ mselect(model.LL4,  list(L.3(), L.4(), L.5(), LL.2(), LL.3(), LL.3u(), LL.4(), L
 model.LL2.3 <- drm(biomass ~ rate, temp, fct = LL2.3(), data = data.A82.24D, type = "continuous")
 
 
-
 plot(fitted(model.LL2.3), residuals(model.LL2.3))
+
+qqnorm(residuals(model.LL2.3))
 
                 
 modelFit(model.LL2.3)
@@ -130,23 +131,13 @@ ED50.ambient <- ED(model.LL2.3, (summary(model.LL2.3)$coefficients[4, 1] * 0.5),
 
 EDcomp(model.LL2.3, c((summary(model.LL2.3)$coefficients[4, 1] * 0.5),
                      (summary(model.LL2.3)$coefficients[3, 1] * 0.5)), 
-       compMatch = c("elevated", "ambient"), type = "absolute", interval = "none", reverse = T, logBase = exp(1))
+       compMatch = c("elevated", "ambient"), type = "absolute", interval = "none", reverse = F, logBase = exp(1))
 
 
-EDcomp(model.LL2.3, c((summary(model.LL2.3)$coefficients[4, 1] * 0.5),
-                     (summary(model.LL2.3)$coefficients[3, 1] * 0.5)), 
-       compMatch = c("elevated", "ambient"), type = "absolute", interval = "fls", reverse = F, logBase = exp(1))
+# Here is to compare the difference between the two ED50 instead of ratio. However, comped function does not provide a p-value because it uses the likelihood ratio test instead of t-test. We could still determine if the difference between the two ED50 is different than zero by looking the lower and upper confidence intervals which, if zero is not included, it means that the difference between the two ED50 is different than zero. However, we need to make sure that the confidence intervals are estimated correctly, which is difficult when using a LL2.3 model for example which the model uses the log transformed response variable. In this case, confidence intervals should be estimated using the interval = "fls", but this option is not offered in the comped function.  
 
+#comped <- comped(c(ED50.elevated[1, 1], ED50.ambient[1, 1]), c(ED50.elevated[1, 2], ED50.ambient[1, 2]), log = F, operator = "-", level = 0.95)
 
-
-comped <- comped(c(ED50.elevated[1, 1], ED50.ambient[1, 1]), c(ED50.elevated[1, 2], ED50.ambient[1, 2]), log = F, operator = "/", level = 0.95)
-
-
-comped <- comped(c(ED50.ambient[1, 1], ED50.elevated[1, 1]), c(ED50.ambient[1, 2], ED50.elevated[1, 2]), log = F, operator = "/", level = 0.95)
-
-
-
-EDcomp(ED50.elevated[1, 1], ED50.ambient[1, 1], type = "absolute")
 
 
 # Comparing b parameter (slope)
