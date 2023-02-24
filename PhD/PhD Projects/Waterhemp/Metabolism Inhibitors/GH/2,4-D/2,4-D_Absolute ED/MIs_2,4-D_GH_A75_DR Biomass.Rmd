@@ -95,6 +95,8 @@ model.W1.3 <- drm(biomass ~ rate, herb, fct = W1.3(), data = data_A75, type = "c
 
 plot(fitted(model.W1.3), residuals(model.W1.3))
 
+qqnorm(residuals(model.W1.3))
+
 
 modelFit(model.W1.3)
 
@@ -133,8 +135,8 @@ ED50.24D.GST <- ED(model.W1.3, (summary(model.W1.3)$coefficients[6, 1] * 0.5), c
 #EDcomp(model.W1.3, c(50, 50), type = "relative", interval = "none", reverse = F)
 
 
-EDcomp(model.W1.3, c((summary(model.W1.3)$coefficients[4, 1] * 0.5),
-                     (summary(model.W1.3)$coefficients[5, 1] * 0.5)), 
+EDcomp(model.W1.3, c((summary(model.W1.3)$coefficients[5, 1] * 0.5),
+                     (summary(model.W1.3)$coefficients[4, 1] * 0.5)), 
        compMatch = c("2,4D", "2,4D+P450"), type = "absolute", interval = "none", reverse = T)
 
 
