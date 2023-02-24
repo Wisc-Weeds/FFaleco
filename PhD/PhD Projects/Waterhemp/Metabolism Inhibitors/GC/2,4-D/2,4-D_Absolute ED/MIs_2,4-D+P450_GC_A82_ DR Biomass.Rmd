@@ -89,8 +89,9 @@ mselect(model.LL4,  list(L.3(), L.4(), L.5(), LL.2(), LL.3(), LL.3u(), LL.4(), L
 model.LL2.3 <- drm(biomass ~ rate, temp, fct = LL2.3(), data = data.A82.24D.P450, type = "continuous")
 
 
-
 plot(fitted(model.LL2.3), residuals(model.LL2.3))
+
+qqnorm(residuals(model.LL2.3))
 
                 
 modelFit(model.LL2.3)

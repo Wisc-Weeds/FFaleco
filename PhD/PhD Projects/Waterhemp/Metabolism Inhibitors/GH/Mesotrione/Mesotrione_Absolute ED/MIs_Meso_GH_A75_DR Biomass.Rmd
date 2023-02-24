@@ -135,7 +135,7 @@ ED50.meso.GST <- ED(model.W1.3, (summary(model.W1.3)$coefficients[6, 1] * 0.5), 
 
 EDcomp(model.W1.3, c((summary(model.W1.3)$coefficients[4, 1] * 0.5),
                      (summary(model.W1.3)$coefficients[5, 1] * 0.5)), 
-       compMatch = c("meso", "meso+P450"), type = "absolute", interval = "none", reverse = T)
+       compMatch = c("meso", "meso+P450"), type = "absolute", interval = "none", reverse = F)
 
 
 EDcomp(model.W1.3, c((summary(model.W1.3)$coefficients[4, 1] * 0.5),

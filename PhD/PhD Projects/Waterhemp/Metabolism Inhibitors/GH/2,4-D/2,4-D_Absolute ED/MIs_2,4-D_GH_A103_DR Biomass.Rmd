@@ -135,12 +135,12 @@ ED50.24D.GST <- ED(model.W1.3, (summary(model.W1.3)$coefficients[6, 1] * 0.5), c
 
 EDcomp(model.W1.3, c((summary(model.W1.3)$coefficients[4, 1] * 0.5),
                      (summary(model.W1.3)$coefficients[5, 1] * 0.5)), 
-       compMatch = c("2,4D", "2,4D+P450"), type = "absolute", interval = "none", reverse = T)
+       compMatch = c("2,4D", "2,4D+P450"), type = "absolute", interval = "none", reverse = F)
 
 
 EDcomp(model.W1.3, c((summary(model.W1.3)$coefficients[4, 1] * 0.5),
                      (summary(model.W1.3)$coefficients[6, 1] * 0.5)), 
-       compMatch = c("2,4D", "2,4D+GST"), type = "absolute", interval = "none", reverse = T)
+       compMatch = c("2,4D", "2,4D+GST"), type = "absolute", interval = "none", reverse = F)
 
 
 # Comparing b parameter (slope)
