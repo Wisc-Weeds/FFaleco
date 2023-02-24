@@ -90,6 +90,8 @@ model.LL2.3 <- drm(biomass ~ rate, pop, fct = LL2.3(),  data = data_atra, type =
 
 plot(fitted(model.LL2.3), residuals(model.LL2.3))
 
+qqnorm(residuals(model.LL2.3))
+
 
 modelFit(model.LL2.3)
 
