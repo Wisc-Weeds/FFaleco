@@ -140,7 +140,7 @@ EDcomp(model.W1.3, c((summary(model.W1.3)$coefficients[4, 1] * 0.5),
 
 EDcomp(model.W1.3, c((summary(model.W1.3)$coefficients[4, 1] * 0.5),
                      (summary(model.W1.3)$coefficients[6, 1] * 0.5)), 
-       compMatch = c("atra", "atra+GST"), type = "absolute", interval = "none", reverse = T)
+       compMatch = c("atra", "atra+GST"), type = "absolute", interval = "none", reverse = F)
 
 
 # Comparing b parameter (slope)
