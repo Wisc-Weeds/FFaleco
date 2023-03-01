@@ -135,15 +135,15 @@ EDcomp(model.W2.3, c((summary(model.W2.3)$coefficients[4, 1] * 0.5),
 
 
 # Comparing b parameter (slope)
-compParm(model.W1.3, strVal = "b", operator = "-")
+compParm(model.W2.3, strVal = "b", operator = "-")
 
 
 # Comparing d parameter (upper limit)
-compParm(model.W1.3, strVal = "d", operator = "-")
+compParm(model.W2.3, strVal = "d", operator = "-")
 
 
 # Comparing e parameter (Infletion Point)
-compParm(model.W1.3, strVal = "e", operator = "-") # Remember that for assymetric models, the paramenter"e" does not reflect the ED50. 
+compParm(model.W2.3, strVal = "e", operator = "-") # Remember that for assymetric models, the paramenter"e" does not reflect the ED50. 
 
 
 ```
@@ -154,14 +154,14 @@ compParm(model.W1.3, strVal = "e", operator = "-") # Remember that for assymetri
 
 ```{r}
 
-tiff(file="C:/Users/felip/OneDrive - UW-Madison/Documents/GitHub/FFaleco/PhD/WiscWeeds/Waterhemp/Waterhemp PRE_Bill Stangel/Sulf_DR_counts.tiff",
+tiff(file="C:/Users/felip/OneDrive - UW-Madison/Documents/GitHub/FFaleco/PhD/WiscWeeds/Waterhemp/Waterhemp PRE_Bill Stangel/Absolute ED50/Sulf_DR_counts.tiff",
      width = 10, height = 8, units = "in", res = 600, compression = "lzw")
 
 
 par(mar = c(5,5,1,1))
 
 
-plot(model.LL3,
+plot(model.W2.3,
      type = "average",
      xlab = expression(paste("Sulfentrazone rate (g ai ha"^-1, ")")),
      ylab = expression(paste("Plant Density (plant pot"^-1, ")")),
@@ -177,12 +177,12 @@ plot(model.LL3,
 
 
 
-points(x = c(summary(model.LL3)$coefficients[5, 1], 
-             summary(model.LL3)$coefficients[6, 1]), 
-       y = c((summary(model.LL3)$coefficients[3, 1]/2), 
-             (summary(model.LL3)$coefficients[4, 1]/2)),
+points(x = c(ED50.A92[1, 1], 
+             ED50.A66[1, 1]),
+       y = c((summary(model.W2.3)$coefficients[3, 1]/2), 
+             (summary(model.W2.3)$coefficients[4, 1]/2)),
        pch = 8,
-       cex = 1.5)
+       cex = 1.3)
 
 
 #abline(v = 280, 
