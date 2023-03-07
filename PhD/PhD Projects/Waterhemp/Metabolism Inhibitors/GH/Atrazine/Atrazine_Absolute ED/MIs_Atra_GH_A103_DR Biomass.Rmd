@@ -95,6 +95,8 @@ model.W1.3 <- drm(biomass ~ rate, herb, fct = W1.3(), data = data_A103, type = "
 
 plot(fitted(model.W1.3), residuals(model.W1.3))
 
+qqnorm(residuals(model.W1.3))
+
 
 modelFit(model.W1.3)
 
@@ -140,7 +142,7 @@ EDcomp(model.W1.3, c((summary(model.W1.3)$coefficients[4, 1] * 0.5),
 
 EDcomp(model.W1.3, c((summary(model.W1.3)$coefficients[4, 1] * 0.5),
                      (summary(model.W1.3)$coefficients[6, 1] * 0.5)), 
-       compMatch = c("atra", "atra+GST"), type = "absolute", interval = "none", reverse = F)
+       compMatch = c("atra", "atra+GST"), type = "absolute", interval = "none", reverse = T)
 
 
 # Comparing b parameter (slope)
