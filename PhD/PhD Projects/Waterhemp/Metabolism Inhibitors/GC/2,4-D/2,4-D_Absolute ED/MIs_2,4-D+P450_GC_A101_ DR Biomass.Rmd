@@ -162,7 +162,7 @@ par(mar = c(5,5,1,1))
 
 plot(model.W1.3,
      type = "average",
-     xlab = expression(paste("2,4-D rate (g ae ha"^-1, ")")),
+     xlab = expression(paste("2,4-D + P450 rate (g ae ha"^-1, ")")),
      ylab = expression(paste("A101 biomass (g plant"^-1, ")")),
      ylim = c(0, 4),
      col = c("red", "darkgreen"),
