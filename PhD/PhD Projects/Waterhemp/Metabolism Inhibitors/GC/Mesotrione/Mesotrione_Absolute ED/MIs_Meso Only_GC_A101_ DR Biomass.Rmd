@@ -91,7 +91,7 @@ model.W2.3 <- drm(biomass ~ rate, temp, fct = W2.3(), data = data.A101.meso, typ
 
 plot(fitted(model.W2.3), residuals(model.W2.3))
 
-
+qqnorm(residuals(model.W2.3))
                 
 modelFit(model.W2.3)
 

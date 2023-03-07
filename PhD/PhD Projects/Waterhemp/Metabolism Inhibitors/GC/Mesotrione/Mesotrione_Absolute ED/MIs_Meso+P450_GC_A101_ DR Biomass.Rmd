@@ -163,7 +163,7 @@ par(mar = c(5,5,1,1))
 
 plot(model.LL2.3,
      type = "average",
-     xlab = expression(paste("Mesotrione+P450 rate (g ai ha"^-1, ")")),
+     xlab = expression(paste("Mesotrione + P450 rate (g ai ha"^-1, ")")),
      ylab = expression(paste("A101 biomass (g plant"^-1, ")")),
      ylim = c(0, 6),
      col = c("red", "darkgreen"),
