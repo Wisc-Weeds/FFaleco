@@ -27,7 +27,7 @@ library(dplyr)
 
 ```{r}
 
-#data <- read.csv("Data Sheet_2,4-D_GH.csv")
+data <- read.csv("Data Sheet_2,4-D_GH.csv")
 
 str(data)
 
