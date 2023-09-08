@@ -1,12 +1,11 @@
 ---
-title: "Waterhemp MIs GH 2,4-D Biomass"
+title: "Waterhemp MIs GH Atrazine Biomass"
 author: "Felipe Faleco"
-date: "10/21/2022"
+date: "02/21/2023"
 output:
-  pdf_document: default
   html_document:
     df_print: paged
-editor_options:
+editor_options: 
   chunk_output_type: inline
 ---
 
@@ -21,26 +20,31 @@ library(dplyr)
 ```
 
 
-# CONFIRMING RESISTANCE
-
-
-## READ DATA
+# READ DATA
 
 ```{r}
 
-data <- read.csv("Data Sheet_2,4-D_GH.csv")
+data <- read.csv("Data Sheet_Atrazine_GH.csv")
 
 str(data)
 
+data_A103 <- data %>% filter(pop == "A103")
 
-data_24D <- data %>% filter(herb == "2,4D")
 
 
 fun <- function(x){
   c( mean = mean(x), VAR = var(x), SD = sd(x), SE = std.error(x), n = length(x))
 }
 
-summary.24D <- summaryBy(cbind(biomass) ~ pop + rate, data = subset(data_24D),
+summary.atra <- summaryBy(cbind(biomass) ~ herb + rate, data = subset(data_A103, herb=="atra"),
+          FUN=fun)
+
+
+summary.atra_GST <- summaryBy(cbind(biomass) ~ herb + rate, data = subset(data_A103, herb=="atra+GST"),
+          FUN=fun)
+
+
+summary.atra_P450 <- summaryBy(cbind(biomass) ~ herb + rate, data = subset(data_A103, herb=="atra+P450"),
           FUN=fun)
 
 
@@ -48,11 +52,11 @@ summary.24D <- summaryBy(cbind(biomass) ~ pop + rate, data = subset(data_24D),
 
 
 
-## MODEL LL.4
+# MODEL LL.4
 
 ```{r}
 
-model.LL4 <- drm(biomass ~ rate, pop, fct = LL.4(), data = data_24D, type = "continuous")
+model.LL4 <- drm(biomass ~ rate, herb, fct = LL.4(), data = data_A103, type = "continuous")
 
 
 plot(fitted(model.LL4), residuals(model.LL4))
@@ -74,7 +78,7 @@ summary(model.LL4)
 
 
 
-## MODEL SELECTION
+# MODEL SELECTION
 
 ```{r, warning=FALSE}
 
@@ -87,7 +91,7 @@ mselect(model.LL4,  list(L.3(), L.4(), L.5(), LL.2(), LL.3(), LL.3u(), LL.4(), L
 # Lower IC, which actually is AIC (default), indicates the best model to be used. On the other hand, the highest the Lack of Fit, better the model. The two-, three-, and four-parameter log-logistic models are are symmetrical around the inflection point (parameter "e") while others (e.g. fiveparameter log-logistic, Gompertz, and Weibull) are asymmetrical. In symmetrical models, the parameter "e" and relative ED50 are identical, that is, they both indicate the dose that reduces the response midway between the upper and lower limits. In asymmetrical models, however, the parameter "e" does not have the same meaning as in symmetrical models, even though it is still the location of the inflection point. Therefore, in asymmetrical models, ED50 should be estimated as "absolute" and not relative.
 
 
-model.W1.3 <- drm(biomass ~ rate, pop, fct = W1.3(),  data = data_24D, type = "continuous")
+model.W1.3 <- drm(biomass ~ rate, herb, fct = W1.3(), data = data_A103, type = "continuous")
 
 plot(fitted(model.W1.3), residuals(model.W1.3))
 
@@ -99,55 +103,46 @@ modelFit(model.W1.3)
 summary(model.W1.3)
 
 
-
-anova(model.W1.3, model.LL4) # p-value > 0.05 means that there is no difference between models. Therefore, we can use model LL.3
+anova(model.W1.3, model.LL4) # p-value > 0.05 means that there is no difference between models. Therefore, we can use model W1.3
 
 ```
 
 
 
-## ED50
+# ED50
 
 ```{r}
 
 #ED(model.W1.3, c(50), type = "relative", interval = "delta")
 
 
-ED50.A82 <- ED(model.W1.3, (summary(model.W1.3)$coefficients[5, 1] * 0.5), clevel = "A82", type = "absolute", interval = "delta")
+ED50.atra <- ED(model.W1.3, (summary(model.W1.3)$coefficients[4, 1] * 0.5), clevel = "atra", type = "absolute", interval = "delta")
 
-ED50.A101 <- ED(model.W1.3, (summary(model.W1.3)$coefficients[6, 1] * 0.5), clevel = "A101", type = "absolute", interval = "delta")
+ED50.atra.P450 <- ED(model.W1.3, (summary(model.W1.3)$coefficients[5, 1] * 0.5), clevel = "atra+P450", type = "absolute", interval = "delta")
 
-ED50.A103 <- ED(model.W1.3, (summary(model.W1.3)$coefficients[7, 1] * 0.5), clevel = "A103", type = "absolute", interval = "delta")
+ED50.atra.GST <- ED(model.W1.3, (summary(model.W1.3)$coefficients[6, 1] * 0.5), clevel = "atra+GST", type = "absolute", interval = "delta")
 
-ED50.A75 <- ED(model.W1.3, (summary(model.W1.3)$coefficients[8, 1] * 0.5), clevel = "A75", type = "absolute", interval = "delta")
 
 # In this case, fitting relative and absolute resulted in the same ED50. Perhaps because W1.3 has a lower limit = 0. In simulations using the W1.4, then the relative and absolute ED50 are different. 
 
 ```
 
 
-## ED 50 RI AND PARAMETERS STUDENT T-TEST COMPARISONS
+# ED 50 RI AND PARAMETERS STUDENT T-TEST COMPARISONS
 
 ```{r}
 
 #EDcomp(model.W1.3, c(50, 50), type = "relative", interval = "none", reverse = F)
 
 
-EDcomp(model.W1.3, c((summary(model.W1.3)$coefficients[6, 1] * 0.5),
+EDcomp(model.W1.3, c((summary(model.W1.3)$coefficients[4, 1] * 0.5),
                      (summary(model.W1.3)$coefficients[5, 1] * 0.5)), 
-       compMatch = c("A101", "A82"), type = "absolute", interval = "none", reverse = F)
+       compMatch = c("atra", "atra+P450"), type = "absolute", interval = "none", reverse = T)
 
 
-EDcomp(model.W1.3, c((summary(model.W1.3)$coefficients[7, 1] * 0.5),
-                     (summary(model.W1.3)$coefficients[5, 1] * 0.5)), 
-       compMatch = c("A103", "A82"), type = "absolute", interval = "none", reverse = F)
-
-
-EDcomp(model.W1.3, c((summary(model.W1.3)$coefficients[8, 1] * 0.5),
-                     (summary(model.W1.3)$coefficients[5, 1] * 0.5)), 
-       compMatch = c("A75", "A82"), type = "absolute", interval = "none", reverse = F)
-
-
+EDcomp(model.W1.3, c((summary(model.W1.3)$coefficients[4, 1] * 0.5),
+                     (summary(model.W1.3)$coefficients[6, 1] * 0.5)), 
+       compMatch = c("atra", "atra+GST"), type = "absolute", interval = "none", reverse = T)
 
 
 # Comparing b parameter (slope)
@@ -166,11 +161,11 @@ compParm(model.W1.3, strVal = "e", operator = "-") # Remember that for assymetri
 
 
 
-##SAVE TIFF
+#SAVE TIFF
 
 ```{r}
 
-tiff(file="C:/Users/felip/OneDrive - UW-Madison/Documents/GitHub/FFaleco/PhD/PhD Projects/Waterhemp/Metabolism Inhibitors/GH/2,4-D/2,4-D_Absolute ED/GH_2,4D Only_All Pops_DR Biomass.tiff",
+tiff(file="C:/Users/felip/OneDrive - UW-Madison/Documents/GitHub/FFaleco/PhD/PhD Projects/Waterhemp/Metabolism Inhibitors/GH/Atrazine/Atrazine_Absolute ED/GH_Atra_A103_DR Biomass.tiff",
      width = 10, height = 8, units = "in", res = 600, compression = "lzw")
 
 
@@ -179,12 +174,12 @@ par(mar = c(5,5,1,1))
 
 plot(model.W1.3,
      type = "average",
-     xlab = expression(paste("2,4-D rate (g ae ha"^-1, ")")),
-     ylab = expression(paste("Biomass (g plant"^-1, ")")),
+     xlab = expression(paste("Atrazine rate (g ai ha"^-1, ")")),
+     ylab = expression(paste("A103 Biomass (g plant"^-1, ")")),
      ylim = c(0, 4),
      #broken = T,
-     col = c("darkgreen", "red", "navy", "orange"),
-     pch = c(19, 17, 15, 18),
+     col = c("darkgreen", "red", "navy"),
+     pch = c(19, 17, 15),
      cex = 1.5,
      cex.axis = 1.3,
      cex.lab = 1.9,
@@ -194,14 +189,12 @@ plot(model.W1.3,
 
 
 
-points(x = c(ED50.A82[1, 1], 
-             ED50.A101[1, 1],
-             ED50.A103[1, 1],
-             ED50.A75[1, 1]),
-       y = c((summary(model.W1.3)$coefficients[5, 1]/2), 
-             (summary(model.W1.3)$coefficients[6, 1]/2),
-             (summary(model.W1.3)$coefficients[7, 1]/2),
-             (summary(model.W1.3)$coefficients[8, 1]/2)),
+points(x = c(ED50.atra[1, 1],
+             ED50.atra.P450[1, 1],
+             ED50.atra.GST[1, 1]),
+       y = c((summary(model.W1.3)$coefficients[4, 1]/2), 
+             (summary(model.W1.3)$coefficients[5, 1]/2),
+             (summary(model.W1.3)$coefficients[6, 1]/2)),
        pch = 8,
        cex = 1.3)
 
@@ -213,38 +206,31 @@ points(x = c(ED50.A82[1, 1],
        #col = "black")
 
 
-
-#text(x = 4500, y = 2.0, 
-     #labels = expression(paste("ED"[50] ~ "A101 = 297.6 ("%+-% "61.7)" ^A)),
-     #cex = 1.0,
+#text(x = 4800, y = 2.0, 
+     #labels = expression(paste("ED"[50] ~ "2,4-D+GST= 116.6 ("%+-% "37.4)" ^A)),
+     #cex = 0.95,
      #col = "black",
      #font = 2)
 
 
-#text(x = 4200, y = 1.8, 
-     #labels = expression(paste("ED"[50] ~ "A75 = 111.6 ("%+-% "25.8)" ^B)),
-     #cex = 1.0,
+#text(x = 5200, y = 1.8, 
+     #labels = expression(paste("ED"[50] ~ "2,4-D+P450= 193.0 ("%+-% "63.8)" ^AB)),
+     #cex = 0.95,
      #col = "black",
      #font = 2)
 
 
-#text(x = 4200, y = 1.6, 
-     #labels = expression(paste("ED"[50] ~ "A82 = 104.7 ("%+-% "21.5)" ^B)),
-     #cex = 1.0,
+#text(x = 3800, y = 1.6, 
+     #labels = expression(paste("ED"[50] ~ "2,4-D= 297.6 ("%+-% "68.6)" ^B)),
+     #cex = 0.95,
      #col = "black",
      #font = 2)
 
 
-#text(x = 4200, y = 1.4, 
-     #labels = expression(paste("ED"[50] ~ "A103 = 55.2 ("%+-% "12.3)" ^C)),
-     #cex = 1.0,
-     #col = "black",
-     #font = 2)
 
-
-#text(x = 3200, y = 0.7, 
+#text(x = 3200, y = 0.9, 
      #labels = expression("1x rate: 1065 g ae ha" ^-1),
-     #cex = 1.0,
+     #cex = 0.95,
      #col = "black",
      #font = 2)
 
@@ -253,5 +239,9 @@ dev.off()
 
 
 ```
+
+
+
+
 
 
