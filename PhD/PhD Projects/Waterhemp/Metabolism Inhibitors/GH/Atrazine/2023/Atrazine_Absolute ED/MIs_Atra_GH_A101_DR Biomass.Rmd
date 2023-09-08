@@ -1,7 +1,7 @@
 ---
 title: "Waterhemp MIs GH Atrazine Biomass"
 author: "Felipe Faleco"
-date: "02/21/2023"
+date: "09/08/2023"
 output:
   html_document:
     df_print: paged
@@ -163,7 +163,7 @@ compParm(model.W1.3, strVal = "e", operator = "-") # Remember that for assymetri
 
 ```{r}
 
-tiff(file="C:/Users/felip/OneDrive - UW-Madison/Documents/GitHub/FFaleco/PhD/PhD Projects/Waterhemp/Metabolism Inhibitors/GH/Atrazine/Atrazine_Absolute ED/GH_Atra_A101_DR Biomass.tiff",
+tiff(file="C:/Users/felip/OneDrive - UW-Madison/Documents/GitHub/FFaleco/PhD/PhD Projects/Waterhemp/Metabolism Inhibitors/GH/Atrazine/2023/Atrazine_Absolute ED/MIs_Atra_GH_A101_DR Biomass.tiff",
      width = 10, height = 8, units = "in", res = 600, compression = "lzw")
 
 
