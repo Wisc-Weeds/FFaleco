@@ -120,7 +120,7 @@ ED50.A103 <- ED(model.W2.3, (summary(model.W2.3)$coefficients[7, 1] * 0.5), clev
 ED50.A75 <- ED(model.W2.3, (summary(model.W2.3)$coefficients[8, 1] * 0.5), clevel = "A75", type = "absolute", interval = "delta")
 
 
-# If the model was a LL we should use logBase = exp(1). Eg: ED50.A82 <- ED(model.LL2.3, (summary(model.LL2.3)$coefficients[5, 1] * 0.5), clevel = "A82", type = "absolute", interval = "delta", logBase = exp(1))
+# If the model was a Log-logistic (log(ED50) as parameter) E.g.: LL2.3,  we should use logBase = exp(1). Eg: ED50.A82 <- ED(model.LL2.3, (summary(model.LL2.3)$coefficients[5, 1] * 0.5), clevel = "A82", type = "absolute", interval = "delta", logBase = exp(1))
 
 ```
 
