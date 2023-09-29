@@ -27,19 +27,16 @@ library(dplyr)
 
 ```{r}
 
-data <- read.csv("Data Sheet_Fomesafen_GH.csv")
+data <- read.csv("Data Sheet_Fome_AT2.csv")
 
 str(data)
-
-
-data_fome <- data %>% filter(herb == "fome")
 
 
 fun <- function(x){
   c( mean = mean(x), VAR = var(x), SD = sd(x), SE = std.error(x), n = length(x))
 }
 
-summary.fome <- summaryBy(cbind(biomass) ~ pop + rate, data = subset(data_fome),
+summary <- summaryBy(cbind(biomass) ~ pop + rate, data = data,
           FUN=fun)
 
 
@@ -51,7 +48,7 @@ summary.fome <- summaryBy(cbind(biomass) ~ pop + rate, data = subset(data_fome),
 
 ```{r}
 
-model.LL4 <- drm(biomass ~ rate, pop, fct = LL.4(), data = data_fome, type = "continuous")
+model.LL4 <- drm(biomass ~ rate, pop, fct = LL.4(), data = data, type = "continuous")
 
 
 plot(fitted(model.LL4), residuals(model.LL4))
@@ -86,7 +83,7 @@ mselect(model.LL4,  list(L.3(), L.4(), L.5(), LL.2(), LL.3(), LL.3u(), LL.4(), L
 # Lower IC, which actually is AIC (default), indicates the best model to be used. On the other hand, the highest the Lack of Fit, better the model. The two-, three-, and four-parameter log-logistic models are are symmetrical around the inflection point (parameter "e") while others (e.g. fiveparameter log-logistic, Gompertz, and Weibull) are asymmetrical. In symmetrical models, the parameter "e" and relative ED50 are identical, that is, they both indicate the dose that reduces the response midway between the upper and lower limits. In asymmetrical models, however, the parameter "e" does not have the same meaning as in symmetrical models, even though it is still the location of the inflection point. Therefore, in asymmetrical models, ED50 should be estimated as "absolute" and not relative.
 
 
-model.W1.3 <- drm(biomass ~ rate, pop, fct = W1.3(),  data = data_fome, type = "continuous")
+model.W1.3 <- drm(biomass ~ rate, pop, fct = W1.3(),  data = data, type = "continuous")
 
 plot(fitted(model.W1.3), residuals(model.W1.3))
 
@@ -111,16 +108,13 @@ anova(model.W1.3, model.LL4) # p-value > 0.05 means that there is no difference 
 #ED(model.W1.3, c(50), type = "relative", interval = "delta")
 
 
-ED50.A82 <- ED(model.W1.3, (summary(model.W1.3)$coefficients[5, 1] * 0.5), clevel = "A82", type = "absolute", interval = "delta")
+ED50.AT2 <- ED(model.W1.3, (summary(model.W1.3)$coefficients[3, 1] * 0.5), clevel = "AT2", type = "absolute", interval = "delta")
 
-ED50.A101 <- ED(model.W1.3, (summary(model.W1.3)$coefficients[6, 1] * 0.5), clevel = "A101", type = "absolute", interval = "delta")
-
-ED50.A103 <- ED(model.W1.3, (summary(model.W1.3)$coefficients[7, 1] * 0.5), clevel = "A103", type = "absolute", interval = "delta")
-
-ED50.A75 <- ED(model.W1.3, (summary(model.W1.3)$coefficients[8, 1] * 0.5), clevel = "A75", type = "absolute", interval = "delta")
+ED50.AT8.EDGE <- ED(model.W1.3, (summary(model.W1.3)$coefficients[4, 1] * 0.5), clevel = "AT8-EDGE", type = "absolute", interval = "delta")
 
 
-# If the model was a Log-logistic (log(ED50) as parameter) E.g.: LL2.3,  we should use logBase = exp(1). Eg: ED50.A82 <- ED(model.LL2.3, (summary(model.LL2.3)$coefficients[5, 1] * 0.5), clevel = "A82", type = "absolute", interval = "delta", logBase = exp(1))
+
+# If the model was a Log-logistic (log(ED50) as parameter) E.g.: LL2.3,  we should use logBase = exp(1).
 
 ```
 
@@ -132,22 +126,13 @@ ED50.A75 <- ED(model.W1.3, (summary(model.W1.3)$coefficients[8, 1] * 0.5), cleve
 #EDcomp(model.W1.3, c(50, 50), type = "relative", interval = "none", reverse = F)
 
 
-EDcomp(model.W1.3, c((summary(model.W1.3)$coefficients[6, 1] * 0.5),
-                     (summary(model.W1.3)$coefficients[5, 1] * 0.5)), 
-       compMatch = c("A101", "A82"), type = "absolute", interval = "none", reverse = F)
+EDcomp(model.W1.3, c((summary(model.W1.3)$coefficients[3, 1] * 0.5),
+                     (summary(model.W1.3)$coefficients[4, 1] * 0.5)), 
+       compMatch = c("AT2", "AT8-EDGE"), type = "absolute", interval = "none", reverse = F)
 
 
-EDcomp(model.W1.3, c((summary(model.W1.3)$coefficients[7, 1] * 0.5),
-                     (summary(model.W1.3)$coefficients[5, 1] * 0.5)), 
-       compMatch = c("A103", "A82"), type = "absolute", interval = "none", reverse = F)
 
-
-EDcomp(model.W1.3, c((summary(model.W1.3)$coefficients[8, 1] * 0.5),
-                     (summary(model.W1.3)$coefficients[5, 1] * 0.5)), 
-       compMatch = c("A75", "A82"), type = "absolute", interval = "none", reverse = F)
-
-
-# If the model was a Log-logistic (log(ED50) as parameter) E.g.: LL2.3, we should use logBase = exp(1). Eg: EDcomp(model.LL2.3, c((summary(model.LL2.3)$coefficients[6, 1] * 0.5), (summary(model.W2.3)$coefficients[5, 1] * 0.5)), compMatch = c("A101", "A82"), type = "absolute", interval = "none", reverse = F, logBase = exp(1))
+# If the model was a Log-logistic (log(ED50) as parameter) E.g.: LL2.3, we should use logBase = exp(1). 
 
 
 
@@ -160,7 +145,7 @@ compParm(model.W1.3, strVal = "d", operator = "-")
 
 
 # Comparing e parameter (Infletion Point)
-compParm(model.W1.3, strVal = "e", operator = "-") # Remember that for assymetric models, the paramenter"e" does not reflect the ED50. 
+compParm(model.W1.3, strVal = "e", operator = "-") # Remember that for asymmetric models, the parameter"e" does not reflect the ED50. 
 
 
 ```
@@ -171,7 +156,7 @@ compParm(model.W1.3, strVal = "e", operator = "-") # Remember that for assymetri
 
 ```{r}
 
-tiff(file="C:/Users/felip/OneDrive - UW-Madison/Documents/GitHub/FFaleco/PhD/PhD Projects/Waterhemp/Metabolism Inhibitors/GH/Fomesafen/Fomesafen_Absolute ED/MIs_Fome Only_GH_All Pops_ DR Biomass.tiff",
+tiff(file="C:/Users/felip/OneDrive - UW-Madison/Documents/GitHub/FFaleco/PhD/PhD Projects/Giant Ragweed/AT2/Fomesafen/NCWSS_2023/AT2_Fome_DR Biomass.tiff",
      width = 10, height = 8, units = "in", res = 600, compression = "lzw")
 
 
@@ -182,27 +167,23 @@ plot(model.W1.3,
      type = "average",
      xlab = expression(paste("Fomesafen rate (g ai ha"^-1, ")")),
      ylab = expression(paste("Biomass (g plant"^-1, ")")),
-     ylim = c(0, 5),
+     ylim = c(0, 2),
      #broken = T,
-     col = c("darkgreen", "red", "navy", "orange"),
-     pch = c(19, 17, 15, 18),
+     col = c("red", "darkgreen"),
+     pch = c(19, 17),
      cex = 1.5,
      cex.axis = 1.3,
      cex.lab = 1.9,
      cex.legend = 2.0,
-     legendPos = c(4800, 4.0),
+     legendPos = c(3000, 2.0),
      lwd = 1.5)
 
 
 
-points(x = c(ED50.A82[1, 1], 
-             ED50.A101[1, 1],
-             ED50.A103[1, 1],
-             ED50.A75[1, 1]),
-       y = c((summary(model.W1.3)$coefficients[5, 1]/2), 
-             (summary(model.W1.3)$coefficients[6, 1]/2),
-             (summary(model.W1.3)$coefficients[7, 1]/2),
-             (summary(model.W1.3)$coefficients[8, 1]/2)),
+points(x = c(ED50.AT2[1, 1], 
+             ED50.AT8.EDGE[1, 1]),
+       y = c((summary(model.W1.3)$coefficients[3, 1]/2), 
+             (summary(model.W1.3)$coefficients[4, 1]/2)),
        pch = 8,
        cex = 1.3)
 
