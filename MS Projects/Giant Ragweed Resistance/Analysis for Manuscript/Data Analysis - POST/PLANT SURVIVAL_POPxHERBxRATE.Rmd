@@ -1,7 +1,7 @@
 ---
-title: "RAW SURVIVORSHIP - WATERHEMP POP x HERB x RATE"
+title: "PLANT SURVIVAL POP x HERB x RATE - GIANT RAGWEED"
 author: "Felipe A. Faleco"
-date: "01/26/2021"
+date: "11/172023"
 output: pdf_document
 ---
 
@@ -20,41 +20,30 @@ library(car)
 
 ```{r}
 
-waterhemp <- read.csv("All POST_Reduction.csv")
+data <- read.csv("All POST_Reduction.csv")
 
-str(waterhemp)
+str(data)
 
-waterhemp$run <- as.factor(waterhemp$run)
+data$run <- as.factor(data$run)
 
-waterhemp$pop <- as.factor(waterhemp$pop)
+data$pop <- as.factor(data$pop)
 
-waterhemp$Herbicide <- as.factor(waterhemp$Herbicide)
+data$Herbicide <- as.factor(data$Herbicide)
 
-waterhemp$Rate <- as.factor(waterhemp$Rate)
+data$Rate <- as.factor(data$Rate)
 
-waterhemp$rep <- as.factor(waterhemp$rep)
+data$rep <- as.factor(data$rep)
 
-str(waterhemp)
-
-```
-
-
-# FILTERING TESTED ALL HERBICIDES
-
-```{r}
-
-tested_all_herbs <- waterhemp %>% filter(tested_all_herbs == "x")
+str(data)
 
 ```
-
-
 
 
 # DATA SUMMARY
 
 ```{r}
 
-summary <- tested_all_herbs %>% 
+summary <- data %>% 
   group_by(pop, Herbicide, Rate) %>% 
   summarise(n = sum(!is.na(surv)), 
             mean = mean(surv, na.rm = TRUE), 
@@ -62,8 +51,8 @@ summary <- tested_all_herbs %>%
             se = sd / sqrt(n),
             CI = qnorm(1- 0.05/2) * se)
 
-summary$herb <- factor(summary$Herbicide,
-                       levels = c("2,4-D", "atrazine", "dicamba", "fomesafen", "glufosinate", "glyphosate", "imazethapyr", "mesotrione"))
+#summary$herb <- factor(summary$Herbicide,
+                       levels = c("Cloransulam", "Fomesafen", "Glyphosate"))
 
 summary
 
@@ -91,7 +80,7 @@ ggplot(summary, aes(x = mean*100, y = pop)) +
          axis.text = element_text(face = "bold", size = 28, colour = "black"),
          strip.text = element_text(face = "bold", size = 32, colour = "black"),
          panel.spacing = unit(1.5, "lines")) +
-  ggsave("RAW SURV_POPxHERBxRATE.tiff", units = "in", width = 35, height = 22, dpi = 600, compression = "lzw")
+  ggsave("PLANT SURVIVAL_POPxHERBxRATE.tiff", units = "in", width = 22, height = 15, dpi = 600, compression = "lzw")
   
 
 ```
