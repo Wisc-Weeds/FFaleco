@@ -26,9 +26,11 @@ library(stringr)
 library(dplyr)
 library(choroplethr)
 
-library(ggsn)
 
-install.packages("ggsn")
+library(cartography)
+
+
+install.packages("cartography")
 
 
 
@@ -79,9 +81,9 @@ base +
                    size = 4,
                    seed = TRUE,
                    show.legend = FALSE) +  
-  north(df, location = 'topright', symbol = 1, anchor = c(x = -92.5, y = 47)) +
+  #north(pos = "topright", col = "grey20", south = FALSE, x = NULL) +
   scale_color_manual(name = "Herbicide Resistance 1x Rate POST", 
-                     values = c("navy", "red", "orange2", "darkgreen")) +
+                     values = c("blue", "red", "orange2", "darkorchid3", "darkgreen")) +
   theme_map() +
   labs(fill="", y = "Latitude", x = "Longitude") + 
      #title = "Giant Ragweed Response to POST Herbicides") +
