@@ -1,0 +1,99 @@
+---
+title: "RAW SURVIVORSHIP - WATERHEMP POP x HERB x RATE"
+author: "Felipe A. Faleco"
+date: "01/26/2021"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+
+knitr::opts_chunk$set(echo = TRUE)
+library(dplyr)
+library(ggplot2)
+library(ggpubr)
+library(car)
+
+```
+
+
+# WHOLE DATA
+
+```{r}
+
+waterhemp <- read.csv("All POST_Reduction.csv")
+
+str(waterhemp)
+
+waterhemp$run <- as.factor(waterhemp$run)
+
+waterhemp$pop <- as.factor(waterhemp$pop)
+
+waterhemp$Herbicide <- as.factor(waterhemp$Herbicide)
+
+waterhemp$Rate <- as.factor(waterhemp$Rate)
+
+waterhemp$rep <- as.factor(waterhemp$rep)
+
+str(waterhemp)
+
+```
+
+
+# FILTERING TESTED ALL HERBICIDES
+
+```{r}
+
+tested_all_herbs <- waterhemp %>% filter(tested_all_herbs == "x")
+
+```
+
+
+
+
+# DATA SUMMARY
+
+```{r}
+
+summary <- tested_all_herbs %>% 
+  group_by(pop, Herbicide, Rate) %>% 
+  summarise(n = sum(!is.na(surv)), 
+            mean = mean(surv, na.rm = TRUE), 
+            sd = sd(surv, na.rm = TRUE),
+            se = sd / sqrt(n),
+            CI = qnorm(1- 0.05/2) * se)
+
+summary$herb <- factor(summary$Herbicide,
+                       levels = c("2,4-D", "atrazine", "dicamba", "fomesafen", "glufosinate", "glyphosate", "imazethapyr", "mesotrione"))
+
+summary
+
+```
+
+
+
+# PLOT
+
+```{r}
+
+rate_labels <- c("1x" = "Rate: 1x", "3x" = "Rate: 3x")
+
+ggplot(summary, aes(x = mean*100, y = pop)) + 
+  geom_point(size = 4) + 
+  geom_vline(xintercept = 50, size = 1, colour = "red") +
+  geom_errorbar(aes(xmin = (mean*100) - (se*100), xmax = (mean*100) + (se*100), width = 0.4)) + 
+  facet_grid(Rate ~ Herbicide, labeller = labeller(Rate = rate_labels))  +
+  labs(#title = "Waterhemp Survivorship - POST", 
+    x = "Plant Survival (%)", 
+    y = "Accession") + 
+  theme_bw() + 
+  theme (plot.title = element_text(face = "bold", hjust = 0.5, size = 50, colour = "darkgreen"), 
+         axis.title = element_text(face = "bold", size = 45, colour = "darkgreen"), 
+         axis.text = element_text(face = "bold", size = 28, colour = "black"),
+         strip.text = element_text(face = "bold", size = 32, colour = "black"),
+         panel.spacing = unit(1.5, "lines")) +
+  ggsave("RAW SURV_POPxHERBxRATE.tiff", units = "in", width = 35, height = 22, dpi = 600, compression = "lzw")
+  
+
+```
+
+
