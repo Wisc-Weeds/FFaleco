@@ -24,21 +24,21 @@ library(ggpubr)
 
 ```{r}
 
-waterhemp <- read.csv("All POST_Reduction.csv")
+data <- read.csv("All POST_Reduction.csv")
 
-str(waterhemp)
+str(data)
 
-waterhemp$run <- as.factor(waterhemp$run)
+data$run <- as.factor(data$run)
 
-waterhemp$pop <- as.factor(waterhemp$pop)
+data$pop <- as.factor(data$pop)
 
-waterhemp$Herbicide <- as.factor(waterhemp$Herbicide)
+data$Herbicide <- as.factor(data$Herbicide)
 
-waterhemp$Rate <- as.factor(waterhemp$Rate)
+data$Rate <- as.factor(data$Rate)
 
-waterhemp$rep <- as.factor(waterhemp$rep)
+data$rep <- as.factor(data$rep)
 
-str(waterhemp)
+str(data)
 
 ```
 
@@ -47,7 +47,7 @@ str(waterhemp)
 
 ```{r}
 
-model <- glmmTMB(logit(bio_red) ~ Herbicide * Rate + (1|run) + (1|pop), data = waterhemp, family = "gaussian")
+model <- glmmTMB(logit(bio_red) ~ Herbicide * Rate + (1|run) + (1|pop), data = data, family = "gaussian")
 
 
 ```
