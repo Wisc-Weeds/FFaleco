@@ -25,11 +25,6 @@ library(mapdata)
 library(stringr)
 library(dplyr)
 library(choroplethr)
-library(cartography)
-library(mapsf)
-
-install.packages("mapsf")
-
 
 
 
@@ -81,7 +76,7 @@ base +
                    seed = TRUE,
                    show.legend = FALSE) +  
   scale_color_manual(name = "Herbicide Resistance 1x Rate POST", 
-                     values = c("blue", "red", "orange2", "darkorchid3", "darkgreen")) +
+                     values = c("blue", "orange2", "red", "darkorchid3", "darkgreen")) +
   theme_map() +
   labs(fill="", y = "Latitude", x = "Longitude") + 
      #title = "Giant Ragweed Response to POST Herbicides") +
@@ -91,16 +86,16 @@ base +
         panel.grid.major = element_line(color = "white"), 
         panel.grid.minor = element_blank(),
         panel.border = element_rect(fill = "NA",color = "white", size = 0.5, linetype = "solid"),
-        legend.title = element_text(size = 14, colour = "black", face = "bold", hjust = 0),
-        legend.text = element_text(size = 14, colour = "black"), 
+        legend.title = element_text(size = 19, colour = "black", face = "bold", hjust = 0),
+        legend.text = element_text(size = 19, colour = "black"), 
         legend.key = element_rect(fill = NA),
         legend.key.width = unit(0.5, "line"),
-        legend.position = c(0.65, 0.78), 
+        legend.position = c(0.58, 0.80), 
         legend.background = element_rect(fill =NA), 
         plot.title = element_text(color = "darkgreen", face = "bold", size = 30, hjust = 0.5)) +
   ggsave("MAP_POP_ALLHERBS_1X.tiff", units = "in", width = 13, height = 11, dpi = 600, compression = "lzw")
 
-  ele
+  
 
 ```
 
