@@ -108,9 +108,9 @@ anova(model.W2.3, model.LL4) # p-value > 0.05 means that there is no difference 
 #ED(model.W1.3, c(50), type = "relative", interval = "delta")
 
 
-ED50.AT2 <- ED(model.W2.3, (summary(model.W2.3)$coefficients[3, 1] * 0.5), clevel = "AT2", type = "absolute", interval = "delta")
+ED50.AT2 <- ED(model.W2.3, (summary(model.W2.3)$coefficients[3, 1] * 0.5), clevel = "AT12", type = "absolute", interval = "delta")
 
-ED50.AT8.EDGE <- ED(model.W2.3, (summary(model.W2.3)$coefficients[4, 1] * 0.5), clevel = "AT8-EDGE", type = "absolute", interval = "delta")
+ED50.AT8.EDGE <- ED(model.W2.3, (summary(model.W2.3)$coefficients[4, 1] * 0.5), clevel = "AT15", type = "absolute", interval = "delta")
 
 
 
@@ -128,7 +128,7 @@ ED50.AT8.EDGE <- ED(model.W2.3, (summary(model.W2.3)$coefficients[4, 1] * 0.5), 
 
 EDcomp(model.W2.3, c((summary(model.W2.3)$coefficients[3, 1] * 0.5),
                      (summary(model.W2.3)$coefficients[4, 1] * 0.5)), 
-       compMatch = c("AT2", "AT8-EDGE"), type = "absolute", interval = "none", reverse = F)
+       compMatch = c("AT12", "AT15"), type = "absolute", interval = "none", reverse = F)
 
 
 
@@ -156,7 +156,7 @@ compParm(model.W2.3, strVal = "e", operator = "-") # Remember that for asymmetri
 
 ```{r}
 
-tiff(file="C:/Users/felip/OneDrive - UW-Madison/Documents/GitHub/FFaleco/PhD/PhD Projects/Giant Ragweed/AT2/Lactofen/AT2_Lac_DR Biomass.tiff",
+tiff(file="C:/Users/felip/OneDrive - UW-Madison/Documents/GitHub/FFaleco/PhD/PhD Projects/Giant Ragweed/AT12/Lactofen/AT2_Lac_DR Biomass.tiff",
      width = 10, height = 8, units = "in", res = 600, compression = "lzw")
 
 
