@@ -1,0 +1,217 @@
+---
+title: "Biomass Comparison"
+author: "Felipe Faleco"
+date: "10/29/2021"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+
+knitr::opts_chunk$set(echo = TRUE)
+
+```
+
+
+#DATA READ
+
+```{r}
+
+data.raw <- read.csv("data.csv")
+
+data.biored <- read.csv("data_BIORED.csv")
+
+```
+
+
+
+#T-TEST 0X BIOMASS BETWEEN BOTH ACCESSIONS
+
+
+```{r}
+
+AT2.0x.raw <- subset(data.raw, c(pop =="AT2" & rate == "0x"))
+
+AT8.EDGE.0x.raw <- subset(data.raw, c(pop =="AT8-EDGE" & rate == "0x"))
+
+
+hist(AT2.0x.raw$biomass)
+
+plot(density(AT2.0x.raw$biomass))
+
+qqnorm(AT2.0x.raw$biomass)
+
+qqline(AT2.0x.raw$biomass)
+
+
+
+hist(AT8.EDGE.0x.raw$biomass)
+
+plot(density(AT8.EDGE.0x.raw$biomass))
+
+qqnorm(AT8.EDGE.0x.raw$biomass)
+
+qqline(AT8.EDGE.0x.raw$biomass)
+
+
+
+t.test(AT2.0x.raw$biomass, AT8.EDGE.0x.raw$biomass) 
+
+wilcox.test(AT2.0x.raw$biomass, AT8.EDGE.0x.raw$biomass) # Non-parametric test
+
+# Therefore, the biomass accumulation of both accessions at 0x is not significantly different at 0x dose (p-value = 0.4857)
+
+```
+
+
+
+#T-TEST 1X BIOMASS BETWEEN BOTH ACCESSIONS
+
+```{r}
+
+AT2.1x.raw <- subset(data.raw, c(pop =="AT2" & rate == "1x"))
+
+AT8.EDGE.1x.raw <- subset(data.raw, c(pop =="AT8-EDGE" & rate == "1x"))
+
+
+hist(AT2.1x.raw$biomass)
+
+plot(density(AT2.1x.raw$biomass))
+
+qqnorm(AT2.1x.raw$biomass)
+
+qqline(AT2.1x.raw$biomass)
+
+
+
+hist(AT8.EDGE.1x.raw$biomass)
+
+plot(density(AT8.EDGE.1x.raw$biomass))
+
+qqnorm(AT8.EDGE.1x.raw$biomass)
+
+qqline(AT8.EDGE.1x.raw$biomass)
+
+
+
+t.test(AT2.1x.raw$biomass, AT8.EDGE.1x.raw$biomass) 
+
+wilcox.test(AT2.1x.raw$biomass, AT8.EDGE.1x.raw$biomass) # Non-parametric test
+
+```
+
+
+
+
+
+#T-TEST 0.5X BIOMASS BETWEEN BOTH ACCESSIONS
+
+```{r}
+
+AT2.0.5x.raw <- subset(data.raw, c(pop =="AT2" & rate == "0.5x"))
+
+AT8.EDGE.0.5x.raw <- subset(data.raw, c(pop =="AT8-EDGE" & rate == "0.5x"))
+
+
+hist(AT2.0.5x.raw$biomass)
+
+plot(density(AT2.0.5x.raw$biomass))
+
+qqnorm(AT2.0.5x.raw$biomass)
+
+qqline(AT2.0.5x.raw$biomass)
+
+
+
+hist(AT8.EDGE.0.5x.raw$biomass)
+
+plot(density(AT8.EDGE.0.5x.raw$biomass))
+
+qqnorm(AT8.EDGE.0.5x.raw$biomass)
+
+qqline(AT8.EDGE.0.5x.raw$biomass)
+
+
+
+t.test(AT2.0.5x.raw$biomass, AT8.EDGE.0.5x.raw$biomass) 
+
+wilcox.test(AT2.0.5x.raw$biomass, AT8.EDGE.0.5x.raw$biomass) # Non-parametric test
+
+```
+
+
+
+#T-TEST 1X BIOMASS REDUCTION BETWEEN BOTH ACCESSIONS
+
+```{r}
+
+AT2.1x.biored <- subset(data.biored, c(pop =="AT2" & rate == "1x"))
+
+AT8.EDGE.1x.biored <- subset(data.biored, c(pop =="AT8-EDGE" & rate == "1x"))
+
+
+hist(AT2.1x.biored$bio_red)
+
+plot(density(AT2.1x.biored$bio_red))
+
+qqnorm(AT2.1x.biored$bio_red)
+
+qqline(AT2.1x.biored$bio_red)
+
+
+
+hist(AT8.EDGE.1x.biored$bio_red)
+
+plot(density(AT8.EDGE.1x.biored$bio_red))
+
+qqnorm(AT8.EDGE.1x.biored$bio_red)
+
+qqline(AT8.EDGE.1x.biored$bio_red)
+
+
+
+t.test(AT2.1x.biored$bio_red, AT8.EDGE.1x.biored$bio_red) 
+
+wilcox.test(AT2.1x.biored$bio_red, AT8.EDGE.1x.biored$bio_red) # Non-parametric test 
+
+```
+
+
+
+#T-TEST 0.5X BIOMASS REDUCTION BETWEEN BOTH ACCESSIONS
+
+```{r}
+
+AT2.0.5x.biored <- subset(data.biored, c(pop =="AT2" & rate == "0.5x"))
+
+AT8.EDGE.0.5x.biored <- subset(data.biored, c(pop =="AT8-EDGE" & rate == "0.5x"))
+
+
+hist(AT2.0.5x.biored$bio_red)
+
+plot(density(AT2.0.5x.biored$bio_red))
+
+qqnorm(AT2.0.5x.biored$bio_red)
+
+qqline(AT2.0.5x.biored$bio_red)
+
+
+
+hist(AT8.EDGE.0.5x.biored$bio_red)
+
+plot(density(AT8.EDGE.0.5x.biored$bio_red))
+
+qqnorm(AT8.EDGE.0.5x.biored$bio_red)
+
+qqline(AT8.EDGE.0.5x.biored$bio_red)
+
+
+
+t.test(AT2.0.5x.biored$bio_red, AT8.EDGE.0.5x.biored$bio_red) 
+
+wilcox.test(AT2.0.5x.biored$bio_red, AT8.EDGE.0.5x.biored$bio_red) # Non-parametric test 
+
+```
+
+
+
+
