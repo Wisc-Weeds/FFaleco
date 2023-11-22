@@ -1,5 +1,5 @@
 ---
-title: "Giant ragweed A12 Fomesafen"
+title: "Giant ragweed AT2 Fomesafen"
 author: "Felipe Faleco"
 date: "09/29/2023"
 output:
@@ -156,7 +156,7 @@ compParm(model.W1.3, strVal = "e", operator = "-") # Remember that for asymmetri
 
 ```{r}
 
-tiff(file="C:/Users/felip/OneDrive - UW-Madison/Documents/GitHub/FFaleco/PhD/PhD Projects/Giant Ragweed/AT12 (formerly AT2) vs AT15 (formerly AT8-EDGE)/Fomesafen/NCWSS_2023/AT2_Fome_DR Biomass.tiff",
+tiff(file="C:/Users/felip/OneDrive - UW-Madison/Documents/GitHub/FFaleco/PhD/PhD Projects/Giant Ragweed/AT12/Fomesafen/NCWSS_2023/AT2_Fome_DR Biomass.tiff",
      width = 10, height = 8, units = "in", res = 600, compression = "lzw")
 
 
