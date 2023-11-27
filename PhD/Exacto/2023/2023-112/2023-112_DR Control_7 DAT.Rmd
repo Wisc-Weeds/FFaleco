@@ -1,7 +1,7 @@
 ---
-title: "Exacto 2022-108 Dose Response VR7DAT"
+title: "Exacto 2023-112 DR Control 7 DAT"
 author: "Felipe Faleco"
-date: "09/05/2022"
+date: "11/27/2023"
 output:
   html_document:
     df_print: paged
@@ -15,6 +15,7 @@ knitr::opts_chunk$set(echo = TRUE)
 library(drc)
 library(doBy)
 library(plotrix)
+library(dplyr)
 
 ```
 
@@ -23,7 +24,7 @@ library(plotrix)
 
 ```{r}
 
-data <- read.csv("data_2022_108.csv")
+data <- read.csv("Data Sheet_2023-112.csv")
 
 str(data)
 
@@ -33,12 +34,13 @@ fun <- function(x){
   c( mean = mean(x), VAR = var(x), SD = sd(x), SE = std.error(x), n = length(x))
 }
 
-summary.Reflex <- summaryBy(cbind(vr_7dat, vr_14dat, vr_21dat,biomass, surv) ~ rate + name, data = subset(data, name=="Reflex"),
+summary.Reflex <- summaryBy(cbind(ve_7dat, ve_14dat, ve_21dat,biomass, surv) ~ rate + pop, data = subset(data, herb=="reflex"),
           FUN=fun)
 
 
-summary.EXT1490 <- summaryBy(cbind(vr_7dat, vr_14dat, vr_21dat,biomass, surv) ~ rate + name, data = subset(data, name=="EXT 1490"),
+summary.EXT1490 <- summaryBy(cbind(ve_7dat, ve_14dat, ve_21dat,biomass, surv) ~ rate + pop, data = subset(data, herb=="EXT1490"),
           FUN=fun)
+
 
 ```
 
@@ -48,7 +50,7 @@ summary.EXT1490 <- summaryBy(cbind(vr_7dat, vr_14dat, vr_21dat,biomass, surv) ~ 
 
 ```{r}
 
-model.LL4<- drm(vr_7dat ~ rate, name, fct = LL.4(),  data = data)
+model.LL4<- drm(ve_7dat ~ rate, herb + pop, fct = LL.4(),  data = data)
 
 
 
