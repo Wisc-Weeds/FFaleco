@@ -1,0 +1,225 @@
+---
+title: "Exacto 2023-112 A92 DR Control 21 DAT"
+author: "Felipe Faleco"
+date: "11/27/2023"
+output:
+  html_document:
+    df_print: paged
+editor_options: 
+  chunk_output_type: inline
+---
+
+```{r setup, include=FALSE}
+
+knitr::opts_chunk$set(echo = TRUE)
+library(drc)
+library(doBy)
+library(plotrix)
+library(dplyr)
+
+```
+
+
+# READ DATA
+
+```{r}
+
+data <- read.csv("Data Sheet_2023-112_A92.csv")
+
+str(data)
+
+
+
+fun <- function(x){
+  c( mean = mean(x), VAR = var(x), SD = sd(x), SE = std.error(x), n = length(x))
+}
+
+summary.Reflex <- summaryBy(cbind(ve_7dat, ve_14dat, ve_21dat,biomass, surv) ~ rate + pop, data = subset(data, herb=="reflex"),
+          FUN=fun)
+
+
+summary.EXT1490 <- summaryBy(cbind(ve_7dat, ve_14dat, ve_21dat,biomass, surv) ~ rate + pop, data = subset(data, herb=="EXT1490"),
+          FUN=fun)
+
+
+```
+
+
+
+# MODEL LL.4
+
+```{r}
+
+model.LL4 <- drm(ve_21dat ~ rate, herb, fct = LL.4(),  data = data, type = "continuous")
+
+
+plot(fitted(model.LL4), residuals(model.LL4))
+
+                
+modelFit(model.LL4) # higher the p-value, better.
+
+summary(model.LL4) 
+
+# c: lower limit (models with negative lower limit are biologically impossible. E.g., negative biomass, negative % biomass reduction, or negative % control)
+
+# d: upper limit (models where the response variable is in %, upper limit bigger than 100% are biologically impossible. E.g., % biomass reduction, % control)
+
+# b: slope around e (inflection point)
+
+# e: e (inflection point). Represents the dose producing a response halfway between the u and l parameters (ED50)
+```
+
+
+
+# MODEL SELECTION
+
+```{r, warning=FALSE}
+
+getMeanFunctions() # To get the most used functions when fitting dose-response curves.
+
+
+mselect(model.LL4,  list(L.3(), L.4(), L.5(), LL.2(), LL.3(), LL.3u(), LL.4(), LL.5(), W1.2(), W1.3(), W1.4(), W2.2(), W2.3(), W2.4(), BC.4(), BC.5(), LL2.2(), LL2.3(), LL2.3u(), LL2.4(), LL2.5(), AR.2(), AR.3(), MM.2(), MM.3(), baro5()), linreg = T)
+
+
+# Lower IC, which actually is AIC (default), indicates the best model to be used. On the other hand, the highest the Lack of Fit, better the model. The two-, three-, and four-parameter log-logistic models are are symmetrical around the inflection point (parameter "e") while others (e.g. fiveparameter log-logistic, Gompertz, and Weibull) are asymmetrical. In symmetrical models, the parameter "e" and relative ED50 are identical, that is, they both indicate the dose that reduces the response midway between the upper and lower limits. In asymmetrical models, however, the parameter "e" does not have the same meaning as in symmetrical models, even though it is still the location of the inflection point. Therefore, in asymmetrical models, ED50 should be estimated as "absolute" and not relative.
+
+
+model.MM.2 <- drm(ve_21dat ~ rate, herb, fct = MM.2(), data = data, type = "continuous")
+
+
+
+plot(fitted(model.MM.2), residuals(model.MM.2))
+
+qqnorm(residuals(model.MM.2))
+
+
+modelFit(model.MM.2)
+
+summary(model.MM.2)
+
+
+anova(model.MM.2, model.LL4) # p-value > 0.05 means that there is no difference between models. Therefore, we can use model LL.3
+
+```
+
+
+
+## ED50
+
+```{r}
+
+
+ED50.reflex <- ED(model.MM.2, (summary(model.MM.2)$coefficients[1, 1] * 0.5), clevel = "reflex", type = "absolute", interval = "delta")
+
+ED50.EXT1490 <- ED(model.MM.2, (summary(model.MM.2)$coefficients[2, 1] * 0.5), clevel = "EXT1490", type = "absolute", interval = "delta")
+
+
+# If the model was a Log-logistic (log(ED50) as parameter) E.g.: LL2.3,  we should use logBase = exp(1).
+
+```
+
+
+# ED 50 RI AND PARAMETERS STUDENT T-TEST COMPARISONS
+
+```{r}
+
+EDcomp(model.MM.2, c((summary(model.MM.2)$coefficients[2, 1] * 0.5),
+                     (summary(model.MM.2)$coefficients[1, 1] * 0.5)), 
+       compMatch = c("reflex", "EXT1490"), type = "absolute", interval = "none", reverse = F)
+
+
+
+# Comparing b parameter (slope)
+compParm(model.MM.2, strVal = "b", operator = "-")
+
+
+# Comparing d parameter (upper limit)
+compParm(model.MM.2, strVal = "d", operator = "-")
+
+
+# Comparing e parameter (Infletion Point)
+compParm(model.MM.2, strVal = "e", operator = "-") # Remember that for assymetric models, the paramenter"e" does not reflect the ED50. 
+
+
+```
+
+
+
+#SAVE TIFF
+
+```{r}
+
+tiff(file="C:/Users/felip/OneDrive - UW-Madison/Documents/GitHub/FFaleco/PhD/Exacto/2023/2023-112/A92/2023-112_A92_DR Control_21 DAT.tiff",
+     width = 10, height = 8, units = "in", res = 600, compression = "lzw")
+
+
+par(mar = c(5,5,1,1))
+
+
+plot(model.MM.2,
+     type = "average",
+     xlab = expression(paste("Fomesafen rate (g ai ha"^-1, ")")),
+     ylab = expression(paste("Control 21 DAT (%)")),
+     ylim = c(0, 100),
+     #broken = T,
+     col = c("darkgreen", "red"),
+     pch = c(19, 17),
+     cex = 1.2,
+     cex.axis = 1,
+     cex.lab = 1.5,
+     cex.legend = 1.4,
+     legendPos = c(550, 100),
+     lwd = 1.5)
+
+
+
+#abline(v = 1065, 
+       #lwd = 2, 
+       #lty = "twodash",
+       #col = "black")
+
+
+#text(x = 4500, y = 2.0, 
+     #labels = expression(paste("ED"[50] ~ "A101 = 297.6 ("%+-% "61.7)" ^A)),
+     #cex = 1.0,
+     #col = "black",
+     #font = 2)
+
+
+#text(x = 4200, y = 1.8, 
+     #labels = expression(paste("ED"[50] ~ "A75 = 111.6 ("%+-% "25.8)" ^B)),
+     #cex = 1.0,
+     #col = "black",
+     #font = 2)
+
+
+#text(x = 4200, y = 1.6, 
+     #labels = expression(paste("ED"[50] ~ "A82 = 104.7 ("%+-% "21.5)" ^B)),
+     #cex = 1.0,
+     #col = "black",
+     #font = 2)
+
+
+#text(x = 4200, y = 1.4, 
+     #labels = expression(paste("ED"[50] ~ "A103 = 55.2 ("%+-% "12.3)" ^C)),
+     #cex = 1.0,
+     #col = "black",
+     #font = 2)
+
+
+#text(x = 3200, y = 0.7, 
+     #labels = expression("1x rate: 1065 g ae ha" ^-1),
+     #cex = 1.0,
+     #col = "black",
+     #font = 2)
+
+
+dev.off()
+
+```
+
+
+
+
+
+
