@@ -24,7 +24,7 @@ library(dplyr)
 
 ```{r}
 
-data <- read.csv("Data Sheet_2023-112.csv")
+data <- read.csv("Data Sheet_2023-112_copy.csv")
 
 str(data)
 
@@ -50,10 +50,12 @@ summary.EXT1490 <- summaryBy(cbind(ve_7dat, ve_14dat, ve_21dat,biomass, surv) ~ 
 
 ```{r}
 
-model.LL4<- drm(ve_7dat ~ rate, herb + pop, fct = LL.4(),  data = data)
+model.LL4<- drm(ve_7dat ~ rate, curve, fct = LL.4(),  data = data, type = "continuous")
 
 
+plot(fitted(model.LL4), residuals(model.LL4))
 
+                
 modelFit(model.LL4) # higher the p-value, better.
 
 summary(model.LL4) 
@@ -65,7 +67,6 @@ summary(model.LL4)
 # b: slope around e (inflection point)
 
 # e: e (inflection point). Represents the dose producing a response halfway between the u and l parameters (ED50)
-
 ```
 
 
@@ -74,47 +75,48 @@ summary(model.LL4)
 
 ```{r, warning=FALSE}
 
-getMeanFunctions(3)
-
-getMeanFunctions(4)
-
-mselect(model.LL4,  list(L.3(),  L.4(), L.5(), LL.2(), LL.3(), LL.3u(), LL2.3(), LL2.3u(), LL.4(), LL2.4(), LL.5(), W1.3(), W1.4(), W2.4(), baro5()),
-        linreg = T) 
-
-#LL.3 better option here (lower IC, which actually is AIC (default)). L.3 (logistic three parameter) could also be used, but since it is a asymmetrical model, I would give preference to LL.3. Moreover, there is no difference between for dose–response data, the logistic model offers no advantage over the log-logistic model (Ritz 2009). Additionally, in symmetrical models, the parameter e and relative ED50 are identical, that is, they both indicate the dose that reduces the response midway between the upper and lower limits. In asymmetrical models, however, the parameter e does not have the same meaning as in symmetrical models, even though it is still the location of the inflection point. For asymmetrical models, ED50 should be estimated as "absolute" and not relative.
+getMeanFunctions() # To get the most used functions when fitting dose-response curves.
 
 
-
-model.LL3<- drm(vr_7dat ~ rate, name, fct = LL.3(),  data = data, type = "continuous")
-
-model.L.3<- drm(vr_7dat ~ rate, name, fct = L.3(),  data = data, type = "continuous")
+mselect(model.LL4,  list(L.3(), L.4(), L.5(), LL.2(), LL.3(), LL.3u(), LL.4(), LL.5(), W1.2(), W1.3(), W1.4(), W2.2(), W2.3(), W2.4(), BC.4(), BC.5(), LL2.2(), LL2.3(), LL2.3u(), LL2.4(), LL2.5(), AR.2(), AR.3(), MM.2(), MM.3(), baro5()), linreg = T)
 
 
-modelFit(model.LL3)
-
-modelFit(model.L.3)
+# Lower IC, which actually is AIC (default), indicates the best model to be used. On the other hand, the highest the Lack of Fit, better the model. The two-, three-, and four-parameter log-logistic models are are symmetrical around the inflection point (parameter "e") while others (e.g. fiveparameter log-logistic, Gompertz, and Weibull) are asymmetrical. In symmetrical models, the parameter "e" and relative ED50 are identical, that is, they both indicate the dose that reduces the response midway between the upper and lower limits. In asymmetrical models, however, the parameter "e" does not have the same meaning as in symmetrical models, even though it is still the location of the inflection point. Therefore, in asymmetrical models, ED50 should be estimated as "absolute" and not relative.
 
 
-summary(model.LL3) # NO parameter c (lower limit). It means lower limit was set to zero.
-
-summary(model.L.3)
+model.LL2.3 <- drm(ve_7dat ~ rate, curve, fct = LL2.3(), data = data, type = "continuous")
 
 
+plot(fitted(model.LL2.3), residuals(model.LL2.3))
 
-anova(model.LL4, model.L.3) # p-value > 0.05 means that there is no difference between models. Therefore, we can use model LL.3
+qqnorm(residuals(model.LL2.3))
+
+
+modelFit(model.LL2.3)
+
+summary(model.LL2.3)
+
+
+anova(model.LL2.3, model.LL4) # p-value > 0.05 means that there is no difference between models. Therefore, we can use model LL.3
 
 ```
 
 
 
-# ED50 AND ED 90
+## ED50
 
 ```{r}
 
-ED(model.LL3, c(50, 90), type = "relative") 
+#ED(model.W1.3, c(50), type = "relative", interval = "delta")
 
 
-# Estimated doses required for ED50, and ED90. Estimation of ED90 is statistically less accurate and often subject to high variance. Therefore, is better to use ED50.
+ED50.A90.reflex <- ED(model.LL2.3, (summary(model.LL2.3)$coefficients[5, 1] * 0.5), clevel = "A90|reflex", type = "absolute", interval = "delta", logBase = exp(1))
+
+ED50.A90.EXT1490 <- ED(model.LL2.3, (summary(model.LL2.3)$coefficients[6, 1] * 0.5), clevel = "A90|EXT1490", type = "absolute", interval = "delta")
+
+
+
+# If the model was a Log-logistic (log(ED50) as parameter) E.g.: LL2.3,  we should use logBase = exp(1).
 
 ```
 
