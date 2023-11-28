@@ -1,5 +1,5 @@
 ---
-title: "Exacto 2023-112 A90 DR Biomass"
+title: "Exacto 2023-112 A92 DR Biomass"
 author: "Felipe Faleco"
 date: "11/27/2023"
 output:
@@ -24,7 +24,7 @@ library(dplyr)
 
 ```{r}
 
-data <- read.csv("Data Sheet_2023-112_A90.csv")
+data <- read.csv("Data Sheet_2023-112_A92.csv")
 
 str(data)
 
@@ -84,20 +84,20 @@ mselect(model.LL4,  list(L.3(), L.4(), L.5(), LL.2(), LL.3(), LL.3u(), LL.4(), L
 # Lower IC, which actually is AIC (default), indicates the best model to be used. On the other hand, the highest the Lack of Fit, better the model. The two-, three-, and four-parameter log-logistic models are are symmetrical around the inflection point (parameter "e") while others (e.g. fiveparameter log-logistic, Gompertz, and Weibull) are asymmetrical. In symmetrical models, the parameter "e" and relative ED50 are identical, that is, they both indicate the dose that reduces the response midway between the upper and lower limits. In asymmetrical models, however, the parameter "e" does not have the same meaning as in symmetrical models, even though it is still the location of the inflection point. Therefore, in asymmetrical models, ED50 should be estimated as "absolute" and not relative.
 
 
-model.L.3 <- drm(biomass ~ rate, herb, fct = L.3(), data = data, type = "continuous")
+model.LL2.3 <- drm(biomass ~ rate, herb, fct = LL2.3(), data = data, type = "continuous")
 
 
-plot(fitted(model.L.3), residuals(model.L.3))
+plot(fitted(model.LL2.3), residuals(model.LL2.3))
 
-qqnorm(residuals(model.L.3))
-
-
-modelFit(model.L.3)
-
-summary(model.L.3)
+qqnorm(residuals(model.LL2.3))
 
 
-anova(model.L.3, model.LL4) # p-value > 0.05 means that there is no difference between models. Therefore, we can use model LL.3
+modelFit(model.LL2.3)
+
+summary(model.LL2.3)
+
+
+anova(model.LL2.3, model.LL4) # p-value > 0.05 means that there is no difference between models. Therefore, we can use model LL.3
 
 ```
 
@@ -108,9 +108,9 @@ anova(model.L.3, model.LL4) # p-value > 0.05 means that there is no difference b
 ```{r}
 
 
-ED50.reflex <- ED(model.L.3, (summary(model.L.3)$coefficients[3, 1] * 0.5), clevel = "reflex", type = "absolute", interval = "delta")
+ED50.reflex <- ED(model.LL2.3, (summary(model.LL2.3)$coefficients[3, 1] * 0.5), clevel = "reflex", type = "absolute", interval = "delta", logBase = exp(1))
 
-ED50.EXT1490 <- ED(model.L.3, (summary(model.L.3)$coefficients[4, 1] * 0.5), clevel = "EXT1490", type = "absolute", interval = "delta")
+ED50.EXT1490 <- ED(model.LL2.3, (summary(model.LL2.3)$coefficients[4, 1] * 0.5), clevel = "EXT1490", type = "absolute", interval = "delta", logBase = exp(1))
 
 
 # If the model was a Log-logistic (log(ED50) as parameter) E.g.: LL2.3,  we should use logBase = exp(1).
@@ -122,22 +122,22 @@ ED50.EXT1490 <- ED(model.L.3, (summary(model.L.3)$coefficients[4, 1] * 0.5), cle
 
 ```{r}
 
-EDcomp(model.L.3, c((summary(model.L.3)$coefficients[4, 1] * 0.5),
-                     (summary(model.L.3)$coefficients[3, 1] * 0.5)), 
-       compMatch = c("reflex", "EXT1490"), type = "absolute", interval = "none", reverse = F)
+EDcomp(model.LL2.3, c((summary(model.LL2.3)$coefficients[4, 1] * 0.5),
+                     (summary(model.LL2.3)$coefficients[3, 1] * 0.5)), 
+       compMatch = c("reflex", "EXT1490"), type = "absolute", interval = "none", reverse = F, logBase = exp(1))
 
 
 
 # Comparing b parameter (slope)
-compParm(model.L.3, strVal = "b", operator = "-")
+compParm(model.LL2.3, strVal = "b", operator = "-")
 
 
 # Comparing d parameter (upper limit)
-compParm(model.L.3, strVal = "d", operator = "-")
+compParm(model.LL2.3, strVal = "d", operator = "-")
 
 
 # Comparing e parameter (Infletion Point)
-compParm(model.L.3, strVal = "e", operator = "-") # Remember that for assymetric models, the paramenter"e" does not reflect the ED50. 
+compParm(model.LL2.3, strVal = "e", operator = "-") # Remember that for assymetric models, the paramenter"e" does not reflect the ED50. 
 
 
 ```
@@ -148,14 +148,14 @@ compParm(model.L.3, strVal = "e", operator = "-") # Remember that for assymetric
 
 ```{r}
 
-tiff(file="C:/Users/felip/OneDrive - UW-Madison/Documents/GitHub/FFaleco/PhD/Exacto/2023/2023-112/A90/2023-112_A90_DR Biomass.tiff",
+tiff(file="C:/Users/felip/OneDrive - UW-Madison/Documents/GitHub/FFaleco/PhD/Exacto/2023/2023-112/A92/2023-112_A92_DR Biomass.tiff",
      width = 10, height = 8, units = "in", res = 600, compression = "lzw")
 
 
 par(mar = c(5,5,1,1))
 
 
-plot(model.L.3,
+plot(model.LL2.3,
      type = "average",
      xlab = expression(paste("Fomesafen rate (g ai ha"^-1, ")")),
      ylab = expression(paste("Biomass (g plant"^-1, ")")),
