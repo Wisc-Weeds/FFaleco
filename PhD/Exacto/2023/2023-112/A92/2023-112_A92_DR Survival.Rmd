@@ -1,5 +1,5 @@
 ---
-title: "Exacto 2023-112 A90 DR Survival"
+title: "Exacto 2023-112 A92 DR Survival"
 author: "Felipe Faleco"
 date: "11/27/2023"
 output:
@@ -24,7 +24,7 @@ library(dplyr)
 
 ```{r}
 
-data <- read.csv("Data Sheet_2023-112_A90.csv")
+data <- read.csv("Data Sheet_2023-112_A92.csv")
 
 str(data)
 
@@ -148,7 +148,7 @@ compParm(model.W2.3, strVal = "e", operator = "-") # Remember that for assymetri
 
 ```{r}
 
-tiff(file="C:/Users/felip/OneDrive - UW-Madison/Documents/GitHub/FFaleco/PhD/Exacto/2023/2023-112/A90/2023-112_A90_DR Survival.tiff",
+tiff(file="C:/Users/felip/OneDrive - UW-Madison/Documents/GitHub/FFaleco/PhD/Exacto/2023/2023-112/A92/2023-112_A92_DR Survival.tiff",
      width = 10, height = 8, units = "in", res = 600, compression = "lzw")
 
 
@@ -167,7 +167,7 @@ plot(model.W2.3,
      cex.axis = 1,
      cex.lab = 1.5,
      cex.legend = 1.4,
-     legendPos = c(650, 100),
+     legendPos = c(650, 70),
      lwd = 1.5)
 
 
