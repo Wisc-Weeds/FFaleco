@@ -167,7 +167,7 @@ plot(model.L.3,
      cex.axis = 1,
      cex.lab = 1.5,
      cex.legend = 1.4,
-     legendPos = c(200, 4.0),
+     legendPos = c(550, 4.0),
      lwd = 1.5)
 
 
