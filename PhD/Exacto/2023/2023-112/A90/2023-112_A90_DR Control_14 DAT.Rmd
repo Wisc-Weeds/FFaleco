@@ -1,5 +1,5 @@
 ---
-title: "Exacto 2023-112 A90 DR Control 7 DAT"
+title: "Exacto 2023-112 A90 DR Control 14 DAT"
 author: "Felipe Faleco"
 date: "11/27/2023"
 output:
@@ -50,7 +50,7 @@ summary.EXT1490 <- summaryBy(cbind(ve_7dat, ve_14dat, ve_21dat,biomass, surv) ~ 
 
 ```{r}
 
-model.LL4 <- drm(ve_7dat ~ rate, herb, fct = LL.4(),  data = data, type = "continuous")
+model.LL4 <- drm(ve_14dat ~ rate, herb, fct = LL.4(),  data = data, type = "continuous")
 
 
 plot(fitted(model.LL4), residuals(model.LL4))
@@ -84,8 +84,7 @@ mselect(model.LL4,  list(L.3(), L.4(), L.5(), LL.2(), LL.3(), LL.3u(), LL.4(), L
 # Lower IC, which actually is AIC (default), indicates the best model to be used. On the other hand, the highest the Lack of Fit, better the model. The two-, three-, and four-parameter log-logistic models are are symmetrical around the inflection point (parameter "e") while others (e.g. fiveparameter log-logistic, Gompertz, and Weibull) are asymmetrical. In symmetrical models, the parameter "e" and relative ED50 are identical, that is, they both indicate the dose that reduces the response midway between the upper and lower limits. In asymmetrical models, however, the parameter "e" does not have the same meaning as in symmetrical models, even though it is still the location of the inflection point. Therefore, in asymmetrical models, ED50 should be estimated as "absolute" and not relative.
 
 
-model.LL2.3 <- drm(ve_7dat ~ rate, herb, fct = LL2.3(), data = data, type = "continuous")
-
+model.LL2.3 <- drm(ve_14dat ~ rate, herb, fct = LL2.3(), data = data, type = "continuous")
 
 
 plot(fitted(model.LL2.3), residuals(model.LL2.3))
@@ -149,7 +148,7 @@ compParm(model.LL2.3, strVal = "e", operator = "-") # Remember that for assymetr
 
 ```{r}
 
-tiff(file="C:/Users/felip/OneDrive - UW-Madison/Documents/GitHub/FFaleco/PhD/Exacto/2023/2023-112/A90/2023-112_A90_DR Control_7 DAT.tiff",
+tiff(file="C:/Users/felip/OneDrive - UW-Madison/Documents/GitHub/FFaleco/PhD/Exacto/2023/2023-112/A90/2023-112_A90_DR Control_14 DAT.tiff",
      width = 10, height = 8, units = "in", res = 600, compression = "lzw")
 
 
@@ -159,7 +158,7 @@ par(mar = c(5,5,1,1))
 plot(model.LL2.3,
      type = "average",
      xlab = expression(paste("Fomesafen rate (g ai ha"^-1, ")")),
-     ylab = expression(paste("Control 7 DAT (%)")),
+     ylab = expression(paste("Control 14 DAT (%)")),
      ylim = c(0, 100),
      #broken = T,
      col = c("darkgreen", "red"),
