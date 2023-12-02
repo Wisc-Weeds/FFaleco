@@ -92,7 +92,7 @@ CLD_emm_herb_rate
 ```{r, echo=TRUE}
 
 
-plot(emm_herb_rate, adjust = "tukey", comparisons = F, alpha = 0.05) + 
+plot(emm_herb_rate, adjust = "tukey", comparisons = F, CIs = T, alpha = 0.05) + 
   geom_point(size = 2) +
   geom_text(aes(label = c("b", "a", "b", 
                           "c", "a", "b")),
