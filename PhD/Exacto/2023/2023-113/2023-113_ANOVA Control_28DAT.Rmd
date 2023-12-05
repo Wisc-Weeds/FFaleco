@@ -1,5 +1,5 @@
 ---
-title: "Exacto 2023-113 ANOVA Counts"
+title: "Exacto 2023-113 ANOVA Control 28 DAT"
 author: "Felipe Faleco"
 date: "2022-09-09"
 output: html_document
@@ -24,8 +24,10 @@ library(ggplot2)
 
 ```{r}
 
-data <- read.csv("Data Sheet_2023-113 - Copy.csv")
+data <- read.csv("Data Sheet_2023-113.csv")
 
+
+data <- data %>% filter(rate == "70" | rate == "140")
 
 
 str(data)
@@ -50,7 +52,7 @@ str(data)
 
 ```{r}
 
-model <- glmmTMB(count_28dat ~ herb * rate, data = data, family = "poisson")
+model <- glmmTMB((ve_28dat/100) ~ herb * rate, data = data, family = beta_family())
 
 ```
 
