@@ -1,5 +1,5 @@
 ---
-title: "Exacto 2023-113 ANOVA Control 28 DAT"
+title: "Exacto 2023-113 ANOVA Control 21 DAT"
 author: "Felipe Faleco"
 date: "2022-09-09"
 output: html_document
@@ -54,7 +54,7 @@ str(data)
 
 ```{r}
 
-model <- glmmTMB(ve_28dat ~ herb * rate, data = data, family = beta_family())
+model <- glmmTMB(ve_21dat ~ herb * rate, data = data, family = beta_family())
 
 ```
 
@@ -96,7 +96,7 @@ emm_herb_rate
 
 
 CLD_emm_herb_rate <- if(requireNamespace("multcomp")) {
-    multcomp::cld(emm_herb_rate$emmeans, alpha = 0.05, Letters=letters, adjust="tukey", reversed = TRUE)}
+    multcomp::cld(emm_herb_rate$emmeans, alpha = 0.1, Letters=letters, adjust="tukey", reversed = TRUE)}
 
 CLD_emm_herb_rate
 
@@ -110,9 +110,9 @@ CLD_emm_herb_rate
 ```{r, echo=TRUE}
 
 
-plot(emm_herb_rate, adjust = "tukey", comparisons = T, CIs = F, alpha = 0.05,  horizontal = T) + 
+plot(emm_herb_rate, adjust = "tukey", comparisons = T, CIs = F, alpha = 0.1,  horizontal = T) + 
   geom_point(size = 2) +
-  geom_text(aes(label = c("ab", "b", "ab", "ab", "a", "ab",
+  geom_text(aes(label = c("a", "b", "a", "a", "a", "ab",
                           "a", "a", "a", "a", "a", "a")),
             vjust = -0.8, size = 4) +
   scale_x_continuous(breaks = c(0, 0.25, 0.50, 0.75, 1), limits = c(0, 1),
@@ -126,7 +126,7 @@ plot(emm_herb_rate, adjust = "tukey", comparisons = T, CIs = F, alpha = 0.05,  h
          axis.title = element_text(face = "bold", size = 18, colour = "darkgreen"), 
          axis.text= element_text(face = "bold", size = 14, colour = "black"),
          strip.text = element_text(face = "bold", size = 13, colour = "black")) +
-  ggsave("2023-113_ANOVA Control 28DAT_HERBxRATE.tiff", units="in", width = 8, height = 6, dpi = 600, compression = "lzw")
+  ggsave("2023-113_ANOVA Control 21DAT_HERBxRATE.tiff", units="in", width = 8, height = 6, dpi = 600, compression = "lzw")
 
 
 ```
