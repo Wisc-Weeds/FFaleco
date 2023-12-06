@@ -1,5 +1,5 @@
 ---
-title: "Exacto 2023-113 ANOVA Biored"
+title: "Exacto 2023-113 ANOVA Control 28 DAT"
 author: "Felipe Faleco"
 date: "2022-09-09"
 output: html_document
@@ -15,6 +15,8 @@ library(glmmTMB)
 library(DHARMa)
 library(emmeans)
 library(ggplot2)
+library(multcomp)
+library(multcompView)
 
 
 ```
@@ -52,8 +54,7 @@ str(data)
 
 ```{r}
 
-model <- glmmTMB(biored ~ herb * rate, data = data, family = beta_family())
-
+model <- glmmTMB(ve_28dat ~ herb * rate, data = data, family = beta_family())
 
 ```
 
@@ -65,7 +66,9 @@ model <- glmmTMB(biored ~ herb * rate, data = data, family = beta_family())
 
 summary(model)
 
+
 resid <- simulateResiduals(model)
+
 
 plot(resid)
 
@@ -93,10 +96,9 @@ emm_herb_rate
 
 
 CLD_emm_herb_rate <- if(requireNamespace("multcomp")) {
-    multcomp::cld(emm_herb_rate$emmeans, alpha = 0.1, Letters=letters, adjust="tukey", reversed = TRUE)}
+    multcomp::cld(emm_herb_rate$emmeans, alpha = 0.05, Letters=letters, adjust="tukey", reversed = TRUE)}
 
 CLD_emm_herb_rate
-
 
 
 ```
@@ -108,15 +110,15 @@ CLD_emm_herb_rate
 ```{r, echo=TRUE}
 
 
-plot(emm_herb_rate, adjust = "tukey", comparisons = T, CIs = F, alpha = 0.1,  horizontal = T) + 
+plot(emm_herb_rate, adjust = "tukey", comparisons = T, CIs = F, alpha = 0.05,  horizontal = T) + 
   geom_point(size = 2) +
-  geom_text(aes(label = c("abc", "c", "abc", "ab", "a", "bc",
+  geom_text(aes(label = c("ab", "b", "ab", "ab", "a", "ab",
                           "a", "a", "a", "a", "a", "a")),
             vjust = -0.8, size = 4) +
   scale_x_continuous(breaks = c(0, 0.25, 0.50, 0.75, 1), limits = c(0, 1),
     labels = scales::percent_format(scale = 100, suffix = "")) +
   labs(#title = "Waterhemp Biomass Reduction - POST", 
-       x = "Biomass Reduction (%)", 
+       x = "Control (%)", 
        y = "Herbicide") +
   facet_grid(~ rate, labeller = label_both) +
   theme_bw() + 
@@ -124,7 +126,7 @@ plot(emm_herb_rate, adjust = "tukey", comparisons = T, CIs = F, alpha = 0.1,  ho
          axis.title = element_text(face = "bold", size = 18, colour = "darkgreen"), 
          axis.text= element_text(face = "bold", size = 14, colour = "black"),
          strip.text = element_text(face = "bold", size = 13, colour = "black")) +
-  ggsave("2023-113_ANOVA Biored_HERBxRATE.tiff", units="in", width = 8, height = 6, dpi = 600, compression = "lzw")
+  ggsave("2023-113_ANOVA Control 28DAT_HERBxRATE.tiff", units="in", width = 8, height = 6, dpi = 600, compression = "lzw")
 
 
 ```
