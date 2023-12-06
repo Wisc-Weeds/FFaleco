@@ -100,7 +100,7 @@ plot(emm_herb_rate, adjust = "tukey", comparisons = F, CIs = T, alpha = 0.05) +
   scale_x_continuous(breaks = c(0, 0.25, 0.50, 0.75, 1), limits = c(0, 1),
     labels = scales::percent_format(scale = 100, suffix = "")) +
   labs(#title = "Waterhemp Biomass Reduction - POST", 
-       x = "Biomass Reduction (%)", 
+       x = "Biomass reduction (%)", 
        y = "Herbicide") +
   facet_grid(~ Rate, labeller = label_both) +
   theme_bw() + 
