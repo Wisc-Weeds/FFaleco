@@ -66,7 +66,9 @@ summary(model)
 
 ```{r, echo=TRUE}
 
-glmmTMB:::Anova.glmmTMB(model)
+glmmTMB:::Anova.glmmTMB(model, type = 3)
+
+# when data is balanced, the factors are orthogonal, and types I, II and III all give the same results. Usually the hypothesis of interest is about the significance of one factor while controlling for the level of the other factors. This equates to using type II or III SS. In general, if there is no significant interaction effect, then type II is more powerful, and follows the principle of marginality. If interaction is present, then type II is inappropriate while type III can still be used, but results need to be interpreted with caution (in the presence of interactions, main effects are rarely interpretable).
 
 ```
 
