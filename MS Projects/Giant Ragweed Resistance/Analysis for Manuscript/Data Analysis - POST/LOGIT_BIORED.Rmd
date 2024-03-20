@@ -66,7 +66,7 @@ summary(model)
 
 ```{r, echo=TRUE}
 
-glmmTMB:::Anova.glmmTMB(model, type = 2, test.statistic = "Chisq")
+glmmTMB:::Anova.glmmTMB(model, type = 2, test.statistic = "Chisqµ")
 
 
 #The designations "type-II" and "type-III" are borrowed from SAS, but the definitions used here do not correspond precisely to those employed by SAS. Type-II tests are calculated according to the principle of marginality, testing each term after all others, except ignoring the term's higher-order relatives; so-called type-III tests violate marginality, testing each term in the model after all of the others. This definition of Type-II tests corresponds to the tests produced by SAS for analysis-of-variance models, where all of the predictors are factors, but not more generally (i.e., when there are quantitative predictors). Be very careful in formulating the model for type-III tests, or the hypotheses tested will not make sense.
