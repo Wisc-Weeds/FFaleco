@@ -1,7 +1,7 @@
 ---
-title: "Exacto 2023-113 ANOVA Control 21 DAT"
+title: "Exacto 2024-204 ANOVA Control 21 DAT"
 author: "Felipe Faleco"
-date: "2022-09-09"
+date: "2024-03-20"
 output: html_document
 ---
 
@@ -18,7 +18,6 @@ library(ggplot2)
 library(multcomp)
 library(multcompView)
 
-
 ```
 
 
@@ -26,10 +25,10 @@ library(multcompView)
 
 ```{r}
 
-data <- read.csv("Data Sheet_2023-113.csv")
+data <- read.csv("Data Sheet_2024-204.csv")
 
 
-data <- data %>% filter(rate == "70" | rate == "140")
+data <- data %>% filter(rate == "26.8" | rate == "53.6")
 
 
 str(data)
@@ -90,7 +89,7 @@ glmmTMB:::Anova.glmmTMB(model)
 
 ```{r, echo=TRUE}
 
-emm_herb_rate <- emmeans(model, ~ herb|rate, adjust = "tukey", type = "response", contr = "pairwise")
+emm_herb_rate <- emmeans(model, ~ herb|rate, alpha = 0.1, adjust = "tukey", type = "response", contr = "pairwise")
 
 emm_herb_rate
 
@@ -112,8 +111,8 @@ CLD_emm_herb_rate
 
 plot(emm_herb_rate, adjust = "tukey", comparisons = T, CIs = F, alpha = 0.1,  horizontal = T) + 
   geom_point(size = 2) +
-  geom_text(aes(label = c("a", "b", "a", "a", "a", "ab",
-                          "a", "a", "a", "a", "a", "a")),
+  geom_text(aes(label = c("a", "a", "a", "a", "a", "a", "a", "b",
+                          "a", "a", "a", "a", "a", "a", "a", "a")),
             vjust = -0.8, size = 4) +
   scale_x_continuous(breaks = c(0, 0.25, 0.50, 0.75, 1), limits = c(0, 1),
     labels = scales::percent_format(scale = 100, suffix = "")) +
@@ -126,7 +125,7 @@ plot(emm_herb_rate, adjust = "tukey", comparisons = T, CIs = F, alpha = 0.1,  ho
          axis.title = element_text(face = "bold", size = 18, colour = "darkgreen"), 
          axis.text= element_text(face = "bold", size = 14, colour = "black"),
          strip.text = element_text(face = "bold", size = 13, colour = "black")) +
-  ggsave("2023-113_ANOVA Control 21DAT_HERBxRATE.tiff", units="in", width = 8, height = 6, dpi = 600, compression = "lzw")
+  ggsave("2024-204_ANOVA Control 21DAT_HERBxRATE.tiff", units="in", width = 8, height = 6, dpi = 600, compression = "lzw")
 
 
 ```
