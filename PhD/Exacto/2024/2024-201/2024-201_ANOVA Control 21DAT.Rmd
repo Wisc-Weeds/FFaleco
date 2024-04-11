@@ -1,7 +1,7 @@
 ---
 title: "Exacto 2024-201 ANOVA Control 21 DAT"
 author: "Felipe Faleco"
-date: "2024-03-20"
+date: "2024-04-11"
 output: html_document
 ---
 
@@ -118,7 +118,7 @@ plot(emm_herb_rate, adjust = "tukey", comparisons = T, CIs = F, alpha = 0.1,  ho
     labels = scales::percent_format(scale = 100, suffix = "")) +
   labs(#title = "Waterhemp Biomass Reduction - POST", 
        x = "Control (%)", 
-       y = "Herbicide") +
+       y = "Treatment") +
   facet_grid(~ rate, labeller = label_both) +
   theme_bw() + 
   theme (plot.title = element_text(face = "bold", hjust = 0.5, size = 18, colour = "darkgreen"), 
