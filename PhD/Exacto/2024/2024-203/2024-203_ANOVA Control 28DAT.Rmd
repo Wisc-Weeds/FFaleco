@@ -1,5 +1,5 @@
 ---
-title: "Exacto 2024-202 ANOVA Control 28 DAT"
+title: "Exacto 2024-203 ANOVA Control 28 DAT"
 author: "Felipe Faleco"
 date: "2024-04-11"
 output: html_document
@@ -25,10 +25,10 @@ library(multcompView)
 
 ```{r}
 
-data <- read.csv("Data Sheet_2024-202.csv")
+data <- read.csv("Data Sheet_2024-203.csv")
 
 
-data <- data %>% filter(rate == "630" | rate == "1260")
+data <- data %>% filter(rate == "535" | rate == "1070")
 
 
 str(data)
