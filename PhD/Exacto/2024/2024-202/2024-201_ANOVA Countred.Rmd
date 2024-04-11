@@ -1,0 +1,134 @@
+---
+title: "Exacto 2024-201 ANOVA Countred"
+author: "Felipe Faleco"
+date: "2024-04-11"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+
+knitr::opts_chunk$set(echo = TRUE)
+
+library(car)
+library(dplyr)
+library(glmmTMB)
+library(DHARMa)
+library(emmeans)
+library(ggplot2)
+
+
+```
+
+
+# PREPARING DATA
+
+```{r}
+
+data <- read.csv("Data Sheet_2024-201.csv")
+
+
+data <- data %>% filter(rate == "36.5" | rate == "73")
+
+
+str(data)
+
+
+data$trt <- as.factor(data$trt)
+
+data$pop <- as.factor(data$pop)
+
+data$herb <- as.factor(data$herb)
+
+data$rate <- as.factor(data$rate)
+
+data$rep <- as.factor(data$rep)
+
+str(data)
+
+```
+
+
+# MODEL
+
+```{r}
+
+model <- glmmTMB(countred ~ herb * rate, data = data, family = beta_family())
+
+```
+
+
+
+# CHECKING ASSUMPTIONS
+
+```{r}
+
+summary(model)
+
+
+resid <- simulateResiduals(model)
+
+
+plot(resid)
+
+```
+
+
+
+# ANOVA
+
+```{r, echo=TRUE}
+
+glmmTMB:::Anova.glmmTMB(model)
+
+```
+
+
+
+# EMM & CLD
+
+```{r, echo=TRUE}
+
+emm_rate <- emmeans(model, ~ rate, adjust = "tukey", type = "response", contr = "pairwise")
+
+emm_rate
+
+
+CLD_emm_rate <- if(requireNamespace("multcomp")) {
+    multcomp::cld(emm_rate$emmeans, alpha = 0.05, Letters=letters, adjust="tukey", reversed = TRUE)}
+
+CLD_emm_rate
+
+
+```
+
+
+
+# PLOT
+
+```{r, echo=TRUE}
+
+
+plot(emm_rate, adjust = "tukey", comparisons = T, CIs = F, alpha = 0.05,  horizontal = T) + 
+  geom_point(size = 2) +
+  geom_text(aes(label = c("b", "a")),
+            vjust = -0.8, size = 4) +
+  scale_x_continuous(breaks = c(0, 0.25, 0.50, 0.75, 1), limits = c(0, 1),
+    labels = scales::percent_format(scale = 100, suffix = "")) +
+  labs(#title = "Waterhemp Biomass Reduction - POST", 
+       x = "Counts Reduction (%)", 
+       y = "Herbicide Rate") +
+  #facet_grid(~ rate, labeller = label_both) +
+  theme_bw() + 
+  theme (plot.title = element_text(face = "bold", hjust = 0.5, size = 18, colour = "darkgreen"), 
+         axis.title = element_text(face = "bold", size = 18, colour = "darkgreen"), 
+         axis.text= element_text(face = "bold", size = 14, colour = "black")) +
+         #strip.text = element_text(face = "bold", size = 13, colour = "black")) +
+  ggsave("2023-113_ANOVA Countred_RATE.tiff", units="in", width = 8, height = 6, dpi = 600, compression = "lzw")
+
+
+```
+
+
+
+
+

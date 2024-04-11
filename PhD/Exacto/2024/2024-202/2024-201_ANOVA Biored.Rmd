@@ -1,7 +1,7 @@
 ---
-title: "Exacto 2024-204 ANOVA Control 21 DAT"
+title: "Exacto 2024-201ANOVA Biored"
 author: "Felipe Faleco"
-date: "2024-03-20"
+date: "2024-04-11"
 output: html_document
 ---
 
@@ -15,8 +15,7 @@ library(glmmTMB)
 library(DHARMa)
 library(emmeans)
 library(ggplot2)
-library(multcomp)
-library(multcompView)
+
 
 ```
 
@@ -25,10 +24,10 @@ library(multcompView)
 
 ```{r}
 
-data <- read.csv("Data Sheet_2024-204.csv")
+data <- read.csv("Data Sheet_2024-201.csv")
 
 
-data <- data %>% filter(rate == "26.8" | rate == "53.6")
+data <- data %>% filter(rate == "36.5" | rate == "73")
 
 
 str(data)
@@ -53,7 +52,8 @@ str(data)
 
 ```{r}
 
-model <- glmmTMB(ve_21dat ~ herb * rate, data = data, family = beta_family())
+model <- glmmTMB(biored ~ herb * rate, data = data, family = beta_family())
+
 
 ```
 
@@ -65,9 +65,7 @@ model <- glmmTMB(ve_21dat ~ herb * rate, data = data, family = beta_family())
 
 summary(model)
 
-
 resid <- simulateResiduals(model)
-
 
 plot(resid)
 
@@ -89,7 +87,7 @@ glmmTMB:::Anova.glmmTMB(model)
 
 ```{r, echo=TRUE}
 
-emm_herb_rate <- emmeans(model, ~ herb|rate, alpha = 0.1, adjust = "tukey", type = "response", contr = "pairwise")
+emm_herb_rate <- emmeans(model, ~ herb|rate, adjust = "tukey", type = "response", contr = "pairwise")
 
 emm_herb_rate
 
@@ -98,6 +96,7 @@ CLD_emm_herb_rate <- if(requireNamespace("multcomp")) {
     multcomp::cld(emm_herb_rate$emmeans, alpha = 0.1, Letters=letters, adjust="tukey", reversed = TRUE)}
 
 CLD_emm_herb_rate
+
 
 
 ```
@@ -111,13 +110,13 @@ CLD_emm_herb_rate
 
 plot(emm_herb_rate, adjust = "tukey", comparisons = T, CIs = F, alpha = 0.1,  horizontal = T) + 
   geom_point(size = 2) +
-  geom_text(aes(label = c("a", "a", "a", "a", "a", "a", "a", "b",
-                          "a", "a", "a", "a", "a", "a", "a", "a")),
+  geom_text(aes(label = c("abc", "c", "abc", "ab", "a", "bc",
+                          "a", "a", "a", "a", "a", "a")),
             vjust = -0.8, size = 4) +
   scale_x_continuous(breaks = c(0, 0.25, 0.50, 0.75, 1), limits = c(0, 1),
     labels = scales::percent_format(scale = 100, suffix = "")) +
   labs(#title = "Waterhemp Biomass Reduction - POST", 
-       x = "Control (%)", 
+       x = "Biomass Reduction (%)", 
        y = "Herbicide") +
   facet_grid(~ rate, labeller = label_both) +
   theme_bw() + 
@@ -125,7 +124,7 @@ plot(emm_herb_rate, adjust = "tukey", comparisons = T, CIs = F, alpha = 0.1,  ho
          axis.title = element_text(face = "bold", size = 18, colour = "darkgreen"), 
          axis.text= element_text(face = "bold", size = 14, colour = "black"),
          strip.text = element_text(face = "bold", size = 13, colour = "black")) +
-  ggsave("2024-204_ANOVA Control 21DAT_HERBxRATE.tiff", units="in", width = 8, height = 6, dpi = 600, compression = "lzw")
+  ggsave("2023-113_ANOVA Biored_HERBxRATE.tiff", units="in", width = 8, height = 6, dpi = 600, compression = "lzw")
 
 
 ```
