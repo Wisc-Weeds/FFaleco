@@ -1,5 +1,5 @@
 ---
-title: "Exacto 2024-202 ANOVA Countred"
+title: "Exacto 2024-203 ANOVA Countred"
 author: "Felipe Faleco"
 date: "2024-04-11"
 output: html_document
@@ -24,10 +24,10 @@ library(ggplot2)
 
 ```{r}
 
-data <- read.csv("Data Sheet_2024-202.csv")
+data <- read.csv("Data Sheet_2024-203.csv")
 
 
-data <- data %>% filter(rate == "630" | rate == "1260")
+data <- data %>% filter(rate == "535" | rate == "1070")
 
 
 str(data)
@@ -87,18 +87,6 @@ glmmTMB:::Anova.glmmTMB(model)
 # EMM & CLD
 
 ```{r, echo=TRUE}
-
-emm_herb <- emmeans(model, ~ herb, alpha = 0.1, adjust = "tukey", type = "response", contr = "pairwise")
-
-emm_herb
-
-
-CLD_emm_herb <- if(requireNamespace("multcomp")) {
-    multcomp::cld(emm_herb$emmeans, alpha = 0.1, Letters=letters, adjust="tukey", reversed = TRUE)}
-
-CLD_emm_herb
-
-
 
 emm_rate <- emmeans(model, ~ rate, alpha = 0.1, adjust = "tukey", type = "response", contr = "pairwise")
 
