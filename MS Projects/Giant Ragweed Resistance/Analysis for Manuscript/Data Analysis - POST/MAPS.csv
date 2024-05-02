@@ -1,7 +1,7 @@
 pop,lat,long,cloransulam_1x,glyphosate_1x,fomesafen_1x,cloransulam_3x,glyphosate_3x,fomesafen_3x,resistance_1x,tested_all_herbs
-AT1,,,x,,,x,,,Cloransulam,x
+AT1,42.557673,-88.866556,x,,,x,,,Cloransulam,x
 AT2,42.631012,-89.240604,,,x,,,,Fomesafen,x
-AT4,,,x,,,x,,,Cloransulam,x
+AT4,42.557673,-88.866556,x,,,x,,,Cloransulam,x
 AT5,42.66274,-88.9640652,x,,,,,,Cloransulam,x
 AT6,42.506859,-88.769498,x,,,x,,,Cloransulam,x
 AT8,42.818472,-88.485899,,x,,,,,Glyphosate,x
