@@ -80,7 +80,7 @@ GC,78,1,A82,atra,4x,4484,ambient,2,0,0
 GC,79,1,A82,atra,4x,4484,ambient,3,0,0
 GC,80,1,A82,atra,4x,4484,ambient,4,0,0
 GC,81,1,A101,atra,0x,0,elevated,1,1,0.996
-GC,82,1,A101,atra,0x,0,elevated,2,0,0
+GC,82,1,A101,atra,0x,0,elevated,2,,
 GC,83,1,A101,atra,0x,0,elevated,3,1,1.177
 GC,84,1,A101,atra,0x,0,elevated,4,1,0.936
 GC,85,1,A101,atra,0.015x,18,elevated,1,1,0.745

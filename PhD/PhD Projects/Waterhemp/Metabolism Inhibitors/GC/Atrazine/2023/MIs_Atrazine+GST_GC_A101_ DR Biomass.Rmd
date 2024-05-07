@@ -1,7 +1,7 @@
 ---
-title: "Waterhemp MIs GC Mesotrione Biomass"
+title: "Waterhemp MIs GC Atrazine Biomass"
 author: "Felipe Faleco"
-date: "03/05/2024"
+date: "05/07/2024"
 output:
   html_document:
     df_print: paged
@@ -26,12 +26,12 @@ library(dplyr)
 
 ```{r}
 
-data <- read.csv("Data Sheet_Meso_GC.csv")
+data <- read.csv("Data Sheet_Atra_GC.csv")
 
 str(data)
 
 
-data.A101.meso.GST <- data %>% filter(pop == "A101", herb == "meso+GST")
+data.A101.atra.GST <- data %>% filter(pop == "A101", herb == "atra+GST")
 
 
 
