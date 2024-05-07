@@ -1,7 +1,7 @@
 ---
-title: "Waterhemp MIs GC Mesotrione Biomass"
+title: "Waterhemp MIs GC Atrazine Biomass"
 author: "Felipe Faleco"
-date: "02/28/2024"
+date: "05/07/2024"
 output:
   html_document:
     df_print: paged
@@ -26,12 +26,12 @@ library(dplyr)
 
 ```{r}
 
-data <- read.csv("Data Sheet_Meso_GC.csv")
+data <- read.csv("Data Sheet_Atra_GC.csv")
 
 str(data)
 
 
-data.A101.meso <- data %>% filter(pop == "A101", herb == "meso")
+data.101.atra <- data %>% filter(pop == "A101", herb == "atra")
 
 
 
@@ -39,7 +39,7 @@ fun <- function(x){
   c( mean = mean(x), VAR = var(x), SD = sd(x), SE = std.error(x), n = length(x))
 }
 
-summary.A101.meso <- summaryBy(cbind(biomass) ~ pop + rate + temp + herb, data = subset(data.A101.meso),
+summary.A101.atra <- summaryBy(cbind(biomass) ~ pop + rate + temp + herb, data = subset(data.101.atra),
           FUN=fun)
 
 
@@ -51,7 +51,7 @@ summary.A101.meso <- summaryBy(cbind(biomass) ~ pop + rate + temp + herb, data =
 
 ```{r}
 
-model.LL4 <- drm(biomass ~ rate, temp, fct = LL.4(), data = data.A101.meso, type = "continuous")
+model.LL4 <- drm(biomass ~ rate, temp, fct = LL.4(), data = data.101.atra, type = "continuous")
 
 
 plot(fitted(model.LL4), residuals(model.LL4))
@@ -86,20 +86,20 @@ mselect(model.LL4,  list(L.3(), L.4(), L.5(), LL.2(), LL.3(), LL.3u(), LL.4(), L
 # Lower IC, which actually is AIC (default), indicates the best model to be used. On the other hand, the highest the Lack of Fit, better the model. The two-, three-, and four-parameter log-logistic models are are symmetrical around the inflection point (parameter "e") while others (e.g. fiveparameter log-logistic, Gompertz, and Weibull) are asymmetrical. In symmetrical models, the parameter "e" and relative ED50 are identical, that is, they both indicate the dose that reduces the response midway between the upper and lower limits. In asymmetrical models, however, the parameter "e" does not have the same meaning as in symmetrical models, even though it is still the location of the inflection point. Therefore, in asymmetrical models, ED50 should be estimated as "absolute" and not relative.
 
 
-model.LL2.3<- drm(biomass ~ rate, temp, fct = LL2.3(), data = data.A101.meso, type = "continuous")
+model.W2.3 <- drm(biomass ~ rate, temp, fct = W2.3(), data = data.101.atra, type = "continuous")
 
 
-plot(fitted(model.LL2.3), residuals(model.LL2.3))
+plot(fitted(model.W2.3), residuals(model.W2.3))
 
-qqnorm(residuals(model.LL2.3))
+qqnorm(residuals(model.W2.3))
 
                 
-modelFit(model.LL2.3)
+modelFit(model.W2.3)
 
-summary(model.LL2.3) 
+summary(model.W2.3) 
 
 
-anova(model.LL2.3, model.LL4) # p-value > 0.05 means that there is no difference between models. Therefore, we can use model LL.3
+anova(model.W2.3, model.LL4) # p-value > 0.05 means that there is no difference between models. Therefore, we can use model LL.3
 
 ```
 
@@ -112,12 +112,10 @@ anova(model.LL2.3, model.LL4) # p-value > 0.05 means that there is no difference
 #ED(model.W1.3, c(50), type = "relative", interval = "delta")
 
 
-ED50.elevated <- ED(model.LL2.3, (summary(model.LL2.3)$coefficients[3, 1] * 0.5), clevel = "elevated", type = "absolute", interval = "delta", logBase = exp(1))
+ED50.elevated <- ED(model.W2.3, (summary(model.W2.3)$coefficients[3, 1] * 0.5), clevel = "elevated", type = "absolute", interval = "delta")
 
-ED50.ambient <- ED(model.LL2.3, (summary(model.LL2.3)$coefficients[4, 1] * 0.5), clevel = "ambient", type = "absolute", interval = "delta", logBase = exp(1))
+ED50.ambient <- ED(model.W2.3, (summary(model.W2.3)$coefficients[4, 1] * 0.5), clevel = "ambient", type = "absolute", interval = "delta")
 
-
-# If the model was a Log-logistic (log(ED50) as parameter) E.g.: LL2.3,  we should use logBase = exp(1). Eg: ED50.A82 <- ED(model.LL2.3, (summary(model.LL2.3)$coefficients[5, 1] * 0.5), clevel = "A82", type = "absolute", interval = "delta", logBase = exp(1))
 
 ```
 
@@ -129,21 +127,27 @@ ED50.ambient <- ED(model.LL2.3, (summary(model.LL2.3)$coefficients[4, 1] * 0.5),
 #EDcomp(model.W1.3, c(50, 50), type = "relative", interval = "none", reverse = F)
 
 
-EDcomp(model.LL2.3, c((summary(model.LL2.3)$coefficients[4, 1] * 0.5),
-                     (summary(model.LL2.3)$coefficients[3, 1] * 0.5)), 
-       compMatch = c("elevated", "ambient"), type = "absolute", interval = "none", logBase = exp(1), reverse = T)
+EDcomp(model.W2.3, c((summary(model.W2.3)$coefficients[4, 1] * 0.5),
+                     (summary(model.W2.3)$coefficients[3, 1] * 0.5)), 
+       compMatch = c("ambient", "elevated"), type = "absolute", interval = "none", reverse = T)
+
+
+# Here is to compare the difference between the two ED50 instead of ratio. However, comped function does not provide a p-value because it uses the likelihood ratio test instead of t-test. We could still determine if the difference between the two ED50 is different than zero by looking the lower and upper confidence intervals which, if zero is not included, it means that the difference between the two ED50 is different than zero. However, we need to make sure that the confidence intervals are estimated correctly, which is difficult when using a LL2.3 model for example which the model uses the log transformed response variable. In this case, confidence intervals should be estimated using the interval = "fls", but this option is not offered in the comped function.  
+
+#comped <- comped(c(ED50.elevated[1, 1], ED50.ambient[1, 1]), c(ED50.elevated[1, 2], ED50.ambient[1, 2]), log = F, operator = "-", level = 0.95)
+
 
 
 # Comparing b parameter (slope)
-compParm(model.LL2.3, strVal = "b", operator = "-")
+compParm(model.W2.3, strVal = "b", operator = "-")
 
 
 # Comparing d parameter (upper limit)
-compParm(model.LL2.3, strVal = "d", operator = "-")
+compParm(model.W2.3, strVal = "d", operator = "-")
 
 
 # Comparing e parameter (Infletion Point)
-compParm(model.LL2.3, strVal = "e", operator = "-") # Remember that for asymmetric models, the parameter"e" does not reflect the ED50. 
+compParm(model.W2.3, strVal = "e", operator = "-") # Remember that for asymmetric models, the parameter"e" does not reflect the ED50. 
 
 
 ```
@@ -154,33 +158,33 @@ compParm(model.LL2.3, strVal = "e", operator = "-") # Remember that for asymmetr
 
 ```{r}
 
-tiff(file="C:/Users/felip/OneDrive - UW-Madison/Documents/GitHub/FFaleco/PhD/PhD Projects/Waterhemp/Metabolism Inhibitors/GC/Mesotrione/2023/Mesotrione_Absolute ED/MIs_Mesotrione Only_GC_A101_ DR Biomass.tiff",
+tiff(file="C:/Users/felip/OneDrive - UW-Madison/Documents/GitHub/FFaleco/PhD/PhD Projects/Waterhemp/Metabolism Inhibitors/GC/Atrazine/2023/MIs_Atrazine Only_GC_A101_ DR Biomass.tiff",
      width = 10, height = 8, units = "in", res = 600, compression = "lzw")
 
 
 par(mar = c(5,5,1,1))
 
 
-plot(model.LL2.3,
+plot(model.W2.3,
      type = "average",
-     xlab = expression(paste("Mesotrione rate (g ai ha"^-1, ")")),
+     xlab = expression(paste("Atrazine rate (g ai ha"^-1, ")")),
      ylab = expression(paste("A101 biomass (g plant"^-1, ")")),
-     ylim = c(0, 4),
+     ylim = c(0, 2),
      col = c("red", "darkgreen"),
      pch = c(19, 17),
      cex = 1.5,
      cex.axis = 1.3,
      cex.lab = 1.9,
      cex.legend = 2.0,
-     legendPos = c(500, 4.0),
+     legendPos = c(3000, 2.0),
      lwd = 1.5)
 
 
 
 points(x = c(ED50.elevated[1, 1],
              ED50.ambient[1, 1]),
-       y = c((summary(model.LL2.3)$coefficients[3, 1]/2), 
-             (summary(model.LL2.3)$coefficients[4, 1]/2)),
+       y = c((summary(model.W2.3)$coefficients[3, 1]/2), 
+             (summary(model.W2.3)$coefficients[4, 1]/2)),
        pch = 8,
        cex = 1.3)
 
