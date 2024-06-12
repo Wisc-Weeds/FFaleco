@@ -113,6 +113,12 @@ ED50.AT2 <- ED(model.W1.3, (summary(model.W1.3)$coefficients[3, 1] * 0.5), cleve
 ED50.AT8.EDGE <- ED(model.W1.3, (summary(model.W1.3)$coefficients[4, 1] * 0.5), clevel = "AT15", type = "absolute", interval = "delta")
 
 
+ED50.AT2 <- ED(model.W1.3, (summary(model.W1.3)$coefficients[3, 1] * 0.1), clevel = "AT12", type = "absolute", interval = "delta")
+
+ED50.AT8.EDGE <- ED(model.W1.3, (summary(model.W1.3)$coefficients[4, 1] * 0.1), clevel = "AT15", type = "absolute", interval = "delta")
+
+
+
 
 # If the model was a Log-logistic (log(ED50) as parameter) E.g.: LL2.3,  we should use logBase = exp(1).
 
@@ -130,6 +136,11 @@ EDcomp(model.W1.3, c((summary(model.W1.3)$coefficients[3, 1] * 0.5),
                      (summary(model.W1.3)$coefficients[4, 1] * 0.5)), 
        compMatch = c("AT12", "AT15"), type = "absolute", interval = "none", reverse = F)
 
+
+
+EDcomp(model.W1.3, c((summary(model.W1.3)$coefficients[3, 1] * 0.1),
+                     (summary(model.W1.3)$coefficients[4, 1] * 0.1)), 
+       compMatch = c("AT12", "AT15"), type = "absolute", interval = "none", reverse = F)
 
 
 # If the model was a Log-logistic (log(ED50) as parameter) E.g.: LL2.3, we should use logBase = exp(1). 
