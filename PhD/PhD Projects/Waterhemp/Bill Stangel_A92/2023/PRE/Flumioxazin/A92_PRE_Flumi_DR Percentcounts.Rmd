@@ -1,0 +1,231 @@
+---
+title: "Waterhemp PRE A92 Flumioxazin DR Counts"
+author: "Felipe Faleco"
+date: "03/13/2024"
+output:
+  html_document:
+    df_print: paged
+editor_options: 
+  chunk_output_type: inline
+---
+
+```{r setup, include=FALSE}
+
+knitr::opts_chunk$set(echo = TRUE)
+library(drc)
+library(doBy)
+library(plotrix)
+library(dplyr)
+
+```
+
+
+# READ DATA
+
+```{r}
+
+data <- read.csv("Data Sheet_A92_Flumioxazin PRE.csv")
+
+str(data)
+
+
+
+fun <- function(x){
+  c( mean = mean(x, na.rm = T), VAR = var(x, na.rm = T), SD = sd(x, na.rm = T), SE = std.error(x, na.rm = T), n = length(x))
+}
+
+summary.A92 <- summaryBy(cbind(percentcount, percentbio) ~ rate + pop, data = subset(data, pop=="A92"),
+          FUN=fun)
+
+
+summary.A66 <- summaryBy(cbind(percentcount, percentbio) ~ rate + pop, data = subset(data, pop=="A66"),
+          FUN=fun)
+
+
+```
+
+
+
+# MODEL LL.4
+
+```{r}
+
+model.LL.4 <- drm(percentcount ~ rate, pop, fct = LL.4(),  data = data, type = "continuous")
+
+
+                
+plot(fitted(model.LL.4), residuals(model.LL.4))
+
+                
+modelFit(model.LL.4) # higher the p-value, better.
+
+summary(model.LL.4) 
+
+# c: lower limit (models with negative lower limit are biologically impossible. E.g., negative biomass, negative % biomass reduction, or negative % control)
+
+# d: upper limit (models where the response variable is in %, upper limit bigger than 100% are biologically impossible. E.g., % biomass reduction, % control)
+
+# b: slope around e (inflection point)
+
+# e: e (inflection point). Represents the dose producing a response halfway between the u and l parameters (ED50)
+
+```
+
+
+
+# MODEL SELECTION
+
+```{r, warning=FALSE}
+
+getMeanFunctions() # To get the most used functions when fitting dose-response curves.
+
+
+mselect(model.LL.4,  list(L.3(), L.4(), L.5(), LL.2(), LL.3(), LL.3u(), LL.4(), LL.5(), W1.2(), W1.3(), W1.4(), W2.2(), W2.3(), W2.4(), BC.4(), BC.5(), LL2.2(), LL2.3(), LL2.3u(), LL2.4(), LL2.5(), AR.2(), AR.3(), MM.2(), MM.3(), baro5()), linreg = T)
+
+
+# Lower IC, which actually is AIC (default), indicates the best model to be used. On the other hand, the highest the Lack of Fit, better the model. The two-, three-, and four-parameter log-logistic models are are symmetrical around the inflection point (parameter "e") while others (e.g. fiveparameter log-logistic, Gompertz, and Weibull) are asymmetrical. In symmetrical models, the parameter "e" and relative ED50 are identical, that is, they both indicate the dose that reduces the response midway between the upper and lower limits. In asymmetrical models, however, the parameter "e" does not have the same meaning as in symmetrical models, even though it is still the location of the inflection point. Therefore, in asymmetrical models, ED50 should be estimated as "absolute" and not relative.
+
+
+
+model.W1.3 <- drm(percentcount ~ rate, pop, fct = W1.3(),  data = data, type = "continuous")
+
+plot(fitted(model.W1.3), residuals(model.W1.3))
+
+qqnorm(residuals(model.W1.3))
+
+
+modelFit(model.W1.3)
+
+summary(model.W1.3)
+
+
+
+anova(model.W1.3, model.LL.4) # p-value > 0.05 means that there is no difference between models. Therefore, we can use model LL.3
+
+```
+
+
+
+## ED50
+
+```{r}
+
+#ED(model.W1.3, c(50), type = "relative", interval = "delta")
+
+
+ED50.A92 <- ED(model.W1.3, (summary(model.W1.3)$coefficients[3, 1] * 0.5), clevel = "A92", type = "absolute", interval = "delta")
+
+ED50.A66 <- ED(model.W1.3, (summary(model.W1.3)$coefficients[4, 1] * 0.5), clevel = "A66", type = "absolute", interval = "delta")
+
+
+```
+
+
+## ED 50 RI AND PARAMETERS STUDENT T-TEST COMPARISONS
+
+```{r}
+
+#EDcomp(model.W1.3, c(50, 50), type = "relative", interval = "none", reverse = F)
+
+
+EDcomp(model.W1.3, c((summary(model.W1.3)$coefficients[4, 1] * 0.5),
+                     (summary(model.W1.3)$coefficients[3, 1] * 0.5)), 
+       compMatch = c("A92", "A66"), type = "absolute", interval = "none", reverse = T)
+
+
+
+# Comparing b parameter (slope)
+compParm(model.W1.3, strVal = "b", operator = "-")
+
+
+# Comparing d parameter (upper limit)
+compParm(model.W1.3, strVal = "d", operator = "-")
+
+
+# Comparing e parameter (Infletion Point)
+compParm(model.W1.3, strVal = "e", operator = "-") # Remember that for assymetric models, the paramenter"e" does not reflect the ED50. 
+
+
+```
+
+
+
+#SAVE TIFF
+
+```{r}
+
+tiff(file="C:/Users/felip/OneDrive - UW-Madison/Documents/GitHub/FFaleco/PhD/PhD Projects/Waterhemp/Bill Stangel_A92/2023/PRE/Flumioxazin/A92_PRE_Flumi_DR Percentcounts.tiff",
+     width = 10, height = 8, units = "in", res = 600, compression = "lzw")
+
+
+par(mar = c(5,5,1,1))
+
+
+plot(model.W1.3,
+     type = "average",
+     xlab = expression(paste("Flumioxazin rate (g ai ha"^-1, ")")),
+     ylab = expression(paste("Plant Density (%)")),
+     ylim = c(0, 100),
+     col = c("red", "darkgreen"),
+     pch = c(19, 17),
+     cex = 1.5,
+     cex.axis = 1.3,
+     cex.lab = 1.9,
+     cex.legend = 2.0,
+     legendPos = c(800, 100),
+     lwd = 1.5)
+
+
+
+points(x = c(ED50.A92[1, 1], 
+             ED50.A66[1, 1]),
+       y = c((summary(model.W1.3)$coefficients[3, 1] * 0.5), 
+             (summary(model.W1.3)$coefficients[4, 1] * 0.5)),
+       pch = 8,
+       cex = 1.3)
+
+
+#abline(v = 280, 
+       #lwd = 2, 
+       #lty = "twodash",
+       #col = "black")
+
+
+#text(x = 750, y = 4.0, 
+     #labels = expression(paste("ED"[50] ~ "A92 = 87.6 ("%+-% "18.1)"^A)),
+     #cex = 1.3,
+     #col = "black",
+     #font = 2)
+
+
+#text(x = 750, y = 3.6, 
+     #labels = expression(paste("ED"[50] ~ "A66 = 32.8 ("%+-% "11.3)"^B)),
+     #cex = 1.3,
+     #col = "black",
+     #font = 2)
+
+
+#text(x = 520, y = 3.2, 
+     #labels = expression("p-value = 0.01"),
+     #cex = 1.3,
+     #col = "black",
+     #font = 2)
+
+
+#text(x = 580, y = 0.9, 
+     #labels = expression("1x rate: 280 g ai ha" ^-1),
+     #cex = 1.2,
+     #col = "black",
+     #font = 2)
+
+
+dev.off()
+
+
+```
+
+
+
+
+
+
