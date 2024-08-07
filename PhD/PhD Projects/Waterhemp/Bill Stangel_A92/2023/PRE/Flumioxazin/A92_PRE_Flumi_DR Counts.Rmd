@@ -1,7 +1,7 @@
 ---
 title: "Waterhemp PRE A92 Flumioxazin DR Counts"
 author: "Felipe Faleco"
-date: "03/13/2024"
+date: "08/07/2024"
 output:
   html_document:
     df_print: paged
@@ -31,7 +31,7 @@ str(data)
 
 
 fun <- function(x){
-  c( mean = mean(x), VAR = var(x), SD = sd(x), SE = std.error(x), n = length(x))
+  c( mean = mean(x, na.rm = T), VAR = var(x, na.rm = T), SD = sd(x, na.rm = T), SE = std.error(x, na.rm = T), n = length(x))
 }
 
 summary.A92 <- summaryBy(cbind(count, biomass) ~ rate + pop, data = subset(data, pop=="A92"),
@@ -164,7 +164,7 @@ par(mar = c(5,5,1,1))
 plot(model.W1.3,
      type = "average",
      xlab = expression(paste("Flumioxazin rate (g ai ha"^-1, ")")),
-     ylab = expression(paste("Plant Density (plant pot"^-1, ")")),
+     ylab = expression(paste("Plant Count (plant pot"^-1, ")")),
      ylim = c(0, 40),
      col = c("red", "darkgreen"),
      pch = c(19, 17),
