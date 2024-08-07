@@ -162,7 +162,7 @@ par(mar = c(5,5,1,1))
 plot(model.W1.2,
      type = "average",
      xlab = expression(paste("Flumioxazin rate (g ai ha"^-1, ")")),
-     ylab = expression(paste("Plant Counts (%)")),
+     ylab = expression(paste("Plant Count (%)")),
      ylim = c(0, 1),
      col = c("red", "darkgreen"),
      pch = c(19, 17),
