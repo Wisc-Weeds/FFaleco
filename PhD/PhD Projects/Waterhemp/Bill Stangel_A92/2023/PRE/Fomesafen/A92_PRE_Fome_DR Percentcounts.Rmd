@@ -1,5 +1,5 @@
 ---
-title: "Waterhemp PRE A92 Flumioxazin DR Counts"
+title: "Waterhemp PRE A92 Fomesafen DR Percentcounts"
 author: "Felipe Faleco"
 date: "08/07/2024"
 output:
@@ -24,7 +24,7 @@ library(dplyr)
 
 ```{r}
 
-data <- read.csv("Data Sheet_A92_Flumioxazin PRE.csv")
+data <- read.csv("Data Sheet_A92_Fomesafen PRE.csv")
 
 str(data)
 
@@ -152,7 +152,7 @@ compParm(model.W1.2, strVal = "e", operator = "-") # Remember that for assymetri
 
 ```{r}
 
-tiff(file="C:/Users/felip/OneDrive - UW-Madison/Documents/GitHub/FFaleco/PhD/PhD Projects/Waterhemp/Bill Stangel_A92/2023/PRE/Flumioxazin/A92_PRE_Flumi_DR Percentcounts.tiff",
+tiff(file="C:/Users/felip/OneDrive - UW-Madison/Documents/GitHub/FFaleco/PhD/PhD Projects/Waterhemp/Bill Stangel_A92/2023/PRE/Fomesafen/A92_PRE_Fome_DR Percentcounts.tiff",
      width = 10, height = 8, units = "in", res = 600, compression = "lzw")
 
 
@@ -161,7 +161,7 @@ par(mar = c(5,5,1,1))
 
 plot(model.W1.2,
      type = "average",
-     xlab = expression(paste("Flumioxazin rate (g ai ha"^-1, ")")),
+     xlab = expression(paste("Fomesafen rate (g ai ha"^-1, ")")),
      ylab = expression(paste("Plant Count (%)")),
      ylim = c(0, 1),
      col = c("red", "darkgreen"),
@@ -170,7 +170,7 @@ plot(model.W1.2,
      cex.axis = 1.3,
      cex.lab = 1.9,
      cex.legend = 2.0,
-     legendPos = c(800, 1.0),
+     legendPos = c(1500, 1.0),
      lwd = 1.5)
 
 
