@@ -1,5 +1,5 @@
 ---
-title: "Waterhemp PRE A92 Fomesafen DR Counts"
+title: "Waterhemp PRE A92 Sulfentrazone DR Counts"
 author: "Felipe Faleco"
 date: "08/07/2024"
 output:
@@ -24,7 +24,7 @@ library(dplyr)
 
 ```{r}
 
-data <- read.csv("Data Sheet_A92_Fomesafen PRE.csv")
+data <- read.csv("Data Sheet_A92_Sulfentrazone PRE.csv")
 
 str(data)
 
@@ -154,7 +154,7 @@ compParm(model.W1.3, strVal = "e", operator = "-") # Remember that for assymetri
 
 ```{r}
 
-tiff(file="C:/Users/felip/OneDrive - UW-Madison/Documents/GitHub/FFaleco/PhD/PhD Projects/Waterhemp/Bill Stangel_A92/2023/PRE/Fomesafen/A92_PRE_Fome_DR Counts.tiff",
+tiff(file="C:/Users/felip/OneDrive - UW-Madison/Documents/GitHub/FFaleco/PhD/PhD Projects/Waterhemp/Bill Stangel_A92/2023/PRE/Sulfentrazone/A92_PRE_Sulf_DR Counts.tiff",
      width = 10, height = 8, units = "in", res = 600, compression = "lzw")
 
 
@@ -163,7 +163,7 @@ par(mar = c(5,5,1,1))
 
 plot(model.W1.3,
      type = "average",
-     xlab = expression(paste("Fomesafen rate (g ai ha"^-1, ")")),
+     xlab = expression(paste("Sulfentrazone rate (g ai ha"^-1, ")")),
      ylab = expression(paste("Plant Count (plant pot"^-1, ")")),
      ylim = c(0, 40),
      col = c("red", "darkgreen"),

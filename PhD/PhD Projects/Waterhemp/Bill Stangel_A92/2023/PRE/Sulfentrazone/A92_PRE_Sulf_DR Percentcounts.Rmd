@@ -116,7 +116,6 @@ ED50.A92 <- ED(model.W1.3, (summary(model.W1.3)$coefficients[3, 1] * 0.5), cleve
 
 ED50.A66 <- ED(model.W1.3, (summary(model.W1.3)$coefficients[4, 1] * 0.5), clevel = "A66", type = "absolute", interval = "delta")
 
-
 ```
 
 
@@ -130,7 +129,6 @@ ED50.A66 <- ED(model.W1.3, (summary(model.W1.3)$coefficients[4, 1] * 0.5), cleve
 EDcomp(model.W1.3, c((summary(model.W1.3)$coefficients[4, 1] * 0.5),
                      (summary(model.W1.3)$coefficients[3, 1] * 0.5)), 
        compMatch = c("A92", "A66"), type = "absolute", interval = "none", reverse = T)
-
 
 
 # Comparing b parameter (slope)
