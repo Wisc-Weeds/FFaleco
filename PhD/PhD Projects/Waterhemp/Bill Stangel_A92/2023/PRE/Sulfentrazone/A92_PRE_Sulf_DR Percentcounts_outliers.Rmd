@@ -24,7 +24,7 @@ library(dplyr)
 
 ```{r}
 
-data <- read.csv("Data Sheet_A92_Sulfentrazone PRE.csv")
+data <- read.csv("Data Sheet_A92_Sulfentrazone PRE_outliers.csv")
 
 str(data)
 
@@ -131,15 +131,15 @@ EDcomp(model.W1.2, c(0.5, 0.5),
 
 
 # Comparing b parameter (slope)
-compParm(model.W1.2, strVal = "b", operator = "-")
+compParm(model.W1.3, strVal = "b", operator = "-")
 
 
 # Comparing d parameter (upper limit)
-#compParm(model.W1.2, strVal = "d", operator = "-")
+compParm(model.W1.3, strVal = "d", operator = "-")
 
 
 # Comparing e parameter (Infletion Point)
-compParm(model.W1.2, strVal = "e", operator = "-") # Remember that for assymetric models, the paramenter"e" does not reflect the ED50. 
+compParm(model.W1.3, strVal = "e", operator = "-") # Remember that for assymetric models, the paramenter"e" does not reflect the ED50. 
 
 
 ```
@@ -157,7 +157,7 @@ tiff(file="C:/Users/felip/OneDrive - UW-Madison/Documents/GitHub/FFaleco/PhD/PhD
 par(mar = c(5,5,1,1))
 
 
-plot(model.W1.2,
+plot(model.W1.3,
      type = "average",
      xlab = expression(paste("Sulfentrazone rate (g ai ha"^-1, ")")),
      ylab = expression(paste("Plant Count (%)")),
@@ -175,7 +175,8 @@ plot(model.W1.2,
 
 points(x = c(ED50.A92[1, 1], 
              ED50.A66[1, 1]),
-       y = c(0.5, 0.5),
+       y = c((summary(model.W1.3)$coefficients[3, 1] * 0.5), 
+             (summary(model.W1.3)$coefficients[4, 1] * 0.5)),
        pch = 8,
        cex = 1.3)
 

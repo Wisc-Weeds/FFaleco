@@ -1,5 +1,5 @@
 ---
-title: "Waterhemp PRE A92 Sulfentrazone DR Percentcounts"
+title: "Waterhemp PRE A92 Sulfentrazone DR Counts"
 author: "Felipe Faleco"
 date: "08/07/2024"
 output:
@@ -24,7 +24,7 @@ library(dplyr)
 
 ```{r}
 
-data <- read.csv("Data Sheet_A92_Sulfentrazone PRE.csv")
+data <- read.csv("Data Sheet_A92_Sulfentrazone PRE_outliers.csv")
 
 str(data)
 
@@ -34,11 +34,11 @@ fun <- function(x){
   c( mean = mean(x, na.rm = T), VAR = var(x, na.rm = T), SD = sd(x, na.rm = T), SE = std.error(x, na.rm = T), n = length(x))
 }
 
-summary.A92 <- summaryBy(cbind(percentcount, percentbio) ~ rate + pop, data = subset(data, pop=="A92"),
+summary.A92 <- summaryBy(cbind(count, biomass) ~ rate + pop, data = subset(data, pop=="A92"),
           FUN=fun)
 
 
-summary.A66 <- summaryBy(cbind(percentcount, percentbio) ~ rate + pop, data = subset(data, pop=="A66"),
+summary.A66 <- summaryBy(cbind(count, biomass) ~ rate + pop, data = subset(data, pop=="A66"),
           FUN=fun)
 
 
@@ -50,7 +50,7 @@ summary.A66 <- summaryBy(cbind(percentcount, percentbio) ~ rate + pop, data = su
 
 ```{r}
 
-model.LL.4 <- drm(percentcount ~ rate, pop, fct = LL.4(),  data = data, type = "continuous")
+model.LL.4 <- drm(count ~ rate, pop, fct = LL.4(),  data = data, type = "continuous")
 
 
                 
@@ -87,19 +87,20 @@ mselect(model.LL.4,  list(L.3(), L.4(), L.5(), LL.2(), LL.3(), LL.3u(), LL.4(), 
 
 
 
-model.W1.2 <- drm(percentcount ~ rate, pop, fct = W1.2(),  data = data, type = "continuous")
+model.W1.3 <- drm(count ~ rate, pop, fct = W1.3(),  data = data, type = "continuous")
 
-plot(fitted(model.W1.2), residuals(model.W1.2))
+plot(fitted(model.W1.3), residuals(model.W1.3))
 
-qqnorm(residuals(model.W1.2))
-
-
-modelFit(model.W1.2)
-
-summary(model.W1.2)
+qqnorm(residuals(model.W1.3))
 
 
-anova(model.W1.2, model.LL.4) # p-value > 0.05 means that there is no difference between models. Therefore, we can use model LL.3
+modelFit(model.W1.3)
+
+summary(model.W1.3)
+
+
+
+anova(model.W1.3, model.LL.4) # p-value > 0.05 means that there is no difference between models. Therefore, we can use model LL.3
 
 ```
 
@@ -112,9 +113,10 @@ anova(model.W1.2, model.LL.4) # p-value > 0.05 means that there is no difference
 #ED(model.W1.3, c(50), type = "relative", interval = "delta")
 
 
-ED50.A92 <- ED(model.W1.2, 0.5, clevel = "A92", type = "absolute", interval = "delta")
+ED50.A92 <- ED(model.W1.3, (summary(model.W1.3)$coefficients[3, 1] * 0.5), clevel = "A92", type = "absolute", interval = "delta")
 
-ED50.A66 <- ED(model.W1.2, 0.5, clevel = "A66", type = "absolute", interval = "delta")
+ED50.A66 <- ED(model.W1.3, (summary(model.W1.3)$coefficients[4, 1] * 0.5), clevel = "A66", type = "absolute", interval = "delta")
+
 
 ```
 
@@ -126,20 +128,22 @@ ED50.A66 <- ED(model.W1.2, 0.5, clevel = "A66", type = "absolute", interval = "d
 #EDcomp(model.W1.3, c(50, 50), type = "relative", interval = "none", reverse = F)
 
 
-EDcomp(model.W1.2, c(0.5, 0.5), 
+EDcomp(model.W1.3, c((summary(model.W1.3)$coefficients[4, 1] * 0.5),
+                     (summary(model.W1.3)$coefficients[3, 1] * 0.5)), 
        compMatch = c("A92", "A66"), type = "absolute", interval = "none", reverse = T)
 
 
+
 # Comparing b parameter (slope)
-compParm(model.W1.2, strVal = "b", operator = "-")
+compParm(model.W1.3, strVal = "b", operator = "-")
 
 
 # Comparing d parameter (upper limit)
-#compParm(model.W1.2, strVal = "d", operator = "-")
+compParm(model.W1.3, strVal = "d", operator = "-")
 
 
 # Comparing e parameter (Infletion Point)
-compParm(model.W1.2, strVal = "e", operator = "-") # Remember that for assymetric models, the paramenter"e" does not reflect the ED50. 
+compParm(model.W1.3, strVal = "e", operator = "-") # Remember that for assymetric models, the paramenter"e" does not reflect the ED50. 
 
 
 ```
@@ -150,32 +154,33 @@ compParm(model.W1.2, strVal = "e", operator = "-") # Remember that for assymetri
 
 ```{r}
 
-tiff(file="C:/Users/felip/OneDrive - UW-Madison/Documents/GitHub/FFaleco/PhD/PhD Projects/Waterhemp/Bill Stangel_A92/2023/PRE/Sulfentrazone/A92_PRE_Sulf_DR Percentcounts.tiff",
+tiff(file="C:/Users/felip/OneDrive - UW-Madison/Documents/GitHub/FFaleco/PhD/PhD Projects/Waterhemp/Bill Stangel_A92/2023/PRE/Sulfentrazone/A92_PRE_Sulf_DR Counts.tiff",
      width = 10, height = 8, units = "in", res = 600, compression = "lzw")
 
 
 par(mar = c(5,5,1,1))
 
 
-plot(model.W1.2,
+plot(model.W1.3,
      type = "average",
      xlab = expression(paste("Sulfentrazone rate (g ai ha"^-1, ")")),
-     ylab = expression(paste("Plant Count (%)")),
-     ylim = c(0, 1),
+     ylab = expression(paste("Plant Count (plant pot"^-1, ")")),
+     ylim = c(0, 40),
      col = c("red", "darkgreen"),
      pch = c(19, 17),
      cex = 1.5,
      cex.axis = 1.3,
      cex.lab = 1.9,
      cex.legend = 2.0,
-     legendPos = c(1500, 1.0),
+     legendPos = c(800, 40.0),
      lwd = 1.5)
 
 
 
 points(x = c(ED50.A92[1, 1], 
              ED50.A66[1, 1]),
-       y = c(0.5, 0.5),
+       y = c((summary(model.W1.3)$coefficients[3, 1] * 0.5), 
+             (summary(model.W1.3)$coefficients[4, 1] * 0.5)),
        pch = 8,
        cex = 1.3)
 
