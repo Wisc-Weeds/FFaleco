@@ -1,7 +1,7 @@
 ---
-title: "Waterhemp MIs GH Fomesafen Biomass"
+title: "Waterhemp MIs GH Fomesafen Percent Bio"
 author: "Felipe Faleco"
-date: "09/08/2023"
+date: "09/26/2024"
 output:
   html_document:
     df_print: paged
@@ -33,18 +33,19 @@ data_A101 <- data %>% filter(pop == "A101")
 
 
 fun <- function(x){
-  c( mean = mean(x), VAR = var(x), SD = sd(x), SE = std.error(x), n = length(x))
+  c( mean = mean(x, na.rm = T), VAR = var(x, na.rm = T), SD = sd(x, na.rm = T), SE = std.error(x, na.rm = T), n = length(x))
 }
 
-summary.fome <- summaryBy(cbind(biomass) ~ herb + rate, data = subset(data_A101, herb=="fome"),
+
+summary.fome <- summaryBy(cbind(percent_bio) ~ herb + rate, data = subset(data_A101, herb=="fome"),
           FUN=fun)
 
 
-summary.fome_GST <- summaryBy(cbind(biomass) ~ herb + rate, data = subset(data_A101, herb=="fome+GST"),
+summary.fome_GST <- summaryBy(cbind(percent_bio) ~ herb + rate, data = subset(data_A101, herb=="fome+GST"),
           FUN=fun)
 
 
-summary.fome_P450 <- summaryBy(cbind(biomass) ~ herb + rate, data = subset(data_A101, herb=="fome+P450"),
+summary.fome_P450 <- summaryBy(cbind(percent_bio) ~ herb + rate, data = subset(data_A101, herb=="fome+P450"),
           FUN=fun)
 
 
@@ -56,7 +57,7 @@ summary.fome_P450 <- summaryBy(cbind(biomass) ~ herb + rate, data = subset(data_
 
 ```{r}
 
-model.LL4 <- drm(biomass ~ rate, herb, fct = LL.4(), data = data_A101, type = "continuous")
+model.LL4 <- drm(percent_bio ~ rate, herb, fct = LL.4(), data = data_A101, type = "continuous")
 
 
 plot(fitted(model.LL4), residuals(model.LL4))
@@ -91,9 +92,11 @@ mselect(model.LL4,  list(L.3(), L.4(), L.5(), LL.2(), LL.3(), LL.3u(), LL.4(), L
 # Lower IC, which actually is AIC (default), indicates the best model to be used. On the other hand, the highest the Lack of Fit, better the model. The two-, three-, and four-parameter log-logistic models are are symmetrical around the inflection point (parameter "e") while others (e.g. fiveparameter log-logistic, Gompertz, and Weibull) are asymmetrical. In symmetrical models, the parameter "e" and relative ED50 are identical, that is, they both indicate the dose that reduces the response midway between the upper and lower limits. In asymmetrical models, however, the parameter "e" does not have the same meaning as in symmetrical models, even though it is still the location of the inflection point. Therefore, in asymmetrical models, ED50 should be estimated as "absolute" and not relative.
 
 
-model.W1.3 <- drm(biomass ~ rate, herb, fct = W1.3(), data = data_A101, type = "continuous")
+model.W1.3 <- drm(percent_bio ~ rate, herb, fct = W1.3(), data = data_A101, type = "continuous")
 
 plot(fitted(model.W1.3), residuals(model.W1.3))
+
+qqnorm(residuals(model.W1.3))
 
 
 modelFit(model.W1.3)
@@ -163,7 +166,7 @@ compParm(model.W1.3, strVal = "e", operator = "-") # Remember that for assymetri
 
 ```{r}
 
-tiff(file="C:/Users/felip/OneDrive - UW-Madison/Documents/GitHub/FFaleco/PhD/PhD Projects/Waterhemp/Metabolism Inhibitors/GH/Fomesafen/Fomesafen_Absolute ED/MIs_Fome_GH_A101_DR Biomass.tiff",
+tiff(file="C:/Users/felip/OneDrive - UW-Madison/Documents/GitHub/FFaleco/PhD/PhD Projects/Waterhemp/Metabolism Inhibitors/GH/Fomesafen/Fomesafen_Absolute ED/MIs_Fome_GH_A101_DR Percent Bio.tiff",
      width = 10, height = 8, units = "in", res = 600, compression = "lzw")
 
 
@@ -173,16 +176,16 @@ par(mar = c(5,5,1,1))
 plot(model.W1.3,
      type = "average",
      xlab = expression(paste("Fomesafen rate (g ai ha"^-1, ")")),
-     ylab = expression(paste("A101 Biomass (g plant"^-1, ")")),
-     ylim = c(0, 5),
+     ylab = expression(paste("A101 Biomass (%)")),
+     ylim = c(0, 100),
      #broken = T,
      col = c("darkgreen", "red", "navy"),
      pch = c(19, 17, 15),
      cex = 1.5,
-     cex.axis = 1.3,
-     cex.lab = 1.9,
-     cex.legend = 2.0,
-     legendPos = c(4800, 4.0),
+     cex.axis = 1.5,
+     cex.lab = 2.0,
+     cex.legend = 1.8,
+     legendPos = c(3600, 100),
      lwd = 1.5)
 
 

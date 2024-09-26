@@ -36,7 +36,7 @@ data_atra <- data %>% filter(herb == "atra")
 
 
 fun <- function(x){
-  c( mean = mean(x), VAR = var(x), SD = sd(x), SE = std.error(x), n = length(x))
+  c( mean = mean(x, na.rm = T), VAR = var(x, na.rm = T), SD = sd(x, na.rm = T), SE = std.error(x, na.rm = T), n = length(x))
 }
 
 summary.atra <- summaryBy(cbind(percent_bio) ~ pop + rate, data = subset(data_atra),

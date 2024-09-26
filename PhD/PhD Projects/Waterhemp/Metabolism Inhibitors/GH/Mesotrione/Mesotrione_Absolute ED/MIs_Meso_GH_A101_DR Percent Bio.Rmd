@@ -33,7 +33,7 @@ data_A101 <- data %>% filter(pop == "A101")
 
 
 fun <- function(x){
-  c( mean = mean(x), VAR = var(x), SD = sd(x), SE = std.error(x), n = length(x))
+  c( mean = mean(x, na.rm = T), VAR = var(x, na.rm = T), SD = sd(x, na.rm = T), SE = std.error(x, na.rm = T), n = length(x))
 }
 
 summary.meso <- summaryBy(cbind(percent_bio) ~ herb + rate, data = subset(data_A101, herb=="meso"),
