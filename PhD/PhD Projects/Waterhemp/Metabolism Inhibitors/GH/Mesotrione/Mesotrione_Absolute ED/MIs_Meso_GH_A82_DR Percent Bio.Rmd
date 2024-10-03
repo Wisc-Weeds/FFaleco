@@ -174,8 +174,8 @@ par(mar = c(5,5,1,1))
 plot(model.W1.2,
      type = "average",
      xlab = expression(paste("Mesotrione rate (g ai ha"^-1, ")")),
-     ylab = expression(paste("A82 Biomass (%)")),
-     ylim = c(0, 100),
+     ylab = expression(paste("A82 Biomass (x 100%)")),
+     ylim = c(0, 1),
      #broken = T,
      col = c("darkgreen", "red", "navy"),
      pch = c(19, 17, 15),
@@ -183,17 +183,15 @@ plot(model.W1.2,
      cex.axis = 1.5,
      cex.lab = 2.0,
      cex.legend = 1.8,
-     legendPos = c(1500, 100),
-     lwd = 1.5,
-     normal = T, 
-     normRef = 100)
+     legendPos = c(1500, 1),
+     lwd = 1.5)
 
 
 
 points(x = c(ED50.meso[1, 1],
              ED50.meso.P450[1, 1],
              ED50.meso.GST[1, 1]),
-       y = c(50, 50, 50),
+       y = c(0.5, 0.5, 0.5),
        pch = 8,
        cex = 1.3)
 
