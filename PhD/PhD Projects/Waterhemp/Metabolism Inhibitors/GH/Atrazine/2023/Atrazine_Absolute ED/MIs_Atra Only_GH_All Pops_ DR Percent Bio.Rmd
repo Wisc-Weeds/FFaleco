@@ -86,19 +86,19 @@ mselect(model.LL4,  list(L.3(), L.4(), L.5(), LL.2(), LL.3(), LL.3u(), LL.4(), L
 # Lower IC, which actually is AIC (default), indicates the best model to be used. On the other hand, the highest the Lack of Fit, better the model. The two-, three-, and four-parameter log-logistic models are are symmetrical around the inflection point (parameter "e") while others (e.g. fiveparameter log-logistic, Gompertz, and Weibull) are asymmetrical. In symmetrical models, the parameter "e" and relative ED50 are identical, that is, they both indicate the dose that reduces the response midway between the upper and lower limits. In asymmetrical models, however, the parameter "e" does not have the same meaning as in symmetrical models, even though it is still the location of the inflection point. Therefore, in asymmetrical models, ED50 should be estimated as "absolute" and not relative.
 
 
-model.LL.3 <- drm(percent_bio ~ rate, pop, fct = LL.3(), data = data_atra, type = "continuous")
+model.LL.2 <- drm(percent_bio ~ rate, pop, fct = LL.2(), data = data_atra, type = "continuous")
 
-plot(fitted(model.LL.3), residuals(model.LL.3))
+plot(fitted(model.LL.2), residuals(model.LL.2))
 
-qqnorm(residuals(model.LL.3))
-
-
-modelFit(model.LL.3)
-
-summary(model.LL.3)
+qqnorm(residuals(model.LL.2))
 
 
-anova(model.LL.3, model.LL4) # p-value > 0.05 means that there is no difference between models. Therefore, we can use model LL.3
+modelFit(model.LL.2)
+
+summary(model.LL.2)
+
+
+anova(model.LL.2, model.LL4) # p-value > 0.05 means that there is no difference between models. Therefore, we can use model LL.3
 
 ```
 
@@ -111,13 +111,13 @@ anova(model.LL.3, model.LL4) # p-value > 0.05 means that there is no difference 
 #ED(model.W1.3, c(50), type = "relative", interval = "delta")
 
 
-ED50.A82 <- ED(model.LL.3, (summary(model.LL.3)$coefficients[5, 1] * 0.5), clevel = "A82", type = "absolute", interval = "delta")
+ED50.A82 <- ED(model.LL.2, 0.5, clevel = "A82", type = "absolute", interval = "delta")
 
-ED50.A101 <- ED(model.LL.3, (summary(model.LL.3)$coefficients[6, 1] * 0.5), clevel = "A101", type = "absolute", interval = "delta")
+ED50.A101 <- ED(model.LL.2, 0.5, clevel = "A101", type = "absolute", interval = "delta")
 
-ED50.A103 <- ED(model.LL.3, (summary(model.LL.3)$coefficients[7, 1] * 0.5), clevel = "A103", type = "absolute", interval = "delta")
+ED50.A103 <- ED(model.LL.2, 0.5, clevel = "A103", type = "absolute", interval = "delta")
 
-ED50.A75 <- ED(model.LL.3, (summary(model.LL.3)$coefficients[8, 1] * 0.5), clevel = "A75", type = "absolute", interval = "delta")
+ED50.A75 <- ED(model.LL.2, 0.5, clevel = "A75", type = "absolute", interval = "delta")
 
 
 # If the model was a Log-logistic (log(ED50) as parameter) E.g.: LL2.3,  we should use logBase = exp(1). Eg: ED50.A82 <- ED(model.LL2.3, (summary(model.LL2.3)$coefficients[5, 1] * 0.5), clevel = "A82", type = "absolute", interval = "delta", logBase = exp(1))
@@ -132,18 +132,15 @@ ED50.A75 <- ED(model.LL.3, (summary(model.LL.3)$coefficients[8, 1] * 0.5), cleve
 #EDcomp(model.W1.3, c(50, 50), type = "relative", interval = "none", reverse = F)
 
 
-EDcomp(model.LL.3, c((summary(model.LL.3)$coefficients[6, 1] * 0.5),
-                     (summary(model.LL.3)$coefficients[5, 1] * 0.5)), 
+EDcomp(model.LL.2, c(0.5, 0.5), 
        compMatch = c("A101", "A82"), type = "absolute", interval = "none", reverse = F)
 
 
-EDcomp(model.LL.3, c((summary(model.LL.3)$coefficients[7, 1] * 0.5),
-                     (summary(model.LL.3)$coefficients[5, 1] * 0.5)), 
+EDcomp(model.LL.2, c(0.5, 0.5), 
        compMatch = c("A103", "A82"), type = "absolute", interval = "none", reverse = F)
 
 
-EDcomp(model.LL.3, c((summary(model.LL.3)$coefficients[8, 1] * 0.5),
-                     (summary(model.LL.3)$coefficients[5, 1] * 0.5)), 
+EDcomp(model.LL.2, c(0.5, 0.5), 
        compMatch = c("A75", "A82"), type = "absolute", interval = "none", reverse = F)
 
 
@@ -152,15 +149,15 @@ EDcomp(model.LL.3, c((summary(model.LL.3)$coefficients[8, 1] * 0.5),
 
 
 # Comparing b parameter (slope)
-compParm(model.LL.3, strVal = "b", operator = "-")
+compParm(model.LL.2, strVal = "b", operator = "-")
 
 
 # Comparing d parameter (upper limit)
-compParm(model.LL.3, strVal = "d", operator = "-")
+compParm(model.LL.2, strVal = "d", operator = "-")
 
 
 # Comparing e parameter (Infletion Point)
-compParm(model.LL.3, strVal = "e", operator = "-") # Remember that for assymetric models, the paramenter"e" does not reflect the ED50. 
+compParm(model.LL.2, strVal = "e", operator = "-") # Remember that for assymetric models, the paramenter"e" does not reflect the ED50. 
 
 
 ```
@@ -178,11 +175,11 @@ tiff(file="C:/Users/felip/OneDrive - UW-Madison/Documents/GitHub/FFaleco/PhD/PhD
 par(mar = c(5,5,1,1))
 
 
-plot(model.LL.3,
+plot(model.LL.2,
      type = "average",
      xlab = expression(paste("Atrazine rate (g ai ha"^-1, ")")),
-     ylab = expression(paste("Biomass (%)")),
-     ylim = c(0, 100),
+     ylab = expression(paste("Biomass (x 100%)")),
+     ylim = c(0, 1),
      #broken = T,
      col = c("darkgreen", "red", "navy", "orange"),
      pch = c(19, 17, 15, 18),
@@ -190,7 +187,7 @@ plot(model.LL.3,
      cex.axis = 1.5,
      cex.lab = 2.0,
      cex.legend = 1.8,
-     legendPos = c(15000, 100),
+     legendPos = c(15000, 1),
      lwd = 1.5)
 
 
@@ -199,10 +196,7 @@ points(x = c(ED50.A82[1, 1],
              ED50.A101[1, 1],
              ED50.A103[1, 1],
              ED50.A75[1, 1]),
-       y = c((summary(model.LL.3)$coefficients[5, 1]/2), 
-             (summary(model.LL.3)$coefficients[6, 1]/2),
-             (summary(model.LL.3)$coefficients[7, 1]/2),
-             (summary(model.LL.3)$coefficients[8, 1]/2)),
+       y = c(0.5, 0.5, 0.5, 0.5),
        pch = 8,
        cex = 1.3)
 
