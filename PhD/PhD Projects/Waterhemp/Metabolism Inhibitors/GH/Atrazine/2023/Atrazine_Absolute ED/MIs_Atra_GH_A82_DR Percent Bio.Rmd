@@ -28,7 +28,7 @@ data <- read.csv("Data Sheet_Atrazine_GH_2023.csv")
 
 str(data)
 
-data_A101 <- data %>% filter(pop == "A101")
+data_A82 <- data %>% filter(pop == "A82")
 
 
 
@@ -36,15 +36,15 @@ fun <- function(x){
   c( mean = mean(x, na.rm = T), VAR = var(x, na.rm = T), SD = sd(x, na.rm = T), SE = std.error(x, na.rm = T), n = length(x))
 }
 
-summary.atra <- summaryBy(cbind(percent_bio) ~ herb + rate, data = subset(data_A101, herb=="atra"),
+summary.atra <- summaryBy(cbind(percent_bio) ~ herb + rate, data = subset(data_A82, herb=="atra"),
           FUN=fun)
 
 
-summary.atra_GST <- summaryBy(cbind(percent_bio) ~ herb + rate, data = subset(data_A101, herb=="atra+GST"),
+summary.atra_GST <- summaryBy(cbind(percent_bio) ~ herb + rate, data = subset(data_A82, herb=="atra+GST"),
           FUN=fun)
 
 
-summary.atra_P450 <- summaryBy(cbind(percent_bio) ~ herb + rate, data = subset(data_A101, herb=="atra+P450"),
+summary.atra_P450 <- summaryBy(cbind(percent_bio) ~ herb + rate, data = subset(data_A82, herb=="atra+P450"),
           FUN=fun)
 
 
@@ -56,7 +56,7 @@ summary.atra_P450 <- summaryBy(cbind(percent_bio) ~ herb + rate, data = subset(d
 
 ```{r}
 
-model.LL4 <- drm(percent_bio ~ rate, herb, fct = LL.4(), data = data_A101, type = "continuous")
+model.LL4 <- drm(percent_bio ~ rate, herb, fct = LL.4(), data = data_A82, type = "continuous")
 
 
 plot(fitted(model.LL4), residuals(model.LL4))
@@ -91,7 +91,7 @@ mselect(model.LL4,  list(L.3(), L.4(), L.5(), LL.2(), LL.3(), LL.3u(), LL.4(), L
 # Lower IC, which actually is AIC (default), indicates the best model to be used. On the other hand, the highest the Lack of Fit, better the model. The two-, three-, and four-parameter log-logistic models are are symmetrical around the inflection point (parameter "e") while others (e.g. fiveparameter log-logistic, Gompertz, and Weibull) are asymmetrical. In symmetrical models, the parameter "e" and relative ED50 are identical, that is, they both indicate the dose that reduces the response midway between the upper and lower limits. In asymmetrical models, however, the parameter "e" does not have the same meaning as in symmetrical models, even though it is still the location of the inflection point. Therefore, in asymmetrical models, ED50 should be estimated as "absolute" and not relative.
 
 
-model.W1.2 <- drm(percent_bio ~ rate, herb, fct = W1.2(), data = data_A101, type = "continuous")
+model.W1.2 <- drm(percent_bio ~ rate, herb, fct = W1.2(), data = data_A82, type = "continuous")
 
 
 plot(fitted(model.W1.2), residuals(model.W1.2))
@@ -164,7 +164,7 @@ compParm(model.W1.2, strVal = "e", operator = "-") # Remember that for assymetri
 
 ```{r}
 
-tiff(file="C:/Users/felip/OneDrive - UW-Madison/Documents/GitHub/FFaleco/PhD/PhD Projects/Waterhemp/Metabolism Inhibitors/GH/Atrazine/2023/Atrazine_Absolute ED/MIs_Atra_GH_A101_DR Percent Bio.tiff",
+tiff(file="C:/Users/felip/OneDrive - UW-Madison/Documents/GitHub/FFaleco/PhD/PhD Projects/Waterhemp/Metabolism Inhibitors/GH/Atrazine/2023/Atrazine_Absolute ED/MIs_Atra_GH_A82_DR Percent Bio.tiff",
      width = 10, height = 8, units = "in", res = 600, compression = "lzw")
 
 
@@ -174,7 +174,7 @@ par(mar = c(5,5,1,1))
 plot(model.W1.2,
      type = "average",
      xlab = expression(paste("Atrazine rate (g ai ha"^-1, ")")),
-     ylab = expression(paste("A101 Biomass (x 100%)")),
+     ylab = expression(paste("A82 Biomass (x 100%)")),
      ylim = c(0, 1),
      #broken = T,
      col = c("darkgreen", "red", "navy"),
