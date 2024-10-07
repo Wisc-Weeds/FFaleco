@@ -112,13 +112,13 @@ anova(model.LL.4, model.LL4) # p-value > 0.05 means that there is no difference 
 #ED(model.W1.3, c(50), type = "relative", interval = "delta")
 
 
-ED50.A82 <- ED(model.LL4, (summary(model.LL4)$coefficients[9, 1] * 0.5), clevel = "A82", type = "absolute", interval = "delta")
+ED50.A82 <- ED(model.LL.4, (summary(model.LL.4)$coefficients[9, 1] * 0.5), clevel = "A82", type = "absolute", interval = "delta")
 
-ED50.A101 <- ED(model.LL4, (summary(model.LL4)$coefficients[10, 1] * 0.5), clevel = "A101", type = "absolute", interval = "delta")
+ED50.A101 <- ED(model.LL.4, (summary(model.LL.4)$coefficients[10, 1] * 0.5), clevel = "A101", type = "absolute", interval = "delta")
 
-ED50.A103 <- ED(model.LL4, (summary(model.LL4)$coefficients[11, 1] * 0.5), clevel = "A103", type = "absolute", interval = "delta")
+ED50.A103 <- ED(model.LL.4, (summary(model.LL.4)$coefficients[11, 1] * 0.5), clevel = "A103", type = "absolute", interval = "delta")
 
-ED50.A75 <- ED(model.LL4, (summary(model.LL4)$coefficients[12, 1] * 0.5), clevel = "A75", type = "absolute", interval = "delta")
+ED50.A75 <- ED(model.LL.4, (summary(model.LL.4)$coefficients[12, 1] * 0.5), clevel = "A75", type = "absolute", interval = "delta")
 
 
 # If the model was a Log-logistic (log(ED50) as parameter) E.g.: LL2.3,  we should use logBase = exp(1). Eg: ED50.A82 <- ED(model.LL2.3, (summary(model.LL2.3)$coefficients[5, 1] * 0.5), clevel = "A82", type = "absolute", interval = "delta", logBase = exp(1))
@@ -133,18 +133,18 @@ ED50.A75 <- ED(model.LL4, (summary(model.LL4)$coefficients[12, 1] * 0.5), clevel
 #EDcomp(model.W1.3, c(50, 50), type = "relative", interval = "none", reverse = F)
 
 
-EDcomp(model.LL4, c((summary(model.LL4)$coefficients[10, 1] * 0.5),
-                     (summary(model.LL4)$coefficients[9, 1] * 0.5)), 
+EDcomp(model.LL.4, c((summary(model.LL.4)$coefficients[10, 1] * 0.5),
+                     (summary(model.LL.4)$coefficients[9, 1] * 0.5)), 
        compMatch = c("A101", "A82"), type = "absolute", interval = "none", reverse = F)
 
 
-EDcomp(model.LL4, c((summary(model.LL4)$coefficients[11, 1] * 0.5),
-                     (summary(model.LL4)$coefficients[9, 1] * 0.5)), 
+EDcomp(model.LL.4, c((summary(model.LL.4)$coefficients[11, 1] * 0.5),
+                     (summary(model.LL.4)$coefficients[9, 1] * 0.5)), 
        compMatch = c("A103", "A82"), type = "absolute", interval = "none", reverse = F)
 
 
-EDcomp(model.LL4, c((summary(model.LL4)$coefficients[12, 1] * 0.5),
-                     (summary(model.LL4)$coefficients[9, 1] * 0.5)), 
+EDcomp(model.LL.4, c((summary(model.LL.4)$coefficients[12, 1] * 0.5),
+                     (summary(model.LL.4)$coefficients[9, 1] * 0.5)), 
        compMatch = c("A75", "A82"), type = "absolute", interval = "none", reverse = F)
 
 
@@ -179,11 +179,11 @@ tiff(file="C:/Users/felip/OneDrive - UW-Madison/Documents/GitHub/FFaleco/PhD/PhD
 par(mar = c(5,5,1,1))
 
 
-plot(model.LL4,
+plot(model.LL.4,
      type = "average",
      xlab = expression(paste("Glyphosate rate (g ae ha"^-1, ")")),
-     ylab = expression(paste("Biomass (%)")),
-     ylim = c(0, 100),
+     ylab = expression(paste("Biomass (x 100%)")),
+     ylim = c(0, 1),
      #broken = T,
      col = c("darkgreen", "red", "navy", "orange"),
      pch = c(19, 17, 15, 18),
@@ -191,7 +191,7 @@ plot(model.LL4,
      cex.axis = 1.5,
      cex.lab = 2.0,
      cex.legend = 1.8,
-     legendPos = c(12000, 100),
+     legendPos = c(12000, 1),
      lwd = 1.5)
 
 
