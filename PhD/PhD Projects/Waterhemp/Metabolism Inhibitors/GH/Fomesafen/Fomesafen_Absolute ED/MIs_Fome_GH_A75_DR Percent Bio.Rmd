@@ -86,7 +86,7 @@ summary(model.LL4)
 getMeanFunctions() # To get the most used functions when fitting dose-response curves.
 
 
-mselect(model.LL4,  list(L.3(), L.4(), L.5(), LL.2(), LL.3(), LL.3u(), LL.4(), LL.5(), W1.2(), W1.3(), W1.4(), W2.2(), W2.3(), W2.4(), BC.4(), BC.5(), LL2.2(), LL2.3(), LL2.3u(), LL2.4(), LL2.5(), AR.2(), AR.3(), MM.2(), MM.3(), baro5()), linreg = T)
+mselect(model.LL4,  list(LL.2(), LL2.2(), LL.3(), LL.3u(), LL2.3(), LL2.3u(), LL.4(), LL2.4(), LL.5(), LL2.5(), W1.2(), W2.2(), W1.3(), W1.3u(), W2.3(), W2.3u(), W1.4(), W2.4()))
 
 
 # Lower IC, which actually is AIC (default), indicates the best model to be used. On the other hand, the highest the Lack of Fit, better the model. The two-, three-, and four-parameter log-logistic models are are symmetrical around the inflection point (parameter "e") while others (e.g. fiveparameter log-logistic, Gompertz, and Weibull) are asymmetrical. In symmetrical models, the parameter "e" and relative ED50 are identical, that is, they both indicate the dose that reduces the response midway between the upper and lower limits. In asymmetrical models, however, the parameter "e" does not have the same meaning as in symmetrical models, even though it is still the location of the inflection point. Therefore, in asymmetrical models, ED50 should be estimated as "absolute" and not relative.
