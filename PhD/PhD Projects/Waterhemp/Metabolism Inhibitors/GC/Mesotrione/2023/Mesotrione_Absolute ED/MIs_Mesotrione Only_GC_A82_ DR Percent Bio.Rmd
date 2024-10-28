@@ -1,5 +1,5 @@
 ---
-title: "Waterhemp MIs GC 2,4-D Biomass"
+title: "Waterhemp MIs GC Mesotrione Biomass"
 author: "Felipe Faleco"
 date: "10/25/2024"
 output:
@@ -26,12 +26,12 @@ library(dplyr)
 
 ```{r}
 
-data <- read.csv("Data Sheet_2,4-D_GC.csv")
+data <- read.csv("Data Sheet_Meso_GC.csv")
 
 str(data)
 
 
-data.A82.24D <- data %>% filter(pop == "A82")
+data.A82.meso <- data %>% filter(pop == "A82", herb == "meso")
 
 
 
@@ -39,8 +39,7 @@ fun <- function(x){
   c( mean = mean(x, na.rm = T), VAR = var(x, na.rm = T), SD = sd(x, na.rm = T), SE = std.error(x, na.rm = T), n = length(x))
 }
 
-
-summary.A82.24D <- summaryBy(cbind(percent_bio) ~ pop + rate + temp + herb, data = subset(data.A82.24D),
+summary.A82.meso <- summaryBy(cbind(percent_bio) ~ pop + rate + temp + herb, data = subset(data.A82.meso),
           FUN=fun)
 
 
@@ -52,7 +51,7 @@ summary.A82.24D <- summaryBy(cbind(percent_bio) ~ pop + rate + temp + herb, data
 
 ```{r}
 
-model.LL4 <- drm(percent_bio ~ rate, temp, fct = LL.4(), data = data.A82.24D, type = "continuous")
+model.LL4 <- drm(percent_bio ~ rate, temp, fct = LL.4(), data = data.A82.meso, type = "continuous")
 
 
 plot(fitted(model.LL4), residuals(model.LL4))
@@ -87,7 +86,7 @@ mselect(model.LL4,  list(LL.2(), LL2.2(), LL.3(), LL.3u(), LL2.3(), LL2.3u(), LL
 # Lower IC, which actually is AIC (default), indicates the best model to be used. On the other hand, the highest the Lack of Fit, better the model. The two-, three-, and four-parameter log-logistic models are are symmetrical around the inflection point (parameter "e") while others (e.g. fiveparameter log-logistic, Gompertz, and Weibull) are asymmetrical. In symmetrical models, the parameter "e" and relative ED50 are identical, that is, they both indicate the dose that reduces the response midway between the upper and lower limits. In asymmetrical models, however, the parameter "e" does not have the same meaning as in symmetrical models, even though it is still the location of the inflection point. Therefore, in asymmetrical models, ED50 should be estimated as "absolute" and not relative.
 
 
-model.W1.2 <- drm(percent_bio ~ rate, temp, fct = W1.2(), data = data.A82.24D, type = "continuous")
+model.W1.2 <- drm(percent_bio ~ rate, temp, fct = W1.2(), data = data.A82.meso, type = "continuous")
 
 
 plot(fitted(model.W1.2), residuals(model.W1.2))
@@ -118,6 +117,8 @@ ED50.elevated <- ED(model.W1.2, 0.5, clevel = "elevated", type = "absolute", int
 ED50.ambient <- ED(model.W1.2, 0.5, clevel = "ambient", type = "absolute", interval = "delta")
 
 
+# In this case, fitting relative and absolute resulted in the same ED50. Perhaps because W1.3 has a lower limit = 0. In simulations using the W1.4, then the relative and absolute ED50 are different. 
+
 ```
 
 
@@ -130,12 +131,6 @@ ED50.ambient <- ED(model.W1.2, 0.5, clevel = "ambient", type = "absolute", inter
 
 EDcomp(model.W1.2, c(0.5, 0.5), 
        compMatch = c("elevated", "ambient"), type = "absolute", interval = "none", reverse = T)
-
-
-# Here is to compare the difference between the two ED50 instead of ratio. However, comped function does not provide a p-value because it uses the likelihood ratio test instead of t-test. We could still determine if the difference between the two ED50 is different than zero by looking the lower and upper confidence intervals which, if zero is not included, it means that the difference between the two ED50 is different than zero. However, we need to make sure that the confidence intervals are estimated correctly, which is difficult when using a LL2.3 model for example which the model uses the log transformed response variable. In this case, confidence intervals should be estimated using the interval = "fls", but this option is not offered in the comped function.  
-
-#comped <- comped(c(ED50.elevated[1, 1], ED50.ambient[1, 1]), c(ED50.elevated[1, 2], ED50.ambient[1, 2]), log = F, operator = "-", level = 0.95)
-
 
 
 # Comparing b parameter (slope)
@@ -158,7 +153,7 @@ compParm(model.W1.2, strVal = "e", operator = "-") # Remember that for asymmetri
 
 ```{r}
 
-tiff(file="C:/Users/felip/OneDrive - UW-Madison/Documents/GitHub/FFaleco/PhD/PhD Projects/Waterhemp/Metabolism Inhibitors/GC/2,4-D/2023/2,4-D_Absolute ED/MIs_2,4-D Only_GC_A82_ DR Percent Bio.tiff",
+tiff(file="C:/Users/felip/OneDrive - UW-Madison/Documents/GitHub/FFaleco/PhD/PhD Projects/Waterhemp/Metabolism Inhibitors/GC/Mesotrione/2023/Mesotrione_Absolute ED/MIs_Mesotrione Only_GC_A82_ DR Percent Bio.tiff",
      width = 10, height = 8, units = "in", res = 600, compression = "lzw")
 
 
@@ -167,7 +162,7 @@ par(mar = c(5,5,1,1))
 
 plot(model.W1.2,
      type = "average",
-     xlab = expression(paste("2,4-D rate (g ae ha"^-1, ")")),
+     xlab = expression(paste("Mesotrione rate (g ai ha"^-1, ")")),
      ylab = expression(paste("A82 percent biomass (x 100%)")),
      ylim = c(0, 1),
      col = c("red", "darkgreen"),
@@ -176,7 +171,7 @@ plot(model.W1.2,
      cex.axis = 1.5,
      cex.lab = 2.0,
      cex.legend = 1.8,
-     legendPos = c(4000, 1),
+     legendPos = c(500, 1),
      lwd = 1.5)
 
 
@@ -186,7 +181,6 @@ points(x = c(ED50.elevated[1, 1],
        y = c(0.5, 0.5),
        pch = 8,
        cex = 1.3)
-
 
 
 

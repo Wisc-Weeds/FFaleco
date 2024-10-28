@@ -162,7 +162,7 @@ par(mar = c(5,5,1,1))
 
 plot(model.W1.2,
      type = "average",
-     xlab = expression(paste("Mesotrione rate (g ae ha"^-1, ")")),
+     xlab = expression(paste("Mesotrione rate (g ai ha"^-1, ")")),
      ylab = expression(paste("A101 percent biomass (x 100%)")),
      ylim = c(0, 1),
      col = c("red", "darkgreen"),
