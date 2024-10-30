@@ -1,5 +1,5 @@
 ---
-title: "Waterhemp MIs GC Atrazine Biomass"
+title: "Waterhemp MIs GC Atrazine Percent Biomass"
 author: "Felipe Faleco"
 date: "10/25/2024"
 output:
@@ -189,7 +189,7 @@ compParm(model.W1.2, strVal = "e", operator = "-") # Remember that for asymmetri
 
 ```{r}
 
-tiff(file="C:/Users/felip/OneDrive - UW-Madison/Documents/GitHub/FFaleco/PhD/PhD Projects/Waterhemp/Metabolism Inhibitors/GC/Atrazine/2023 - Copy/MIs_Atra_GC_ DR Percent Bio.tiff",
+tiff(file="C:/Users/felip/OneDrive - UW-Madison/Documents/GitHub/FFaleco/PhD/PhD Projects/Waterhemp/Metabolism Inhibitors/GC/Atrazine/2023/Atrazine_Absolute ED_Multiple Comparisons/MIs_Atra Everything_GC_ DR Percent Bio.tiff",
      width = 10, height = 8, units = "in", res = 600, compression = "lzw")
 
 
