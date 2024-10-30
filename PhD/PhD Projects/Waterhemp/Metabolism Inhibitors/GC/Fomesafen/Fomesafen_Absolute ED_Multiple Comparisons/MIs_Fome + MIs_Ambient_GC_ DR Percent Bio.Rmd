@@ -1,5 +1,5 @@
 ---
-title: "Waterhemp MIs GC 2,4-D Biomass"
+title: "Waterhemp MIs GC Fomesafen Percent Biomass"
 author: "Felipe Faleco"
 date: "10/25/2024"
 output:
@@ -26,12 +26,12 @@ library(dplyr)
 
 ```{r}
 
-data <- read.csv("Data Sheet_2,4-D_GC.csv")
+data <- read.csv("Data Sheet_fome_GC.csv")
 
 str(data)
 
 
-data.24D.MIs.ambient <- data %>% filter(pop == "A101", temp == "ambient")
+data.fome.MIs.ambient <- data %>% filter(pop == "A101", temp == "ambient")
 
 
 
@@ -39,7 +39,7 @@ fun <- function(x){
   c( mean = mean(x, na.rm = T), VAR = var(x, na.rm = T), SD = sd(x, na.rm = T), SE = std.error(x, na.rm = T), n = length(x))
 }
 
-summary <- summaryBy(cbind(percent_bio) ~ treat + rate, data = data.24D.MIs.ambient,
+summary <- summaryBy(cbind(percent_bio) ~ treat + rate, data = data.fome.MIs.ambient,
           FUN=fun)
 
 
@@ -51,7 +51,7 @@ summary <- summaryBy(cbind(percent_bio) ~ treat + rate, data = data.24D.MIs.ambi
 
 ```{r}
 
-model.LL4 <- drm(percent_bio ~ rate, treat, fct = LL.4(), data = data.24D.MIs.ambient, type = "continuous")
+model.LL4 <- drm(percent_bio ~ rate, treat, fct = LL.4(), data = data.fome.MIs.ambient, type = "continuous")
 
 
 plot(fitted(model.LL4), residuals(model.LL4))
@@ -86,7 +86,7 @@ mselect(model.LL4,  list(LL.2(), LL2.2(), LL.3(), LL.3u(), LL2.3(), LL2.3u(), LL
 # Lower IC, which actually is AIC (default), indicates the best model to be used. On the other hand, the highest the Lack of Fit, better the model. The two-, three-, and four-parameter log-logistic models are are symmetrical around the inflection point (parameter "e") while others (e.g. fiveparameter log-logistic, Gompertz, and Weibull) are asymmetrical. In symmetrical models, the parameter "e" and relative ED50 are identical, that is, they both indicate the dose that reduces the response midway between the upper and lower limits. In asymmetrical models, however, the parameter "e" does not have the same meaning as in symmetrical models, even though it is still the location of the inflection point. Therefore, in asymmetrical models, ED50 should be estimated as "absolute" and not relative.
 
 
-model.W1.2 <- drm(percent_bio ~ rate, treat, fct = W1.2(), data = data.24D.MIs.ambient, type = "continuous")
+model.W1.2 <- drm(percent_bio ~ rate, treat, fct = W1.2(), data = data.fome.MIs.ambient, type = "continuous")
 
 
 plot(fitted(model.W1.2), residuals(model.W1.2))
@@ -112,13 +112,13 @@ anova(model.W1.2, model.LL4) # p-value > 0.05 means that there is no difference 
 #ED(model.W1.3, c(50), type = "relative", interval = "delta")
 
 
-ED50.A101.24D.ambient <- ED(model.W1.2, 0.5, clevel = "A101+2,4D+ambient", type = "absolute", interval = "delta")
+ED50.A101.fome.ambient <- ED(model.W1.2, 0.5, clevel = "A101+fome+ambient", type = "absolute", interval = "delta")
 
 
-ED50.A101.24D.P450.ambient <- ED(model.W1.2, 0.5, clevel = "A101+2,4D+P450+ambient", type = "absolute", interval = "delta")
+ED50.A101.fome.P450.ambient <- ED(model.W1.2, 0.5, clevel = "A101+fome+P450+ambient", type = "absolute", interval = "delta")
 
 
-ED50.A101.24D.GST.ambient <- ED(model.W1.2, 0.5, clevel = "A101+2,4D+GST+ambient", type = "absolute", interval = "delta")
+ED50.A101.fome.GST.ambient <- ED(model.W1.2, 0.5, clevel = "A101+fome+GST+ambient", type = "absolute", interval = "delta")
 
 
 # In this case, fitting relative and absolute resulted in the same ED50. Perhaps because W1.3 has a lower limit = 0. In simulations using the W1.4, then the relative and absolute ED50 are different. 
@@ -134,12 +134,12 @@ ED50.A101.24D.GST.ambient <- ED(model.W1.2, 0.5, clevel = "A101+2,4D+GST+ambient
 
 
 EDcomp(model.W1.2, c(0.5, 0.5), 
-       compMatch = c("A101+2,4D+P450+ambient", "A101+2,4D+ambient"), type = "absolute", interval = "none", reverse = T)
+       compMatch = c("A101+fome+P450+ambient", "A101+fome+ambient"), type = "absolute", interval = "none", reverse = T)
 
 
 
 EDcomp(model.W1.2, c(0.5, 0.5), 
-       compMatch = c("A101+2,4D+GST+ambient", "A101+2,4D+ambient"), type = "absolute", interval = "none", reverse = T)
+       compMatch = c("A101+fome+GST+ambient", "A101+fome+ambient"), type = "absolute", interval = "none", reverse = T)
 
 
 
@@ -164,7 +164,7 @@ compParm(model.W1.2, strVal = "e", operator = "-") # Remember that for asymmetri
 
 ```{r}
 
-tiff(file="C:/Users/felip/OneDrive - UW-Madison/Documents/GitHub/FFaleco/PhD/PhD Projects/Waterhemp/Metabolism Inhibitors/GC/2,4-D/2023/2,4-D_Absolute ED_Multiple Comparisons/MIs_2,4-D + MIs_Ambient_GC_ DR Percent Bio.tiff",
+tiff(file="C:/Users/felip/OneDrive - UW-Madison/Documents/GitHub/FFaleco/PhD/PhD Projects/Waterhemp/Metabolism Inhibitors/GC/Fomesafen/Fomesafen_Absolute ED_Multiple Comparisons/MIs_Fome + MIs_Ambient_GC_ DR Percent Bio.tiff",
      width = 10, height = 8, units = "in", res = 600, compression = "lzw")
 
 
@@ -173,7 +173,7 @@ par(mar = c(5,5,1,1))
 
 plot(model.W1.2,
      type = "average",
-     xlab = expression(paste("2,4-D rate (g ae ha"^-1, ")")),
+     xlab = expression(paste("Fomesafen rate (g ai ha"^-1, ")")),
      ylab = expression(paste("A101 Percent biomass (x 100%)")),
      ylim = c(0, 1),
      col = c("darkgreen", "red", "navy"),
@@ -182,14 +182,14 @@ plot(model.W1.2,
      cex.axis = 1.5,
      cex.lab = 2.0,
      cex.legend = 1.5,
-     legendPos = c(5000, 1),
+     legendPos = c(1000, 1),
      lwd = 1.5)
 
 
 
-points(x = c(ED50.A101.24D.ambient [1, 1],
-             ED50.A101.24D.P450.ambient [1, 1],
-             ED50.A101.24D.GST.ambient [1, 1]),
+points(x = c(ED50.A101.fome.ambient [1, 1],
+             ED50.A101.fome.P450.ambient [1, 1],
+             ED50.A101.fome.GST.ambient [1, 1]),
        y = c(0.5, 0.5, 0.5),
        pch = 8,
        cex = 1.3)
