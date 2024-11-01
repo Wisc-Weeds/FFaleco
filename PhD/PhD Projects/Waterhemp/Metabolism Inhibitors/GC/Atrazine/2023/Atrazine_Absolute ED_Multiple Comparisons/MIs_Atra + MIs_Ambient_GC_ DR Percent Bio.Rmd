@@ -86,20 +86,20 @@ mselect(model.LL4,  list(LL.2(), LL2.2(), LL.3(), LL.3u(), LL2.3(), LL2.3u(), LL
 # Lower IC, which actually is AIC (default), indicates the best model to be used. On the other hand, the highest the Lack of Fit, better the model. The two-, three-, and four-parameter log-logistic models are are symmetrical around the inflection point (parameter "e") while others (e.g. fiveparameter log-logistic, Gompertz, and Weibull) are asymmetrical. In symmetrical models, the parameter "e" and relative ED50 are identical, that is, they both indicate the dose that reduces the response midway between the upper and lower limits. In asymmetrical models, however, the parameter "e" does not have the same meaning as in symmetrical models, even though it is still the location of the inflection point. Therefore, in asymmetrical models, ED50 should be estimated as "absolute" and not relative.
 
 
-model.W2.2 <- drm(percent_bio ~ rate, treat, fct = W2.2(), data = data.atra.MIs.ambient, type = "continuous")
+model.W1.2 <- drm(percent_bio ~ rate, treat, fct = W1.2(), data = data.atra.MIs.ambient, type = "continuous")
 
 
-plot(fitted(model.W2.2), residuals(model.W2.2))
+plot(fitted(model.W1.2), residuals(model.W1.2))
 
-qqnorm(residuals(model.W2.2))
+qqnorm(residuals(model.W1.2))
 
                 
-modelFit(model.W2.2)
+modelFit(model.W1.2)
 
-summary(model.W2.2) 
+summary(model.W1.2) 
 
 
-anova(model.W2.2, model.LL4) # p-value > 0.05 means that there is no difference between models. Therefore, we can use model LL.3
+anova(model.W1.2, model.LL4) # p-value > 0.05 means that there is no difference between models. Therefore, we can use model LL.3
 
 ```
 
@@ -112,13 +112,13 @@ anova(model.W2.2, model.LL4) # p-value > 0.05 means that there is no difference 
 #ED(model.W1.3, c(50), type = "relative", interval = "delta")
 
 
-ED50.A101.atra.ambient <- ED(model.W2.2, 0.5, clevel = "A101+atra+ambient", type = "absolute", interval = "delta")
+ED50.A101.atra.ambient <- ED(model.W1.2, 0.5, clevel = "A101+atra+ambient", type = "absolute", interval = "delta")
 
 
-ED50.A101.atra.P450.ambient <- ED(model.W2.2, 0.5, clevel = "A101+atra+P450+ambient", type = "absolute", interval = "delta")
+ED50.A101.atra.P450.ambient <- ED(model.W1.2, 0.5, clevel = "A101+atra+P450+ambient", type = "absolute", interval = "delta")
 
 
-ED50.A101.atra.GST.ambient <- ED(model.W2.2, 0.5, clevel = "A101+atra+GST+ambient", type = "absolute", interval = "delta")
+ED50.A101.atra.GST.ambient <- ED(model.W1.2, 0.5, clevel = "A101+atra+GST+ambient", type = "absolute", interval = "delta")
 
 
 # In this case, fitting relative and absolute resulted in the same ED50. Perhaps because W1.3 has a lower limit = 0. In simulations using the W1.4, then the relative and absolute ED50 are different. 
@@ -133,12 +133,12 @@ ED50.A101.atra.GST.ambient <- ED(model.W2.2, 0.5, clevel = "A101+atra+GST+ambien
 #EDcomp(model.W1.3, c(50, 50), type = "relative", interval = "none", reverse = F)
 
 
-EDcomp(model.W2.2, c(0.5, 0.5), 
+EDcomp(model.W1.2, c(0.5, 0.5), 
        compMatch = c("A101+atra+P450+ambient", "A101+atra+ambient"), type = "absolute", interval = "none", reverse = T)
 
 
 
-EDcomp(model.W2.2, c(0.5, 0.5), 
+EDcomp(model.W1.2, c(0.5, 0.5), 
        compMatch = c("A101+atra+GST+ambient", "A101+atra+ambient"), type = "absolute", interval = "none", reverse = T)
 
 
@@ -171,9 +171,9 @@ tiff(file="C:/Users/felip/OneDrive - UW-Madison/Documents/GitHub/FFaleco/PhD/PhD
 par(mar = c(5,5,1,1))
 
 
-plot(model.W2.2,
+plot(model.W1.2,
      type = "average",
-     xlab = expression(paste("Atrazine rate (g ae ha"^-1, ")")),
+     xlab = expression(paste("Atrazine rate (g ai ha"^-1, ")")),
      ylab = expression(paste("A101 Percent biomass (x 100%)")),
      ylim = c(0, 1),
      col = c("darkgreen", "red", "navy"),
