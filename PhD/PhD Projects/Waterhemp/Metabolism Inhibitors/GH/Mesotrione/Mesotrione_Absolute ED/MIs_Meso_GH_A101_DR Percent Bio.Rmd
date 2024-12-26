@@ -40,11 +40,11 @@ summary.meso <- summaryBy(cbind(percent_bio) ~ herb + rate, data = subset(data_A
           FUN=fun)
 
 
-summary.meso_GST <- summaryBy(cbind(percent_bio) ~ herb + rate, data = subset(data_A101, herb=="meso+GST"),
+summary.meso_GSTs <- summaryBy(cbind(percent_bio) ~ herb + rate, data = subset(data_A101, herb=="meso+GSTs"),
           FUN=fun)
 
 
-summary.meso_P450 <- summaryBy(cbind(percent_bio) ~ herb + rate, data = subset(data_A101, herb=="meso+P450"),
+summary.meso_P450s <- summaryBy(cbind(percent_bio) ~ herb + rate, data = subset(data_A101, herb=="meso+P450s"),
           FUN=fun)
 
 
@@ -118,9 +118,9 @@ anova(model.W1.2, model.LL4) # p-value > 0.05 means that there is no difference 
 
 ED50.meso <- ED(model.W1.2, 0.5, clevel = "meso", type = "absolute", interval = "delta")
 
-ED50.meso.P450 <- ED(model.W1.2, 0.5, clevel = "meso+P450", type = "absolute", interval = "delta")
+ED50.meso.P450s <- ED(model.W1.2, 0.5, clevel = "meso+P450s", type = "absolute", interval = "delta")
 
-ED50.meso.GST <- ED(model.W1.2, 0.5, clevel = "meso+GST", type = "absolute", interval = "delta")
+ED50.meso.GSTs <- ED(model.W1.2, 0.5, clevel = "meso+GSTs", type = "absolute", interval = "delta")
 
 
 # In this case, fitting relative and absolute resulted in the same ED50. Perhaps because W1.3 has a lower limit = 0. In simulations using the W1.4, then the relative and absolute ED50 are different. 
@@ -136,11 +136,11 @@ ED50.meso.GST <- ED(model.W1.2, 0.5, clevel = "meso+GST", type = "absolute", int
 
 
 EDcomp(model.W1.2, c(0.5, 0.5), 
-       compMatch = c("meso", "meso+P450"), type = "absolute", interval = "none", reverse = T)
+       compMatch = c("meso", "meso+P450s"), type = "absolute", interval = "none", reverse = T)
 
 
 EDcomp(model.W1.2, c(0.5, 0.5), 
-       compMatch = c("meso", "meso+GST"), type = "absolute", interval = "none", reverse = T)
+       compMatch = c("meso", "meso+GSTs"), type = "absolute", interval = "none", reverse = T)
 
 
 
@@ -174,7 +174,7 @@ par(mar = c(5,5,1,1))
 plot(model.W1.2,
      type = "average",
      xlab = expression(paste("Mesotrione rate (g ai ha"^-1, ")")),
-     ylab = expression(paste("A101 Biomass (x 100%)")),
+     ylab = expression(paste("A101 biomass (x 100%)")),
      ylim = c(0, 1),
      #broken = T,
      col = c("darkgreen", "red", "navy"),
@@ -189,8 +189,8 @@ plot(model.W1.2,
 
 
 points(x = c(ED50.meso[1, 1],
-             ED50.meso.P450[1, 1],
-             ED50.meso.GST[1, 1]),
+             ED50.meso.P450s[1, 1],
+             ED50.meso.GSTs[1, 1]),
        y = c(0.5, 0.5, 0.5),
        pch = 8,
        cex = 1.3)

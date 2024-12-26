@@ -41,11 +41,11 @@ summary.gly <- summaryBy(cbind(percent_bio) ~ herb + rate, data = subset(data_A1
           FUN=fun)
 
 
-summary.gly_GST <- summaryBy(cbind(percent_bio) ~ herb + rate, data = subset(data_A101, herb=="gly+GST"),
+summary.gly_GSTs <- summaryBy(cbind(percent_bio) ~ herb + rate, data = subset(data_A101, herb=="gly+GSTs"),
           FUN=fun)
 
 
-summary.gly_P450 <- summaryBy(cbind(percent_bio) ~ herb + rate, data = subset(data_A101, herb=="gly+P450"),
+summary.gly_P450s <- summaryBy(cbind(percent_bio) ~ herb + rate, data = subset(data_A101, herb=="gly+P450s"),
           FUN=fun)
 
 
@@ -119,9 +119,9 @@ anova(model.W2.3, model.LL4) # p-value > 0.05 means that there is no difference 
 
 ED50.gly <- ED(model.W2.3, (summary(model.W2.3)$coefficients[4, 1] * 0.5), clevel = "gly", type = "absolute", interval = "delta")
 
-ED50.gly.P450 <- ED(model.W2.3, (summary(model.W2.3)$coefficients[5, 1] * 0.5), clevel = "gly+P450", type = "absolute", interval = "delta")
+ED50.gly.P450s <- ED(model.W2.3, (summary(model.W2.3)$coefficients[5, 1] * 0.5), clevel = "gly+P450s", type = "absolute", interval = "delta")
 
-ED50.gly.GST <- ED(model.W2.3, (summary(model.W2.3)$coefficients[6, 1] * 0.5), clevel = "gly+GST", type = "absolute", interval = "delta")
+ED50.gly.GSTs <- ED(model.W2.3, (summary(model.W2.3)$coefficients[6, 1] * 0.5), clevel = "gly+GSTs", type = "absolute", interval = "delta")
 
 # interval = "none" because it is a symmetric model. For asymmetric should use "delta"
 
@@ -136,12 +136,12 @@ ED50.gly.GST <- ED(model.W2.3, (summary(model.W2.3)$coefficients[6, 1] * 0.5), c
 
 EDcomp(model.W2.3, c((summary(model.W2.3)$coefficients[4, 1] * 0.5),
                      (summary(model.W2.3)$coefficients[5, 1] * 0.5)), 
-       compMatch = c("gly", "gly+P450"), type = "absolute", interval = "none", reverse = T)
+       compMatch = c("gly", "gly+P450s"), type = "absolute", interval = "none", reverse = T)
 
 
 EDcomp(model.W2.3, c((summary(model.W2.3)$coefficients[4, 1] * 0.5),
                      (summary(model.W2.3)$coefficients[6, 1] * 0.5)), 
-       compMatch = c("gly", "gly+GST"), type = "absolute", interval = "none", reverse = T)
+       compMatch = c("gly", "gly+GSTs"), type = "absolute", interval = "none", reverse = T)
 
 
 # Comparing b parameter (slope)
@@ -174,7 +174,7 @@ par(mar = c(5,5,1,1))
 plot(model.W2.3,
      type = "average",
      xlab = expression(paste("Glyphosate rate (g ae ha"^-1, ")")),
-     ylab = expression(paste("A101 Biomass (x 100%)")),
+     ylab = expression(paste("A101 biomass (x 100%)")),
      ylim = c(0, 1),
      #broken = T,
      col = c("darkgreen", "red", "navy"),
@@ -183,14 +183,14 @@ plot(model.W2.3,
      cex.axis = 1.5,
      cex.lab = 2.0,
      cex.legend = 1.8,
-     legendPos = c(12000, 1),
+     legendPos = c(18000, 1.05),
      lwd = 1.5)
 
 
 
 points(x = c(ED50.gly[1, 1],
-             ED50.gly.P450[1, 1],
-             ED50.gly.GST[1, 1]),
+             ED50.gly.P450s[1, 1],
+             ED50.gly.GSTs[1, 1]),
        y = c((summary(model.W2.3)$coefficients[4, 1] * 0.5), 
              (summary(model.W2.3)$coefficients[5, 1] * 0.5), 
              (summary(model.W2.3)$coefficients[6, 1] * 0.5)),
