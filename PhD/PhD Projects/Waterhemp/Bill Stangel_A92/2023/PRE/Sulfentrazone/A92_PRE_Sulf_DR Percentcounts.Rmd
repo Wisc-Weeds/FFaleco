@@ -117,11 +117,6 @@ ED50.A92 <- ED(model.W1.2, 0.5, clevel = "A92", type = "absolute", interval = "d
 ED50.A66 <- ED(model.W1.2, 0.5, clevel = "A66", type = "absolute", interval = "delta")
 
 
-
-ED50.A92 <- ED(model.W1.2, 0.1, clevel = "A92", type = "absolute", interval = "delta")
-
-ED50.A66 <- ED(model.W1.2, 0.1, clevel = "A66", type = "absolute", interval = "delta")
-
 ```
 
 
@@ -135,10 +130,6 @@ ED50.A66 <- ED(model.W1.2, 0.1, clevel = "A66", type = "absolute", interval = "d
 EDcomp(model.W1.2, c(0.5, 0.5), 
        compMatch = c("A92", "A66"), type = "absolute", interval = "none", reverse = T)
 
-
-
-EDcomp(model.W1.2, c(0.1, 0.1), 
-       compMatch = c("A92", "A66"), type = "absolute", interval = "none", reverse = T)
 
 
 # Comparing b parameter (slope)
@@ -171,7 +162,7 @@ par(mar = c(5,5,1,1))
 plot(model.W1.2,
      type = "average",
      xlab = expression(paste("Sulfentrazone rate (g ai ha"^-1, ")")),
-     ylab = expression(paste("Plant Count (%)")),
+     ylab = expression(paste("Plant count (x 100%)")),
      ylim = c(0, 1),
      col = c("red", "darkgreen"),
      pch = c(19, 17),
