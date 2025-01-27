@@ -171,7 +171,7 @@ plot(model.W1.2,
      cex.axis = 1.3,
      cex.lab = 1.9,
      cex.legend = 2.0,
-     legendPos = c(1500, 1.0),
+     legendPos = c(1400, 1.0),
      lwd = 1.5)
 
 
