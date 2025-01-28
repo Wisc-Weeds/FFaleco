@@ -166,7 +166,7 @@ par(mar = c(5,5,1,1))
 plot(model.W1.2,
      type = "average",
      xlab = expression(paste("Lactofen rate (g ai ha"^-1, ")")),
-     ylab = expression(paste("Percent biomass (x 100%)")),
+     ylab = expression(paste("Biomass (x 100%)")),
      ylim = c(0, 1),
      #broken = T,
      col = c("red", "darkgreen"),
