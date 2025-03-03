@@ -112,13 +112,13 @@ anova(model.W1.2, model.LL4) # p-value > 0.05 means that there is no difference 
 #ED(model.W1.3, c(50), type = "relative", interval = "delta")
 
 
-ED50.A82.atra.elevated <- ED(model.W1.2, 0.5, clevel = "A82+atra+elevated", type = "absolute", interval = "delta")
+ED50.A82.atra.increased <- ED(model.W1.2, 0.5, clevel = "A82+atra+increased", type = "absolute", interval = "delta")
 
 ED50.A82.atra.ambient <- ED(model.W1.2, 0.5, clevel = "A82+atra+ambient", type = "absolute", interval = "delta")
 
 
 
-ED50.A101.atra.elevated <- ED(model.W1.2, 0.5, clevel = "A101+atra+elevated", type = "absolute", interval = "delta")
+ED50.A101.atra.increased <- ED(model.W1.2, 0.5, clevel = "A101+atra+increased", type = "absolute", interval = "delta")
 
 ED50.A101.atra.ambient <- ED(model.W1.2, 0.5, clevel = "A101+atra+ambient", type = "absolute", interval = "delta")
 
@@ -137,12 +137,12 @@ ED50.A101.atra.ambient <- ED(model.W1.2, 0.5, clevel = "A101+atra+ambient", type
 
 
 EDcomp(model.W1.2, c(0.5, 0.5), 
-       compMatch = c("A82+atra+elevated", "A82+atra+ambient"), type = "absolute", interval = "none", reverse = T)
+       compMatch = c("A82+atra+increased", "A82+atra+ambient"), type = "absolute", interval = "none", reverse = T)
 
 
 
 EDcomp(model.W1.2, c(0.5, 0.5), 
-       compMatch = c("A101+atra+elevated", "A101+atra+ambient"), type = "absolute", interval = "none", reverse = T)
+       compMatch = c("A101+atra+increased", "A101+atra+ambient"), type = "absolute", interval = "none", reverse = T)
 
 
 
@@ -191,9 +191,9 @@ plot(model.W1.2,
 
 
 
-points(x = c(ED50.A82.atra.elevated [1, 1],
+points(x = c(ED50.A82.atra.increased [1, 1],
              ED50.A82.atra.ambient [1, 1],
-             ED50.A101.atra.elevated [1, 1],
+             ED50.A101.atra.increased [1, 1],
              ED50.A101.atra.ambient [1, 1]),
        y = c(0.5, 0.5, 0.5, 0.5),
        pch = 8,
