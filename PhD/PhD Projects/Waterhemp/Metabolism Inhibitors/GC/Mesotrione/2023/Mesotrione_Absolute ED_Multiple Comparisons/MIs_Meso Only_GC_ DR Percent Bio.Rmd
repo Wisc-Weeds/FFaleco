@@ -112,13 +112,13 @@ anova(model.W1.2, model.LL4) # p-value > 0.05 means that there is no difference 
 #ED(model.W1.3, c(50), type = "relative", interval = "delta")
 
 
-ED50.A82.meso.elevated <- ED(model.W1.2, 0.5, clevel = "A82+meso+elevated", type = "absolute", interval = "delta")
+ED50.A82.meso.increased <- ED(model.W1.2, 0.5, clevel = "A82+meso+increased", type = "absolute", interval = "delta")
 
 ED50.A82.meso.ambient <- ED(model.W1.2, 0.5, clevel = "A82+meso+ambient", type = "absolute", interval = "delta")
 
 
 
-ED50.A101.meso.elevated <- ED(model.W1.2, 0.5, clevel = "A101+meso+elevated", type = "absolute", interval = "delta")
+ED50.A101.meso.increased <- ED(model.W1.2, 0.5, clevel = "A101+meso+increased", type = "absolute", interval = "delta")
 
 ED50.A101.meso.ambient <- ED(model.W1.2, 0.5, clevel = "A101+meso+ambient", type = "absolute", interval = "delta")
 
@@ -137,12 +137,12 @@ ED50.A101.meso.ambient <- ED(model.W1.2, 0.5, clevel = "A101+meso+ambient", type
 
 
 EDcomp(model.W1.2, c(0.5, 0.5), 
-       compMatch = c("A82+meso+elevated", "A82+meso+ambient"), type = "absolute", interval = "none", reverse = T)
+       compMatch = c("A82+meso+increased", "A82+meso+ambient"), type = "absolute", interval = "none", reverse = T)
 
 
 
 EDcomp(model.W1.2, c(0.5, 0.5), 
-       compMatch = c("A101+meso+elevated", "A101+meso+ambient"), type = "absolute", interval = "none", reverse = T)
+       compMatch = c("A101+meso+increased", "A101+meso+ambient"), type = "absolute", interval = "none", reverse = T)
 
 
 
@@ -176,8 +176,8 @@ par(mar = c(5,5,1,1))
 
 plot(model.W1.2,
      type = "average",
-     xlab = expression(paste("Mesotrione rate (g ae ha"^-1, ")")),
-     ylab = expression(paste("Percent biomass (x 100%)")),
+     xlab = expression(paste("Mesotrione rate (g ai ha"^-1, ")")),
+     ylab = expression(paste("Biomass (x 100%)")),
      ylim = c(0, 1),
      col = c("darkgreen", "darkgreen", "red", "red"),
      pch = c(19, 1, 17, 2),
@@ -191,9 +191,9 @@ plot(model.W1.2,
 
 
 
-points(x = c(ED50.A82.meso.elevated [1, 1],
+points(x = c(ED50.A82.meso.increased[1, 1],
              ED50.A82.meso.ambient [1, 1],
-             ED50.A101.meso.elevated [1, 1],
+             ED50.A101.meso.increased [1, 1],
              ED50.A101.meso.ambient [1, 1]),
        y = c(0.5, 0.5, 0.5, 0.5),
        pch = 8,
