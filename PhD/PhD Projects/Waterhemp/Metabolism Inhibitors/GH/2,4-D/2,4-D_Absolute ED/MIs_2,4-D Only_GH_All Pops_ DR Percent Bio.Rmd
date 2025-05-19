@@ -100,7 +100,7 @@ summary(model.W1.2)
 
 
 
-anova(model.W1.2, model.LL4) # p-value > 0.05 means that there is no difference between models. Therefore, we can use model LL.3
+anova(model.W1.2, model.LL4) # p-value > 0.05 means that there is no difference between models. Therefore, we can use model W1.2
 
 ```
 
