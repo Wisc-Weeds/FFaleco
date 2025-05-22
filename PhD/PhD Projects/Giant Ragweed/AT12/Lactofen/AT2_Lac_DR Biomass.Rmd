@@ -19,9 +19,7 @@ library(dplyr)
 
 ```
 
-
 # CONFIRMING RESISTANCE
-
 
 ## READ DATA
 
@@ -41,8 +39,6 @@ summary <- summaryBy(cbind(biomass) ~ pop + rate, data = data,
 
 
 ```
-
-
 
 ## MODEL LL.4
 
@@ -67,8 +63,6 @@ summary(model.LL4)
 # e: e (inflection point). Represents the dose producing a response halfway between the u and l parameters (ED50)
 
 ```
-
-
 
 ## MODEL SELECTION
 
@@ -99,8 +93,6 @@ anova(model.W2.3, model.LL4) # p-value > 0.05 means that there is no difference 
 
 ```
 
-
-
 ## ED50
 
 ```{r}
@@ -122,7 +114,6 @@ ED50.AT8.EDGE <- ED(model.W2.3, (summary(model.W2.3)$coefficients[4, 1] * 0.1), 
 # If the model was a Log-logistic (log(ED50) as parameter) E.g.: LL2.3,  we should use logBase = exp(1).
 
 ```
-
 
 ## ED 50 RI AND PARAMETERS STUDENT T-TEST COMPARISONS
 
@@ -160,8 +151,6 @@ compParm(model.W2.3, strVal = "e", operator = "-") # Remember that for asymmetri
 
 
 ```
-
-
 
 ##SAVE TIFF
 
@@ -246,5 +235,3 @@ dev.off()
 
 
 ```
-
-
