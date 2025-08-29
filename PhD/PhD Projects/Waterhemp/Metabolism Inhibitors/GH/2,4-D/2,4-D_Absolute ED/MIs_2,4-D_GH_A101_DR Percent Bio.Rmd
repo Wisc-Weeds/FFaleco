@@ -40,11 +40,11 @@ summary.24D <- summaryBy(cbind(percent_bio) ~ herb + rate, data = subset(data_A1
           FUN=fun)
 
 
-summary.24D_GST <- summaryBy(cbind(percent_bio) ~ herb + rate, data = subset(data_A101, herb=="2,4D+GSTs"),
+summary.24D_GST <- summaryBy(cbind(percent_bio) ~ herb + rate, data = subset(data_A101, herb=="2,4D+GST"),
           FUN=fun)
 
 
-summary.24D_P450 <- summaryBy(cbind(percent_bio) ~ herb + rate, data = subset(data_A101, herb=="2,4D+P450s"),
+summary.24D_P450 <- summaryBy(cbind(percent_bio) ~ herb + rate, data = subset(data_A101, herb=="2,4D+P450"),
           FUN=fun)
 
 
@@ -118,9 +118,9 @@ anova(model.W1.2, model.LL4) # p-value > 0.05 means that there is no difference 
 
 ED50.24D <- ED(model.W1.2, 0.5, clevel = "2,4D", type = "absolute", interval = "delta")
 
-ED50.24D.P450s <- ED(model.W1.2, 0.5, clevel = "2,4D+P450s", type = "absolute", interval = "delta")
+ED50.24D.P450 <- ED(model.W1.2, 0.5, clevel = "2,4D+P450", type = "absolute", interval = "delta")
 
-ED50.24D.GSTs <- ED(model.W1.2, 0.5, clevel = "2,4D+GSTs", type = "absolute", interval = "delta")
+ED50.24D.GST <- ED(model.W1.2, 0.5, clevel = "2,4D+GST", type = "absolute", interval = "delta")
 
 
 # In this case, fitting relative and absolute resulted in the same ED50. Perhaps because W1.3 has a lower limit = 0. In simulations using the W1.4, then the relative and absolute ED50 are different. 
@@ -136,11 +136,11 @@ ED50.24D.GSTs <- ED(model.W1.2, 0.5, clevel = "2,4D+GSTs", type = "absolute", in
 
 
 EDcomp(model.W1.2, c(0.5, 0.5), 
-       compMatch = c("2,4D", "2,4D+P450s"), type = "absolute", interval = "none", reverse = T)
+       compMatch = c("2,4D", "2,4D+P450"), type = "absolute", interval = "none", reverse = T)
 
 
 EDcomp(model.W1.2, c(0.5, 0.5), 
-       compMatch = c("2,4D", "2,4D+GSTs"), type = "absolute", interval = "none", reverse = T)
+       compMatch = c("2,4D", "2,4D+GST"), type = "absolute", interval = "none", reverse = T)
 
 
 # Comparing b parameter (slope)
@@ -163,7 +163,7 @@ compParm(model.W1.2, strVal = "e", operator = "-") # Remember that for assymetri
 
 ```{r}
 
-tiff(file="C:/Users/felip/OneDrive - UW-Madison/Documents/GitHub/FFaleco/PhD/PhD Projects/Waterhemp/Metabolism Inhibitors/GH/2,4-D/2,4-D_Absolute ED/GH_2,4-D_A101_DR Percent Bio.tiff",
+tiff(file="C:/Users/felip/OneDrive/Documents/GitHub/FFaleco/PhD/PhD Projects/Waterhemp/Metabolism Inhibitors/GH/2,4-D/2,4-D_Absolute ED/GH_2,4-D_A101_DR Percent Bio.tiff",
      width = 10, height = 8, units = "in", res = 600, compression = "lzw")
 
 
