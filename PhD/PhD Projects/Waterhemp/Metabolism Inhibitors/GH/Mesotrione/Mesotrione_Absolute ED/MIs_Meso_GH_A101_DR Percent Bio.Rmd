@@ -40,11 +40,11 @@ summary.meso <- summaryBy(cbind(percent_bio) ~ herb + rate, data = subset(data_A
           FUN=fun)
 
 
-summary.meso_GSTs <- summaryBy(cbind(percent_bio) ~ herb + rate, data = subset(data_A101, herb=="meso+GSTs"),
+summary.meso_GSTs <- summaryBy(cbind(percent_bio) ~ herb + rate, data = subset(data_A101, herb=="meso+GST"),
           FUN=fun)
 
 
-summary.meso_P450s <- summaryBy(cbind(percent_bio) ~ herb + rate, data = subset(data_A101, herb=="meso+P450s"),
+summary.meso_P450s <- summaryBy(cbind(percent_bio) ~ herb + rate, data = subset(data_A101, herb=="meso+P450"),
           FUN=fun)
 
 
@@ -118,9 +118,9 @@ anova(model.W1.2, model.LL4) # p-value > 0.05 means that there is no difference 
 
 ED50.meso <- ED(model.W1.2, 0.5, clevel = "meso", type = "absolute", interval = "delta")
 
-ED50.meso.P450s <- ED(model.W1.2, 0.5, clevel = "meso+P450s", type = "absolute", interval = "delta")
+ED50.meso.P450s <- ED(model.W1.2, 0.5, clevel = "meso+P450", type = "absolute", interval = "delta")
 
-ED50.meso.GSTs <- ED(model.W1.2, 0.5, clevel = "meso+GSTs", type = "absolute", interval = "delta")
+ED50.meso.GSTs <- ED(model.W1.2, 0.5, clevel = "meso+GST", type = "absolute", interval = "delta")
 
 
 # In this case, fitting relative and absolute resulted in the same ED50. Perhaps because W1.3 has a lower limit = 0. In simulations using the W1.4, then the relative and absolute ED50 are different. 
@@ -136,11 +136,11 @@ ED50.meso.GSTs <- ED(model.W1.2, 0.5, clevel = "meso+GSTs", type = "absolute", i
 
 
 EDcomp(model.W1.2, c(0.5, 0.5), 
-       compMatch = c("meso", "meso+P450s"), type = "absolute", interval = "none", reverse = T)
+       compMatch = c("meso", "meso+P450"), type = "absolute", interval = "none", reverse = T)
 
 
 EDcomp(model.W1.2, c(0.5, 0.5), 
-       compMatch = c("meso", "meso+GSTs"), type = "absolute", interval = "none", reverse = T)
+       compMatch = c("meso", "meso+GST"), type = "absolute", interval = "none", reverse = T)
 
 
 
@@ -164,7 +164,7 @@ compParm(model.W1.2, strVal = "e", operator = "-") # Remember that for assymetri
 
 ```{r}
 
-tiff(file="C:/Users/felip/OneDrive - UW-Madison/Documents/GitHub/FFaleco/PhD/PhD Projects/Waterhemp/Metabolism Inhibitors/GH/Mesotrione/Mesotrione_Absolute ED/GH_Meso_A101_DR Percent Bio.tiff",
+tiff(file="C:/Users/felip/OneDrive/Documents/GitHub/FFaleco/PhD/PhD Projects/Waterhemp/Metabolism Inhibitors/GH/Mesotrione/Mesotrione_Absolute ED/GH_Meso_A101_DR Percent Bio.tiff",
      width = 10, height = 8, units = "in", res = 600, compression = "lzw")
 
 
