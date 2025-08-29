@@ -41,11 +41,11 @@ summary.gly <- summaryBy(cbind(percent_bio) ~ herb + rate, data = subset(data_A1
           FUN=fun)
 
 
-summary.gly_GSTs <- summaryBy(cbind(percent_bio) ~ herb + rate, data = subset(data_A101, herb=="gly+GSTs"),
+summary.gly_GSTs <- summaryBy(cbind(percent_bio) ~ herb + rate, data = subset(data_A101, herb=="gly+GST"),
           FUN=fun)
 
 
-summary.gly_P450s <- summaryBy(cbind(percent_bio) ~ herb + rate, data = subset(data_A101, herb=="gly+P450s"),
+summary.gly_P450s <- summaryBy(cbind(percent_bio) ~ herb + rate, data = subset(data_A101, herb=="gly+P450"),
           FUN=fun)
 
 
@@ -119,9 +119,9 @@ anova(model.W2.3, model.LL4) # p-value > 0.05 means that there is no difference 
 
 ED50.gly <- ED(model.W2.3, (summary(model.W2.3)$coefficients[4, 1] * 0.5), clevel = "gly", type = "absolute", interval = "delta")
 
-ED50.gly.P450s <- ED(model.W2.3, (summary(model.W2.3)$coefficients[5, 1] * 0.5), clevel = "gly+P450s", type = "absolute", interval = "delta")
+ED50.gly.P450s <- ED(model.W2.3, (summary(model.W2.3)$coefficients[5, 1] * 0.5), clevel = "gly+P450", type = "absolute", interval = "delta")
 
-ED50.gly.GSTs <- ED(model.W2.3, (summary(model.W2.3)$coefficients[6, 1] * 0.5), clevel = "gly+GSTs", type = "absolute", interval = "delta")
+ED50.gly.GSTs <- ED(model.W2.3, (summary(model.W2.3)$coefficients[6, 1] * 0.5), clevel = "gly+GST", type = "absolute", interval = "delta")
 
 # interval = "none" because it is a symmetric model. For asymmetric should use "delta"
 
@@ -136,12 +136,12 @@ ED50.gly.GSTs <- ED(model.W2.3, (summary(model.W2.3)$coefficients[6, 1] * 0.5), 
 
 EDcomp(model.W2.3, c((summary(model.W2.3)$coefficients[4, 1] * 0.5),
                      (summary(model.W2.3)$coefficients[5, 1] * 0.5)), 
-       compMatch = c("gly", "gly+P450s"), type = "absolute", interval = "none", reverse = T)
+       compMatch = c("gly", "gly+P450"), type = "absolute", interval = "none", reverse = T)
 
 
 EDcomp(model.W2.3, c((summary(model.W2.3)$coefficients[4, 1] * 0.5),
                      (summary(model.W2.3)$coefficients[6, 1] * 0.5)), 
-       compMatch = c("gly", "gly+GSTs"), type = "absolute", interval = "none", reverse = T)
+       compMatch = c("gly", "gly+GST"), type = "absolute", interval = "none", reverse = T)
 
 
 # Comparing b parameter (slope)
@@ -164,7 +164,7 @@ compParm(model.W2.3, strVal = "e", operator = "-") # Remember that for assymetri
 
 ```{r}
 
-tiff(file="C:/Users/felip/OneDrive - UW-Madison/Documents/GitHub/FFaleco/PhD/PhD Projects/Waterhemp/Metabolism Inhibitors/GH/Glyphosate/Glyphosate_Absolute ED/MIs_Gly_GH_A101_DR Percent Bio.tiff",
+tiff(file="C:/Users/felip/OneDrive/Documents/GitHub/FFaleco/PhD/PhD Projects/Waterhemp/Metabolism Inhibitors/GH/Glyphosate/Glyphosate_Absolute ED/MIs_Gly_GH_A101_DR Percent Bio.tiff",
      width = 10, height = 8, units = "in", res = 600, compression = "lzw")
 
 
